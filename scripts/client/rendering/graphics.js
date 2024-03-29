@@ -82,49 +82,11 @@ MyGame.graphics = (function() {
             localSize.height);
     }
 
-    //------------------------------------------------------------------
-    //
-    // Draw an image out of a spritesheet into the local canvas coordinate system.
-    //
-    //------------------------------------------------------------------
-    function drawImageSpriteSheet(spriteSheet, spriteSize, sprite, center, size) {
-        let localCenter = {
-            x: center.x * canvas.width,
-            y: center.y * canvas.width
-        };
-        let localSize = {
-            width: size.width * canvas.width,
-            height: size.height * canvas.height
-        };
-
-        context.drawImage(spriteSheet,
-            sprite * spriteSize.width, 0,                 // which sprite to render
-            spriteSize.width, spriteSize.height,    // size in the spritesheet
-            localCenter.x - localSize.width / 2,
-            localCenter.y - localSize.height / 2,
-            localSize.width, localSize.height);
-    }
-
-    //------------------------------------------------------------------
-    //
-    // Draw a circle into the local canvas coordinate system.
-    //
-    //------------------------------------------------------------------
-    function drawCircle(center, radius, color) {
-        context.beginPath();
-        context.arc(center.x * canvas.width, center.y * canvas.width, 2 * radius * canvas.width, 2 * Math.PI, false);
-        context.closePath();
-        context.fillStyle = color;
-        context.fill();
-    }
-
     return {
         clear: clear,
         saveContext: saveContext,
         restoreContext: restoreContext,
         rotateCanvas: rotateCanvas,
-        drawImage: drawImage,
-        drawImageSpriteSheet: drawImageSpriteSheet,
-        drawCircle: drawCircle
+        drawImage: drawImage
     };
 }());

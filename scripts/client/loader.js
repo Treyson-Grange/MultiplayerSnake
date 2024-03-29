@@ -18,11 +18,7 @@ MyGame.loader = (function() {
     'use strict';
     let scriptOrder = [
         {
-            scripts: ['../shared/network-ids'],
-            message: 'Network Ids loaded',
-            onComplete: null,
-        }, {
-            scripts: ['../shared/queue'],
+            scripts: ['queue'],
             message: 'Utilities loaded',
             onComplete: null,
         }, {
@@ -30,7 +26,7 @@ MyGame.loader = (function() {
             message: 'Input loaded',
             onComplete: null
         }, {
-            scripts: ['components/player', 'components/player-remote', 'components/missile', 'components/animated-sprite'],
+            scripts: ['player', 'player-remote'],
             message: 'Player models loaded',
             onComplete: null
         }, {
@@ -38,7 +34,7 @@ MyGame.loader = (function() {
             message: 'Graphics loaded',
             onComplete: null
         }, {
-            scripts: ['rendering/player', 'rendering/player-remote', 'rendering/missile', 'rendering/animated-sprite'],
+            scripts: ['rendering/player', 'rendering/player-remote'],
             message: 'Renderers loaded',
             onComplete: null
         }, {
@@ -52,9 +48,6 @@ MyGame.loader = (function() {
         }, {
             key: 'player-other',
             source: 'assets/playerShip1_red.png'
-        }, {
-            key: 'explosion',
-            source: 'assets/explosion.png'
         }];
 
     //------------------------------------------------------------------

@@ -23,8 +23,7 @@ function createPlayer() {
 
     let size = {
         width: 0.05,
-        height: 0.05,
-        radius: 0.05
+        height: 0.05
     };
     let direction = random.nextDouble() * 2 * Math.PI;    // Angle in radians
     let rotateRate = Math.PI / 1000;    // radians per millisecond
@@ -54,10 +53,6 @@ function createPlayer() {
     Object.defineProperty(that, 'reportUpdate', {
         get: () => reportUpdate,
         set: value => reportUpdate = value
-    });
-
-    Object.defineProperty(that, 'radius', {
-        get: () => size.radius
     });
 
     //------------------------------------------------------------------

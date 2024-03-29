@@ -13,63 +13,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
             texture: MyGame.assets['player-self']
         },
         playerOthers = {},
-        missiles = {},
-        explosions = {},
-        messageHistory = Queue.create(),
+        messageHistory = MyGame.utilities.Queue(),
         messageId = 1,
-        nextExplosionId = 1,
-        socket = io(),
-        networkQueue = Queue.create();
-
-    
-    socket.on(NetworkIds.CONNECT_ACK, data => {
-        networkQueue.enqueue({
-            type: NetworkIds.CONNECT_ACK,
-            data: data
-        });
-    });
-
-    socket.on(NetworkIds.CONNECT_OTHER, data => {
-        networkQueue.enqueue({
-            type: NetworkIds.CONNECT_OTHER,
-            data: data
-        });
-    });
-
-    socket.on(NetworkIds.DISCONNECT_OTHER, data => {
-        networkQueue.enqueue({
-            type: NetworkIds.DISCONNECT_OTHER,
-            data: data
-        });
-    });
-
-    socket.on(NetworkIds.UPDATE_SELF, data => {
-        networkQueue.enqueue({
-            type: NetworkIds.UPDATE_SELF,
-            data: data
-        });
-    });
-
-    socket.on(NetworkIds.UPDATE_OTHER, data => {
-        networkQueue.enqueue({
-            type: NetworkIds.UPDATE_OTHER,
-            data: data
-        });
-    });
-
-    socket.on(NetworkIds.MISSILE_NEW, data => {
-        networkQueue.enqueue({
-            type: NetworkIds.MISSILE_NEW,
-            data: data
-        });
-    });
-
-    socket.on(NetworkIds.MISSILE_HIT, data => {
-        networkQueue.enqueue({
-            type: NetworkIds.MISSILE_HIT,
-            data: data
-        });
-    });
+        socket = io();
 
     //------------------------------------------------------------------
     //
@@ -77,7 +23,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
     // the state of the newly connected player model.
     //
     //------------------------------------------------------------------
-    function connectPlayerSelf(data) {
+    socket.on('connect-ack', function(data) {
         playerSelf.model.position.x = data.position.x;
         playerSelf.model.position.y = data.position.y;
 
@@ -87,7 +33,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.model.direction = data.direction;
         playerSelf.model.speed = data.speed;
         playerSelf.model.rotateRate = data.rotateRate;
-    }
+    });
 
     //------------------------------------------------------------------
     //
@@ -95,12 +41,11 @@ MyGame.main = (function(graphics, renderer, input, components) {
     // the state of the newly connected player model.
     //
     //------------------------------------------------------------------
-    function connectPlayerOther(data) {
+    socket.on('connect-other', function(data) {
         let model = components.PlayerRemote();
         model.state.position.x = data.position.x;
         model.state.position.y = data.position.y;
         model.state.direction = data.direction;
-        model.state.lastUpdate = performance.now();
 
         model.goal.position.x = data.position.x;
         model.goal.position.y = data.position.y;
@@ -114,23 +59,23 @@ MyGame.main = (function(graphics, renderer, input, components) {
             model: model,
             texture: MyGame.assets['player-other']
         };
-    }
+    });
 
     //------------------------------------------------------------------
     //
     // Handler for when another player disconnects from the game.
     //
     //------------------------------------------------------------------
-    function disconnectPlayerOther(data) {
+    socket.on('disconnect-other', function(data) {
         delete playerOthers[data.clientId];
-    }
+    });
 
     //------------------------------------------------------------------
     //
     // Handler for receiving state updates about the self player.
     //
     //------------------------------------------------------------------
-    function updatePlayerSelf(data) {
+    socket.on('update-self', function(data) {
         playerSelf.model.position.x = data.position.x;
         playerSelf.model.position.y = data.position.y;
         playerSelf.model.direction = data.direction;
@@ -143,37 +88,38 @@ MyGame.main = (function(graphics, renderer, input, components) {
             if (messageHistory.front.id === data.lastMessageId) {
                 done = true;
             }
+            //console.log('dumping: ', messageHistory.front.id);
             messageHistory.dequeue();
         }
 
         //
         // Update the client simulation since this last server update, by
         // replaying the remaining inputs.
-        let memory = Queue.create();
+        let memory = MyGame.utilities.Queue();
         while (!messageHistory.empty) {
             let message = messageHistory.dequeue();
             switch (message.type) {
-                case NetworkIds.MOVE:
+                case 'move':
                     playerSelf.model.move(message.elapsedTime);
                     break;
-                case NetworkIds.ROTATE_RIGHT:
+                case 'rotate-right':
                     playerSelf.model.rotateRight(message.elapsedTime);
                     break;
-                case NetworkIds.ROTATE_LEFT:
+                case 'rotate-left':
                     playerSelf.model.rotateLeft(message.elapsedTime);
                     break;
             }
             memory.enqueue(message);
         }
         messageHistory = memory;
-    }
+    });
 
     //------------------------------------------------------------------
     //
     // Handler for receiving state updates about other players.
     //
     //------------------------------------------------------------------
-    function updatePlayerOther(data) {
+    socket.on('update-other', function(data) {
         if (playerOthers.hasOwnProperty(data.clientId)) {
             let model = playerOthers[data.clientId].model;
             model.goal.updateWindow = data.updateWindow;
@@ -182,47 +128,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             model.goal.position.y = data.position.y
             model.goal.direction = data.direction;
         }
-    }
-
-    //------------------------------------------------------------------
-    //
-    // Handler for receiving notice of a new missile in the environment.
-    //
-    //------------------------------------------------------------------
-    function missileNew(data) {
-        missiles[data.id] = components.Missile({
-            id: data.id,
-            radius: data.radius,
-            speed: data.speed,
-            direction: data.direction,
-            position: {
-                x: data.position.x,
-                y: data.position.y
-            },
-            timeRemaining: data.timeRemaining
-        });
-    }
-
-    //------------------------------------------------------------------
-    //
-    // Handler for receiving notice that a missile has hit a player.
-    //
-    //------------------------------------------------------------------
-    function missileHit(data) {
-        explosions[nextExplosionId] = components.AnimatedSprite({
-            id: nextExplosionId++,
-            spriteSheet: MyGame.assets['explosion'],
-            spriteSize: { width: 0.07, height: 0.07 },
-            spriteCenter: data.position,
-            spriteCount: 16,
-            spriteTime: [ 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
-        });
-
-        //
-        // When we receive a hit notification, go ahead and remove the
-        // associated missle from the client model.
-        delete missiles[data.missileId];
-    }
+    });
 
     //------------------------------------------------------------------
     //
@@ -230,44 +136,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //
     //------------------------------------------------------------------
     function processInput(elapsedTime) {
-        //
-        // Start with the keyboard updates so those messages can get in transit
-        // while the local updating of received network messages are processed.
         myKeyboard.update(elapsedTime);
-
-        //
-        // Double buffering on the queue so we don't asynchronously receive messages
-        // while processing.
-        let processMe = networkQueue;
-        networkQueue = networkQueue = Queue.create();
-        while (!processMe.empty) {
-            let message = processMe.dequeue();
-            switch (message.type) {
-                case NetworkIds.CONNECT_ACK:
-                    connectPlayerSelf(message.data);
-                    break;
-                case NetworkIds.CONNECT_OTHER:
-                    connectPlayerOther(message.data);
-                    break;
-                case NetworkIds.DISCONNECT_OTHER:
-                    disconnectPlayerOther(message.data);
-                    break;
-                case NetworkIds.UPDATE_SELF:
-                    updatePlayerSelf(message.data);
-                    break;
-                case NetworkIds.UPDATE_OTHER:
-                    updatePlayerOther(message.data);
-                    break;
-                case NetworkIds.MISSILE_NEW:
-                    missileNew(message.data);
-                    break;
-                case NetworkIds.MISSILE_HIT:
-                    missileHit(message.data);
-                    break;
-            }
-        }
     }
-
+    
     //------------------------------------------------------------------
     //
     // Update the game simulation
@@ -277,23 +148,6 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.model.update(elapsedTime);
         for (let id in playerOthers) {
             playerOthers[id].model.update(elapsedTime);
-        }
-
-        let removeMissiles = [];
-        for (let missile in missiles) {
-            if (!missiles[missile].update(elapsedTime)) {
-                removeMissiles.push(missiles[missile]);
-            }
-        }
-
-        for (let missile = 0; missile < removeMissiles.length; missile++) {
-            delete missiles[removeMissiles[missile].id];
-        }
-
-        for (let id in explosions) {
-            if (!explosions[id].update(elapsedTime)) {
-                delete explosions[id];
-            }
         }
     }
 
@@ -308,14 +162,6 @@ MyGame.main = (function(graphics, renderer, input, components) {
         for (let id in playerOthers) {
             let player = playerOthers[id];
             renderer.PlayerRemote.render(player.model, player.texture);
-        }
-
-        for (let missile in missiles) {
-            renderer.Missile.render(missiles[missile]);
-        }
-
-        for (let id in explosions) {
-            renderer.AnimatedSprite.render(explosions[id]);
         }
     }
 
@@ -349,9 +195,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 let message = {
                     id: messageId++,
                     elapsedTime: elapsedTime,
-                    type: NetworkIds.INPUT_MOVE
+                    type: 'move'
                 };
-                socket.emit(NetworkIds.INPUT, message);
+                socket.emit('input', message);
                 messageHistory.enqueue(message);
                 playerSelf.model.move(elapsedTime);
             },
@@ -361,9 +207,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 let message = {
                     id: messageId++,
                     elapsedTime: elapsedTime,
-                    type: NetworkIds.INPUT_ROTATE_RIGHT
+                    type: 'rotate-right'
                 };
-                socket.emit(NetworkIds.INPUT, message);
+                socket.emit('input', message);
                 messageHistory.enqueue(message);
                 playerSelf.model.rotateRight(elapsedTime);
             },
@@ -373,23 +219,13 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 let message = {
                     id: messageId++,
                     elapsedTime: elapsedTime,
-                    type: NetworkIds.INPUT_ROTATE_LEFT
+                    type: 'rotate-left'
                 };
-                socket.emit(NetworkIds.INPUT, message);
+                socket.emit('input', message);
                 messageHistory.enqueue(message);
                 playerSelf.model.rotateLeft(elapsedTime);
             },
             'a', true);
-
-        myKeyboard.registerHandler(elapsedTime => {
-                let message = {
-                    id: messageId++,
-                    elapsedTime: elapsedTime,
-                    type: NetworkIds.INPUT_FIRE
-                };
-                socket.emit(NetworkIds.INPUT, message);
-            },
-            ' ', false);
 
         //
         // Get the game loop started

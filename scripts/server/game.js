@@ -7,40 +7,11 @@
 
 let present = require('present');
 let Player = require('./player');
-let Missile = require('./missile');
-let NetworkIds = require('../shared/network-ids');
-let Queue = require('../shared/queue.js');
 
-const SIMULATION_UPDATE_RATE_MS = 50;
-const STATE_UPDATE_RATE_MS = 100;
-let lastUpdate = 0;
+const UPDATE_RATE_MS = 50;
 let quit = false;
 let activeClients = {};
-let newMissiles = [];
-let activeMissiles = [];
-let hits = [];
-let inputQueue = Queue.create();
-let nextMissileId = 1;
-
-//------------------------------------------------------------------
-//
-// Used to create a missile in response to user input.
-//
-//------------------------------------------------------------------
-function createMissile(clientId, playerModel) {
-    let missile = Missile.create({
-        id: nextMissileId++,
-        clientId: clientId,
-        position: {
-            x: playerModel.position.x,
-            y: playerModel.position.y
-        },
-        direction: playerModel.direction,
-        speed: playerModel.speed
-    });
-
-    newMissiles.push(missile);
-}
+let inputQueue = [];
 
 //------------------------------------------------------------------
 //
@@ -48,45 +19,29 @@ function createMissile(clientId, playerModel) {
 // the game loop was processed.
 //
 //------------------------------------------------------------------
-function processInput(elapsedTime) {
+function processInput() {
     //
     // Double buffering on the queue so we don't asynchronously receive inputs
     // while processing.
     let processMe = inputQueue;
-    inputQueue = Queue.create();
+    inputQueue = [];
 
-    while (!processMe.empty) {
-        let input = processMe.dequeue();
+    for (let inputIndex in processMe) {
+        let input = processMe[inputIndex];
         let client = activeClients[input.clientId];
         client.lastMessageId = input.message.id;
         switch (input.message.type) {
-            case NetworkIds.INPUT_MOVE:
+            case 'move':
                 client.player.move(input.message.elapsedTime);
                 break;
-            case NetworkIds.INPUT_ROTATE_LEFT:
+            case 'rotate-left':
                 client.player.rotateLeft(input.message.elapsedTime);
                 break;
-            case NetworkIds.INPUT_ROTATE_RIGHT:
+            case 'rotate-right':
                 client.player.rotateRight(input.message.elapsedTime);
-                break;
-            case NetworkIds.INPUT_FIRE:
-                createMissile(input.clientId, client.player);
                 break;
         }
     }
-}
-
-//------------------------------------------------------------------
-//
-// Utility function to perform a hit test between two objects.  The
-// objects must have a position: { x: , y: } property and radius property.
-//
-//------------------------------------------------------------------
-function collided(obj1, obj2) {
-    let distance = Math.sqrt(Math.pow(obj1.position.x - obj2.position.x, 2) + Math.pow(obj1.position.y - obj2.position.y, 2));
-    let radii = obj1.radius + obj2.radius;
-
-    return distance <= radii;
 }
 
 //------------------------------------------------------------------
@@ -98,46 +53,6 @@ function update(elapsedTime, currentTime) {
     for (let clientId in activeClients) {
         activeClients[clientId].player.update(currentTime);
     }
-
-    for (let missile = 0; missile < newMissiles.length; missile++) {
-        newMissiles[missile].update(elapsedTime);
-    }
-
-    let keepMissiles = [];
-    for (let missile = 0; missile < activeMissiles.length; missile++) {
-        //
-        // If update returns false, that means the missile lifetime ended and
-        // we don't keep it around any longer.
-        if (activeMissiles[missile].update(elapsedTime)) {
-            keepMissiles.push(activeMissiles[missile]);
-        }
-    }
-    activeMissiles = keepMissiles;
-
-    //
-    // Check to see if any missiles collide with any players (no friendly fire)
-    keepMissiles = [];
-    for (let missile = 0; missile < activeMissiles.length; missile++) {
-        let hit = false;
-        for (let clientId in activeClients) {
-            //
-            // Don't allow a missile to hit the player it was fired from.
-            if (clientId !== activeMissiles[missile].clientId) {
-                if (collided(activeMissiles[missile], activeClients[clientId].player)) {
-                    hit = true;
-                    hits.push({
-                        clientId: clientId,
-                        missileId: activeMissiles[missile].id,
-                        position: activeClients[clientId].player.position
-                    });
-                }
-            }
-        }
-        if (!hit) {
-            keepMissiles.push(activeMissiles[missile]);
-        }
-    }
-    activeMissiles = keepMissiles;
 }
 
 //------------------------------------------------------------------
@@ -146,39 +61,6 @@ function update(elapsedTime, currentTime) {
 //
 //------------------------------------------------------------------
 function updateClients(elapsedTime) {
-    //
-    // For demonstration purposes, network updates run at a slower rate than
-    // the game simulation.
-    lastUpdate += elapsedTime;
-    if (lastUpdate < STATE_UPDATE_RATE_MS) {
-        return;
-    }
-
-    //
-    // Build the missile messages one time, then reuse inside the loop
-    let missileMessages = [];
-    for (let item = 0; item < newMissiles.length; item++) {
-        let missile = newMissiles[item];
-        missileMessages.push({
-            id: missile.id,
-            direction: missile.direction,
-            position: {
-                x: missile.position.x,
-                y: missile.position.y
-            },
-            radius: missile.radius,
-            speed: missile.speed,
-            timeRemaining: missile.timeRemaining
-        });
-    }
-
-    //
-    // Move all the new missiles over to the active missiles array
-    for (let missile = 0; missile < newMissiles.length; missile++) {
-        activeMissiles.push(newMissiles[missile]);
-    }
-    newMissiles.length = 0;
-
     for (let clientId in activeClients) {
         let client = activeClients[clientId];
         let update = {
@@ -186,45 +68,25 @@ function updateClients(elapsedTime) {
             lastMessageId: client.lastMessageId,
             direction: client.player.direction,
             position: client.player.position,
-            updateWindow: lastUpdate
+            updateWindow: elapsedTime
         };
         if (client.player.reportUpdate) {
-            client.socket.emit(NetworkIds.UPDATE_SELF, update);
+            client.socket.emit('update-self', update);
 
             //
             // Notify all other connected clients about every
             // other connected client status...but only if they are updated.
             for (let otherId in activeClients) {
                 if (otherId !== clientId) {
-                    activeClients[otherId].socket.emit(NetworkIds.UPDATE_OTHER, update);
+                    activeClients[otherId].socket.emit('update-other', update);
                 }
             }
-        }
-
-        //
-        // Report any new missiles to the active clients
-        for (let missile = 0; missile < missileMessages.length; missile++) {
-            client.socket.emit(NetworkIds.MISSILE_NEW, missileMessages[missile]);
-        }
-
-        //
-        // Report any missile hits to this client
-        for (let hit = 0; hit < hits.length; hit++) {
-            client.socket.emit(NetworkIds.MISSILE_HIT, hits[hit]);
         }
     }
 
     for (let clientId in activeClients) {
         activeClients[clientId].player.reportUpdate = false;
     }
-
-    //
-    // Don't need these anymore, clean up
-    hits.length = 0;
-    //
-    // Reset the elapsed time since last update so we can know
-    // when to put out the next update.
-    lastUpdate = 0;
 }
 
 //------------------------------------------------------------------
@@ -233,7 +95,7 @@ function updateClients(elapsedTime) {
 //
 //------------------------------------------------------------------
 function gameLoop(currentTime, elapsedTime) {
-    processInput(elapsedTime);
+    processInput();
     update(elapsedTime, currentTime);
     updateClients(elapsedTime);
 
@@ -241,7 +103,7 @@ function gameLoop(currentTime, elapsedTime) {
         setTimeout(() => {
             let now = present();
             gameLoop(now, now - currentTime);
-        }, SIMULATION_UPDATE_RATE_MS);
+        }, UPDATE_RATE_MS);
     }
 }
 
@@ -267,7 +129,7 @@ function initializeSocketIO(httpServer) {
             if (newPlayer.clientId !== clientId) {
                 //
                 // Tell existing about the newly connected player
-                client.socket.emit(NetworkIds.CONNECT_OTHER, {
+                client.socket.emit('connect-other', {
                     clientId: newPlayer.clientId,
                     direction: newPlayer.direction,
                     position: newPlayer.position,
@@ -278,7 +140,7 @@ function initializeSocketIO(httpServer) {
 
                 //
                 // Tell the new player about the already connected player
-                socket.emit(NetworkIds.CONNECT_OTHER, {
+                socket.emit('connect-other', {
                     clientId: client.player.clientId,
                     direction: client.player.direction,
                     position: client.player.position,
@@ -300,7 +162,7 @@ function initializeSocketIO(httpServer) {
         for (let clientId in activeClients) {
             let client = activeClients[clientId];
             if (playerId !== clientId) {
-                client.socket.emit(NetworkIds.DISCONNECT_OTHER, {
+                client.socket.emit('disconnect-other', {
                     clientId: playerId
                 });
             }
@@ -317,7 +179,7 @@ function initializeSocketIO(httpServer) {
             socket: socket,
             player: newPlayer
         };
-        socket.emit(NetworkIds.CONNECT_ACK, {
+        socket.emit('connect-ack', {
             direction: newPlayer.direction,
             position: newPlayer.position,
             size: newPlayer.size,
@@ -325,8 +187,8 @@ function initializeSocketIO(httpServer) {
             speed: newPlayer.speed
         });
 
-        socket.on(NetworkIds.INPUT, data => {
-            inputQueue.enqueue({
+        socket.on('input', data => {
+            inputQueue.push({
                 clientId: socket.id,
                 message: data
             });

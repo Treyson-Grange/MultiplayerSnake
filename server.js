@@ -10,7 +10,6 @@ let mimeTypes = {
         '.png' : 'image/png',
         '.jpg' : 'image/jpeg',
         '.mp3' : 'audio/mpeg3',
-        '.map' : 'application/json',
         '.map' : 'application/octet-stream' // Chrome is requesting socket.io;'s source map file
     };
 
