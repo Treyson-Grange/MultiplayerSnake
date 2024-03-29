@@ -3,10 +3,10 @@
 // Nodejs module that provides the server-side game model.
 //
 // ------------------------------------------------------------------
-'use strict';
+"use strict";
 
-let present = require('present');
-let Player = require('./player');
+let present = require("present");
+let Player = require("./player");
 
 const UPDATE_RATE_MS = 50;
 let quit = false;
@@ -20,28 +20,32 @@ let inputQueue = [];
 //
 //------------------------------------------------------------------
 function processInput() {
-    //
-    // Double buffering on the queue so we don't asynchronously receive inputs
-    // while processing.
-    let processMe = inputQueue;
-    inputQueue = [];
+  //
+  // Double buffering on the queue so we don't asynchronously receive inputs
+  // while processing.
+  let processMe = inputQueue;
+  inputQueue = [];
 
-    for (let inputIndex in processMe) {
-        let input = processMe[inputIndex];
-        let client = activeClients[input.clientId];
-        client.lastMessageId = input.message.id;
-        switch (input.message.type) {
-            case 'move':
-                client.player.move(input.message.elapsedTime);
-                break;
-            case 'rotate-left':
-                client.player.rotateLeft(input.message.elapsedTime);
-                break;
-            case 'rotate-right':
-                client.player.rotateRight(input.message.elapsedTime);
-                break;
-        }
+  for (let inputIndex in processMe) {
+    let input = processMe[inputIndex];
+    let client = activeClients[input.clientId];
+    if (client === undefined) {
+      //Since it is possible that there is still input in the queue for a client that has disconnected we need to check heres
+      continue;
     }
+    client.lastMessageId = input.message.id;
+    switch (input.message.type) {
+      case "move":
+        client.player.move(input.message.elapsedTime);
+        break;
+      case "rotate-left":
+        client.player.rotateLeft(input.message.elapsedTime);
+        break;
+      case "rotate-right":
+        client.player.rotateRight(input.message.elapsedTime);
+        break;
+    }
+  }
 }
 
 //------------------------------------------------------------------
@@ -50,9 +54,9 @@ function processInput() {
 //
 //------------------------------------------------------------------
 function update(elapsedTime, currentTime) {
-    for (let clientId in activeClients) {
-        activeClients[clientId].player.update(currentTime);
-    }
+  for (let clientId in activeClients) {
+    activeClients[clientId].player.update(currentTime);
+  }
 }
 
 //------------------------------------------------------------------
@@ -61,32 +65,32 @@ function update(elapsedTime, currentTime) {
 //
 //------------------------------------------------------------------
 function updateClients(elapsedTime) {
-    for (let clientId in activeClients) {
-        let client = activeClients[clientId];
-        let update = {
-            clientId: clientId,
-            lastMessageId: client.lastMessageId,
-            direction: client.player.direction,
-            position: client.player.position,
-            updateWindow: elapsedTime
-        };
-        if (client.player.reportUpdate) {
-            client.socket.emit('update-self', update);
+  for (let clientId in activeClients) {
+    let client = activeClients[clientId];
+    let update = {
+      clientId: clientId,
+      lastMessageId: client.lastMessageId,
+      direction: client.player.direction,
+      position: client.player.position,
+      updateWindow: elapsedTime,
+    };
+    if (client.player.reportUpdate) {
+      client.socket.emit("update-self", update);
 
-            //
-            // Notify all other connected clients about every
-            // other connected client status...but only if they are updated.
-            for (let otherId in activeClients) {
-                if (otherId !== clientId) {
-                    activeClients[otherId].socket.emit('update-other', update);
-                }
-            }
+      //
+      // Notify all other connected clients about every
+      // other connected client status...but only if they are updated.
+      for (let otherId in activeClients) {
+        if (otherId !== clientId) {
+          activeClients[otherId].socket.emit("update-other", update);
         }
+      }
     }
+  }
 
-    for (let clientId in activeClients) {
-        activeClients[clientId].player.reportUpdate = false;
-    }
+  for (let clientId in activeClients) {
+    activeClients[clientId].player.reportUpdate = false;
+  }
 }
 
 //------------------------------------------------------------------
@@ -95,16 +99,16 @@ function updateClients(elapsedTime) {
 //
 //------------------------------------------------------------------
 function gameLoop(currentTime, elapsedTime) {
-    processInput();
-    update(elapsedTime, currentTime);
-    updateClients(elapsedTime);
+  processInput();
+  update(elapsedTime, currentTime);
+  updateClients(elapsedTime);
 
-    if (!quit) {
-        setTimeout(() => {
-            let now = present();
-            gameLoop(now, now - currentTime);
-        }, UPDATE_RATE_MS);
-    }
+  if (!quit) {
+    setTimeout(() => {
+      let now = present();
+      gameLoop(now, now - currentTime);
+    }, UPDATE_RATE_MS);
+  }
 }
 
 //------------------------------------------------------------------
@@ -114,93 +118,93 @@ function gameLoop(currentTime, elapsedTime) {
 //
 //------------------------------------------------------------------
 function initializeSocketIO(httpServer) {
-    let io = require('socket.io')(httpServer);
+  let io = require("socket.io")(httpServer);
 
-    //------------------------------------------------------------------
-    //
-    // Notifies the already connected clients about the arrival of this
-    // new client.  Plus, tell the newly connected client about the
-    // other players already connected.
-    //
-    //------------------------------------------------------------------
-    function notifyConnect(socket, newPlayer) {
-        for (let clientId in activeClients) {
-            let client = activeClients[clientId];
-            if (newPlayer.clientId !== clientId) {
-                //
-                // Tell existing about the newly connected player
-                client.socket.emit('connect-other', {
-                    clientId: newPlayer.clientId,
-                    direction: newPlayer.direction,
-                    position: newPlayer.position,
-                    rotateRate: newPlayer.rotateRate,
-                    speed: newPlayer.speed,
-                    size: newPlayer.size
-                });
-
-                //
-                // Tell the new player about the already connected player
-                socket.emit('connect-other', {
-                    clientId: client.player.clientId,
-                    direction: client.player.direction,
-                    position: client.player.position,
-                    rotateRate: client.player.rotateRate,
-                    speed: client.player.speed,
-                    size: client.player.size
-                });
-            }
-        }
-    }
-
-    //------------------------------------------------------------------
-    //
-    // Notifies the already connected clients about the disconnect of
-    // another client.
-    //
-    //------------------------------------------------------------------
-    function notifyDisconnect(playerId) {
-        for (let clientId in activeClients) {
-            let client = activeClients[clientId];
-            if (playerId !== clientId) {
-                client.socket.emit('disconnect-other', {
-                    clientId: playerId
-                });
-            }
-        }
-    }
-    
-    io.on('connection', function(socket) {
-        console.log('Connection established: ', socket.id);
+  //------------------------------------------------------------------
+  //
+  // Notifies the already connected clients about the arrival of this
+  // new client.  Plus, tell the newly connected client about the
+  // other players already connected.
+  //
+  //------------------------------------------------------------------
+  function notifyConnect(socket, newPlayer) {
+    for (let clientId in activeClients) {
+      let client = activeClients[clientId];
+      if (newPlayer.clientId !== clientId) {
         //
-        // Create an entry in our list of connected clients
-        let newPlayer = Player.create()
-        newPlayer.clientId = socket.id;
-        activeClients[socket.id] = {
-            socket: socket,
-            player: newPlayer
-        };
-        socket.emit('connect-ack', {
-            direction: newPlayer.direction,
-            position: newPlayer.position,
-            size: newPlayer.size,
-            rotateRate: newPlayer.rotateRate,
-            speed: newPlayer.speed
+        // Tell existing about the newly connected player
+        client.socket.emit("connect-other", {
+          clientId: newPlayer.clientId,
+          direction: newPlayer.direction,
+          position: newPlayer.position,
+          rotateRate: newPlayer.rotateRate,
+          speed: newPlayer.speed,
+          size: newPlayer.size,
         });
 
-        socket.on('input', data => {
-            inputQueue.push({
-                clientId: socket.id,
-                message: data
-            });
+        //
+        // Tell the new player about the already connected player
+        socket.emit("connect-other", {
+          clientId: client.player.clientId,
+          direction: client.player.direction,
+          position: client.player.position,
+          rotateRate: client.player.rotateRate,
+          speed: client.player.speed,
+          size: client.player.size,
         });
+      }
+    }
+  }
 
-        socket.on('disconnect', function() {
-            delete activeClients[socket.id];
-            notifyDisconnect(socket.id);
+  //------------------------------------------------------------------
+  //
+  // Notifies the already connected clients about the disconnect of
+  // another client.
+  //
+  //------------------------------------------------------------------
+  function notifyDisconnect(playerId) {
+    for (let clientId in activeClients) {
+      let client = activeClients[clientId];
+      if (playerId !== clientId) {
+        client.socket.emit("disconnect-other", {
+          clientId: playerId,
         });
+      }
+    }
+  }
 
-        notifyConnect(socket, newPlayer);
+  io.on("connection", function (socket) {
+    console.log("Connection established: ", socket.id);
+    //
+    // Create an entry in our list of connected clients
+    let newPlayer = Player.create();
+    newPlayer.clientId = socket.id;
+    activeClients[socket.id] = {
+      socket: socket,
+      player: newPlayer,
+    };
+    socket.emit("connect-ack", {
+      direction: newPlayer.direction,
+      position: newPlayer.position,
+      size: newPlayer.size,
+      rotateRate: newPlayer.rotateRate,
+      speed: newPlayer.speed,
     });
+
+    socket.on("input", (data) => {
+      inputQueue.push({
+        clientId: socket.id,
+        message: data,
+      });
+    });
+
+    socket.on("disconnect", function () {
+      delete activeClients[socket.id];
+      notifyDisconnect(socket.id);
+    });
+
+    notifyConnect(socket, newPlayer);
+  });
 }
 
 //------------------------------------------------------------------
@@ -209,8 +213,8 @@ function initializeSocketIO(httpServer) {
 //
 //------------------------------------------------------------------
 function initialize(httpServer) {
-    initializeSocketIO(httpServer);
-    gameLoop(present(), 0);
+  initializeSocketIO(httpServer);
+  gameLoop(present(), 0);
 }
 
 //------------------------------------------------------------------
@@ -220,7 +224,7 @@ function initialize(httpServer) {
 //
 //------------------------------------------------------------------
 function terminate() {
-    this.quit = true;
+  this.quit = true;
 }
 
 module.exports.initialize = initialize;

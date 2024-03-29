@@ -1,0 +1,1 @@
+- ~~Server crashes on a person closing the tab.~~
