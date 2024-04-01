@@ -173,10 +173,11 @@ MyGame.screens['game-play'] = (function (game, components, renderer, graphics, i
   //------------------------------------------------------------------
   function render() {
     graphics.clear();
+    // console.log("playerSelf.model, playerSelf.texture: ", playerSelf.model, playerSelf.texture);
     renderer.Player.render(playerSelf.model, playerSelf.texture);
     for (let id in playerOthers) {
       let player = playerOthers[id];
-      renderer.PlayerRemote.render(player.model, player.texture);
+      renderer.PlayerRemote.render(player.model, MyGame.assets["player-other"]); // player.texture is 'undefined' here :( should prolly fix that!
     }
   }
 
@@ -196,6 +197,10 @@ MyGame.screens['game-play'] = (function (game, components, renderer, graphics, i
     if (!cancelNextRequest) {
         requestAnimationFrame(gameLoop);
     }
+  }
+
+  function updatePlayers() {
+    playerSelf.texture = MyGame.assets["player-self"];
   }
 
   //------------------------------------------------------------------
@@ -272,6 +277,7 @@ MyGame.screens['game-play'] = (function (game, components, renderer, graphics, i
 
   return {
     initialize: initialize,
-    run: run
+    run: run,
+    updatePlayers: updatePlayers
   };
 }(MyGame.game, MyGame.components, MyGame.renderer, MyGame.graphics, MyGame.input));

@@ -166,7 +166,8 @@ MyGame.loader = (function() {
     function mainComplete() {
         console.log('it is all loaded up');
         console.log(MyGame);
-        MyGame.screens['game-play'].initialize();
+        // MyGame.screens['game-play'].initialize();
+        MyGame.screens['game-play'].updatePlayers();
     }
 
     //
