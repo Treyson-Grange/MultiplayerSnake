@@ -206,6 +206,7 @@ MyGame.screens['game-play'] = (function (game, components, renderer, graphics, i
   //------------------------------------------------------------------
   function initialize() {
     console.log("game initializing...");
+
     //
     // Create the keyboard input handler and register the keyboard commands
     myKeyboard.registerHandler(

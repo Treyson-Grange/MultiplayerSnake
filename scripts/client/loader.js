@@ -16,7 +16,7 @@
 //------------------------------------------------------------------
 MyGame.loader = (function() {
     'use strict';
-    console.log("MyGame: ", MyGame);
+    // console.log("MyGame: ", MyGame);
     let scriptOrder = [
         {
             scripts: ['queue'],
@@ -166,7 +166,7 @@ MyGame.loader = (function() {
     function mainComplete() {
         console.log('it is all loaded up');
         console.log(MyGame);
-        // MyGame.game.initialize();
+        MyGame.screens['game-play'].initialize();
     }
 
     //
