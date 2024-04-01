@@ -3,10 +3,14 @@
 // This function provides the "game" code.
 //
 //------------------------------------------------------------------
-MyGame.screens['game-play'] = (function (graphics, renderer, input, components) {
+MyGame.screens['game-play'] = (function (game, components, renderer, graphics, input) {
   "use strict";
 
+  console.log(components.PlayerRemote());
+  console.log(components.Player());
+
   let lastTimeStamp = performance.now(),
+    cancelNextRequest = true,
     myKeyboard = input.Keyboard(),
     playerSelf = {
       model: components.Player(),
@@ -16,6 +20,7 @@ MyGame.screens['game-play'] = (function (graphics, renderer, input, components) 
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
     socket = io();
+
 
   //------------------------------------------------------------------
   //
@@ -43,6 +48,8 @@ MyGame.screens['game-play'] = (function (graphics, renderer, input, components) 
   //------------------------------------------------------------------
   socket.on("connect-other", function (data) {
     let model = components.PlayerRemote();
+    console.log("MODEL IS: ", model);
+    console.log("COMPONENTS.PLAYERREMOTE() IS: ", components.PlayerRemote());
     model.state.position.x = data.position.x;
     model.state.position.y = data.position.y;
     model.state.direction = data.direction;
@@ -186,7 +193,9 @@ MyGame.screens['game-play'] = (function (graphics, renderer, input, components) 
     update(elapsedTime);
     render();
 
-    requestAnimationFrame(gameLoop);
+    if (!cancelNextRequest) {
+        requestAnimationFrame(gameLoop);
+    }
   }
 
   //------------------------------------------------------------------
@@ -244,12 +253,24 @@ MyGame.screens['game-play'] = (function (graphics, renderer, input, components) 
       true
     );
 
-    //
-    // Get the game loop started
-    requestAnimationFrame(gameLoop);
+        //
+        // Stop the game loop by canceling the request for the next animation frame
+        cancelNextRequest = true;
+        //
+        // Then, return to the main menu
+        game.showScreen('main-menu');
+
   }
 
+    function run() {
+        lastTimeStamp = performance.now();
+        cancelNextRequest = false;
+        requestAnimationFrame(gameLoop);
+    }
+
+
   return {
-    initialize: initialize
+    initialize: initialize,
+    run: run
   };
-}(MyGame.graphics, MyGame.renderer, MyGame.input, MyGame.components));
+}(MyGame.game, MyGame.components, MyGame.renderer, MyGame.graphics, MyGame.input));

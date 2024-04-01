@@ -1,10 +1,10 @@
-MyGame = {
-    input: {},
-    components: {},
-    renderer: {},
-    utilities: {},
-    assets: {}
-};
+// MyGame = {
+//     input: {},
+//     components: {},
+//     renderer: {},
+//     utilities: {},
+//     assets: {}
+// };
 
 //------------------------------------------------------------------
 //
@@ -16,6 +16,7 @@ MyGame = {
 //------------------------------------------------------------------
 MyGame.loader = (function() {
     'use strict';
+    console.log("MyGame: ", MyGame);
     let scriptOrder = [
         {
             scripts: ['queue'],
@@ -164,7 +165,8 @@ MyGame.loader = (function() {
     //------------------------------------------------------------------
     function mainComplete() {
         console.log('it is all loaded up');
-        MyGame.main.initialize();
+        console.log(MyGame);
+        // MyGame.game.initialize();
     }
 
     //
