@@ -33,3 +33,6 @@ Last
 - Treyson doing snake. Get it moving around and doing controls with anne marie (keyboard/mouse)
 
 - Meeting next tuesday be done before that
+
+- Also invincibility on spawn for when you spawn on someone.
+  - Just do something like timer and a boolean
