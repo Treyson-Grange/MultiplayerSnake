@@ -8,8 +8,8 @@ MyGame.screens['main-menu'] = (function(game) {
             'click',
             // function() {game.showScreen('game-play'); });
             function() {
-                game.showScreen('game-play'); 
-                // game.showScreen('pre-game'); 
+                // game.showScreen('game-play'); 
+                game.showScreen('pre-game'); 
             });
         
         document.getElementById('id-high-scores').addEventListener(
