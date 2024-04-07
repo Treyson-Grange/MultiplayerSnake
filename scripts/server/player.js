@@ -30,6 +30,8 @@ function createPlayer() {
   let speed = 0.0002; // unit distance per millisecond
   let reportUpdate = false; // Indicates if this model was updated during the last update
   let preferedDirection = 0;
+  let threshold = Math.pi / 16;
+
   Object.defineProperty(that, "direction", {
     get: () => direction,
   });
@@ -94,11 +96,11 @@ function createPlayer() {
 
   that.goUp = function (elapsedTime) {
     reportUpdate = true;
-    preferedDirection = Math.PI / 2;
+    preferedDirection = -Math.PI / 2;
   };
   that.goDown = function (elapsedTime) {
     reportUpdate = true;
-    preferedDirection = -Math.PI / 2;
+    preferedDirection = Math.PI / 2;
   };
   that.goRight = function (elapsedTime) {
     reportUpdate = true;
@@ -109,6 +111,19 @@ function createPlayer() {
     preferedDirection = Math.PI;
   };
 
+  function rotateToDirection(elapsedTime) {
+    // console.log(Math.abs(direction - preferedDirection));
+    if (Math.abs(direction - preferedDirection) < 5) {
+      direction = preferedDirection;
+      return;
+    }
+    if (direction < preferedDirection) {
+      direction += rotateRate * elapsedTime;
+    } else if (direction > preferedDirection) {
+      direction -= rotateRate * elapsedTime;
+    }
+  }
+
   //------------------------------------------------------------------
   //
   // Function used to update the player during the game loop.
@@ -116,7 +131,10 @@ function createPlayer() {
   //------------------------------------------------------------------
 
   that.update = function (when) {
-    direction = preferedDirection;
+    if (preferedDirection !== direction) {
+      rotateToDirection(when);
+    }
+    // direction = preferedDirection;
   };
 
   return that;

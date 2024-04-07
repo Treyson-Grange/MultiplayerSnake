@@ -114,11 +114,17 @@ MyGame.screens["game-play"] = (function (
         case "move":
           playerSelf.model.move(message.elapsedTime);
           break;
-        case "rotate-right":
-          playerSelf.model.rotateRight(message.elapsedTime);
+        case "up":
+          playerSelf.model.goUp(message.elapsedTime);
           break;
-        case "rotate-left":
-          playerSelf.model.rotateLeft(message.elapsedTime);
+        case "right":
+          playerSelf.model.goRight(message.elapsedTime);
+          break;
+        case "left":
+          playerSelf.model.goLeft(message.elapsedTime);
+          break;
+        case "down":
+          playerSelf.model.goDown(message.elapsedTime);
           break;
       }
       memory.enqueue(message);
@@ -158,6 +164,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   function update(elapsedTime) {
     let message = {
+      //makes it automatically move
       id: messageId++,
       elapsedTime: elapsedTime,
       type: "move",

@@ -18,6 +18,7 @@ MyGame.components.Player = function () {
   let rotateRate = 0;
   let speed = 0;
   let preferedDirection = 0;
+  let threshold = 1;
   Object.defineProperty(that, "direction", {
     get: () => direction,
     set: (value) => {
@@ -78,11 +79,11 @@ MyGame.components.Player = function () {
     direction -= rotateRate * elapsedTime;
   };
   that.goUp = function (elapsedTime) {
-    preferedDirection = Math.PI / 2;
+    preferedDirection = -Math.PI / 2;
     console.log("go up");
   };
   that.goDown = function (elapsedTime) {
-    preferedDirection = -Math.PI / 2;
+    preferedDirection = Math.PI / 2;
   };
   that.goRight = function (elapsedTime) {
     preferedDirection = 0;
@@ -91,18 +92,23 @@ MyGame.components.Player = function () {
     preferedDirection = Math.PI;
   };
 
+  function rotateToDirection(elapsedTime) {
+    console.log(rotateRate * elapsedTime);
+    console.log(direction - preferedDirection, preferedDirection);
+    if (Math.abs(direction - preferedDirection) < 5) {
+      direction = preferedDirection;
+      return;
+    }
+    if (direction < preferedDirection) {
+      direction += rotateRate * elapsedTime;
+    } else if (direction > preferedDirection) {
+      direction -= rotateRate * elapsedTime;
+    }
+  }
+
   that.update = function (when) {
-    if (
-      direction - preferedDirection < Math.PI / 1000 ||
-      direction - preferedDirection > -Math.PI / 1000
-    ) {
-      if (direction !== preferedDirection) {
-        if (direction < preferedDirection) {
-          direction = preferedDirection;
-        } else {
-          direction = preferedDirection;
-        }
-      }
+    if (preferedDirection !== direction) {
+      rotateToDirection(when);
     }
   };
 
