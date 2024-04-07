@@ -19,11 +19,9 @@
         </div>
         <div id = "pre-game" class = "screen">
             <p>Name your snake!</p>
-            <input />
-            <p>Keyboard or Mouse?</p>
-            <button id="id-keyboard-controlled">Keyboard</button>
-            <button id="id-mouse-controlled">Mouse</button>
+            <input id = "id-input-name" />
             <button id="id-start-game">PLAY!</button>
+            <p>Instructions: Use the keyboard to control your snake. Eat food to grow big! Don't hit other snakes (or the wall) or you'll diiiiiiiiie.</p>
         </div>
         <div id = "game-play" class = "screen">
             <!-- <canvas id = "id-canvas" width = "500" height = "500"></canvas> -->
@@ -66,7 +64,8 @@
             renderer: {},
             utilities: {},
             assets: {},
-            objects: {}
+            objects: {},
+            persistence: {}
         };
     </script>
     <script src = "scripts/client/player-remote.js"></script>
@@ -76,6 +75,7 @@
     <script src = "scripts/client/rendering/player.js"></script>
     <script src = "scripts/client/input.js"></script>
     <script src = "scripts/client/queue.js"></script>
+    <script src = "scripts/client/persistence.js"></script>
 
     <script src = "scripts/client/game.js"></script>
     <script src = "scripts/client/mainmenu.js"></script>
