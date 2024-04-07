@@ -38,11 +38,17 @@ function processInput() {
       case "move":
         client.player.move(input.message.elapsedTime);
         break;
-      case "rotate-left":
-        client.player.rotateLeft(input.message.elapsedTime);
+      case "up":
+        client.player.goUp(input.message.elapsedTime);
         break;
-      case "rotate-right":
-        client.player.rotateRight(input.message.elapsedTime);
+      case "down":
+        client.player.goDown(input.message.elapsedTime);
+        break;
+      case "right":
+        client.player.goRight(input.message.elapsedTime);
+        break;
+      case "left":
+        client.player.goLeft(input.message.elapsedTime);
         break;
     }
   }
