@@ -17,6 +17,12 @@
                 <li><button id = "id-about">About</button></li>
             </ul>
         </div>
+        <div id = "pre-game" class = "screen">
+            <p>Name your snake!</p>
+            <input id = "id-input-name" />
+            <button id="id-start-game">PLAY!</button>
+            <p>Instructions: Use the keyboard to control your snake. Eat food to grow big! Don't hit other snakes (or the wall) or you'll diiiiiiiiie.</p>
+        </div>
         <div id = "game-play" class = "screen">
             <!-- <canvas id = "id-canvas" width = "500" height = "500"></canvas> -->
             <canvas id = "canvas-main" width = "600" height = "600" style = "background-color: rgb(0, 0, 0)"></canvas>
@@ -57,7 +63,9 @@
             components: {},
             renderer: {},
             utilities: {},
-            assets: {}
+            assets: {},
+            objects: {},
+            persistence: {}
         };
     </script>
     <script src = "scripts/client/player-remote.js"></script>
@@ -67,9 +75,11 @@
     <script src = "scripts/client/rendering/player.js"></script>
     <script src = "scripts/client/input.js"></script>
     <script src = "scripts/client/queue.js"></script>
+    <script src = "scripts/client/persistence.js"></script>
 
     <script src = "scripts/client/game.js"></script>
     <script src = "scripts/client/mainmenu.js"></script>
+    <script src = "scripts/client/pregame.js"></script>
     <script src = "scripts/client/gameplay.js"></script>
     <script src = "scripts/client/highscores.js"></script>
     <script src = "scripts/client/help.js"></script>
