@@ -3,7 +3,13 @@
 // This function provides the "game" code.
 //
 //------------------------------------------------------------------
-MyGame.screens['game-play'] = (function (game, components, renderer, graphics, input) {
+MyGame.screens["game-play"] = (function (
+  game,
+  components,
+  renderer,
+  graphics,
+  input
+) {
   "use strict";
 
   console.log(components.PlayerRemote());
@@ -20,7 +26,6 @@ MyGame.screens['game-play'] = (function (game, components, renderer, graphics, i
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
     socket = io();
-
 
   //------------------------------------------------------------------
   //
@@ -195,7 +200,7 @@ MyGame.screens['game-play'] = (function (game, components, renderer, graphics, i
     render();
 
     if (!cancelNextRequest) {
-        requestAnimationFrame(gameLoop);
+      requestAnimationFrame(gameLoop);
     }
   }
 
@@ -225,20 +230,33 @@ MyGame.screens['game-play'] = (function (game, components, renderer, graphics, i
         messageHistory.enqueue(message);
         playerSelf.model.move(elapsedTime);
       },
-      "w",
+      "t",
       true
     );
-
     myKeyboard.registerHandler(
       (elapsedTime) => {
         let message = {
           id: messageId++,
           elapsedTime: elapsedTime,
-          type: "rotate-right",
+          type: "up",
         };
         socket.emit("input", message);
         messageHistory.enqueue(message);
-        playerSelf.model.rotateRight(elapsedTime);
+        playerSelf.model.goUp(elapsedTime);
+      },
+      "w",
+      true
+    );
+    myKeyboard.registerHandler(
+      (elapsedTime) => {
+        let message = {
+          id: messageId++,
+          elapsedTime: elapsedTime,
+          type: "right",
+        };
+        socket.emit("input", message);
+        messageHistory.enqueue(message);
+        playerSelf.model.goRight(elapsedTime);
       },
       "d",
       true
@@ -249,35 +267,53 @@ MyGame.screens['game-play'] = (function (game, components, renderer, graphics, i
         let message = {
           id: messageId++,
           elapsedTime: elapsedTime,
-          type: "rotate-left",
+          type: "left",
         };
         socket.emit("input", message);
         messageHistory.enqueue(message);
-        playerSelf.model.rotateLeft(elapsedTime);
+        playerSelf.model.goLeft(elapsedTime);
       },
       "a",
       true
     );
+    myKeyboard.registerHandler(
+      (elapsedTime) => {
+        let message = {
+          id: messageId++,
+          elapsedTime: elapsedTime,
+          type: "down",
+        };
+        socket.emit("input", message);
+        messageHistory.enqueue(message);
+        playerSelf.model.goDown(elapsedTime);
+      },
+      "s",
+      true
+    );
 
-        //
-        // Stop the game loop by canceling the request for the next animation frame
-        cancelNextRequest = true;
-        //
-        // Then, return to the main menu
-        game.showScreen('main-menu');
-
+    //
+    // Stop the game loop by canceling the request for the next animation frame
+    cancelNextRequest = true;
+    //
+    // Then, return to the main menu
+    game.showScreen("main-menu");
   }
 
-    function run() {
-        lastTimeStamp = performance.now();
-        cancelNextRequest = false;
-        requestAnimationFrame(gameLoop);
-    }
-
+  function run() {
+    lastTimeStamp = performance.now();
+    cancelNextRequest = false;
+    requestAnimationFrame(gameLoop);
+  }
 
   return {
     initialize: initialize,
     run: run,
-    updatePlayers: updatePlayers
+    updatePlayers: updatePlayers,
   };
-}(MyGame.game, MyGame.components, MyGame.renderer, MyGame.graphics, MyGame.input));
+})(
+  MyGame.game,
+  MyGame.components,
+  MyGame.renderer,
+  MyGame.graphics,
+  MyGame.input
+);
