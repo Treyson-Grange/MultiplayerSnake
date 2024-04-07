@@ -113,15 +113,16 @@ function createPlayer() {
 
   function rotateToDirection(elapsedTime) {
     // console.log(Math.abs(direction - preferedDirection));
-    if (Math.abs(direction - preferedDirection) < 5) {
-      direction = preferedDirection;
-      return;
-    }
-    if (direction < preferedDirection) {
-      direction += rotateRate * elapsedTime;
-    } else if (direction > preferedDirection) {
-      direction -= rotateRate * elapsedTime;
-    }
+    direction = preferedDirection;
+    // if (Math.abs(direction - preferedDirection) < 5) {
+    //   direction = preferedDirection;
+    //   return;
+    // }
+    // if (direction < preferedDirection) {
+    //   direction += rotateRate * elapsedTime;
+    // } else if (direction > preferedDirection) {
+    //   direction -= rotateRate * elapsedTime;
+    // }
   }
 
   //------------------------------------------------------------------

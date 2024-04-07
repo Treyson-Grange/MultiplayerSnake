@@ -93,17 +93,18 @@ MyGame.components.Player = function () {
   };
 
   function rotateToDirection(elapsedTime) {
-    console.log(rotateRate * elapsedTime);
-    console.log(direction - preferedDirection, preferedDirection);
-    if (Math.abs(direction - preferedDirection) < 5) {
-      direction = preferedDirection;
-      return;
-    }
-    if (direction < preferedDirection) {
-      direction += rotateRate * elapsedTime;
-    } else if (direction > preferedDirection) {
-      direction -= rotateRate * elapsedTime;
-    }
+    direction = preferedDirection;
+    // console.log(rotateRate * elapsedTime);
+    // console.log(direction - preferedDirection, preferedDirection);
+    // if (Math.abs(direction - preferedDirection) < 5) {
+    //   direction = preferedDirection;
+    //   return;
+    // }
+    // if (direction < preferedDirection) {
+    //   direction += rotateRate * elapsedTime;
+    // } else if (direction > preferedDirection) {
+    //   direction -= rotateRate * elapsedTime;
+    // }
   }
 
   that.update = function (when) {
