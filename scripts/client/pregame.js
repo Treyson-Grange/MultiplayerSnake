@@ -2,9 +2,23 @@ MyGame.screens['pre-game'] = (function(game) {
     'use strict';
     
     function initialize() {
-        // document.getElementById('id-about-back').addEventListener(
-        //     'click',
-        //     function() { game.showScreen('main-menu'); });
+        document.getElementById('id-start-game').addEventListener(
+            'click',
+            function() { game.showScreen('game-play'); });
+
+        document.getElementById('id-keyboard-controlled').addEventListener(
+            'click',
+            function() { 
+                // do persistent shiz here
+             }
+        );
+
+        document.getElementById('id-mouse-controlled').addEventListener(
+            'click',
+            function() {
+                // do persistent shiz here too
+            }
+        );
     }
     
     function run() {
