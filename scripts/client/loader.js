@@ -39,7 +39,7 @@ MyGame.loader = (function () {
         onComplete: null,
       },
       {
-        scripts: ["rendering/player", "rendering/player-remote"],
+        scripts: ["rendering/player", "rendering/player-remote", "rendering/background"],
         message: "Renderers loaded",
         onComplete: null,
       },
@@ -57,6 +57,10 @@ MyGame.loader = (function () {
       {
         key: "player-other",
         source: "assets/snakeHeadRed.png",
+      },
+      {
+        key: "tile",
+        source: "assets/dirt.png",
       },
     ];
 
