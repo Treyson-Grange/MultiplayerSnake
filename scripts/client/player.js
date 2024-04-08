@@ -15,10 +15,10 @@ MyGame.components.Player = function () {
     height: 0.05,
   };
   let direction = 0;
-  let rotateRate = 0;
-  let speed = 0;
+  let rotateRate = Math.PI / 1000;
+  let speed = 0.0002;
   let preferedDirection = 0;
-  let threshold = 1;
+  let threshold = 2;
   Object.defineProperty(that, "direction", {
     get: () => direction,
     set: (value) => {
@@ -69,7 +69,9 @@ MyGame.components.Player = function () {
   that.rotateRight = function (elapsedTime) {
     direction += rotateRate * elapsedTime;
   };
-
+  function rotateRight(elapsedTime) {
+    direction += rotateRate * elapsedTime;
+  }
   //------------------------------------------------------------------
   //
   // Public function that rotates the player left.
@@ -78,37 +80,40 @@ MyGame.components.Player = function () {
   that.rotateLeft = function (elapsedTime) {
     direction -= rotateRate * elapsedTime;
   };
+  function rotateLeft(elapsedTime) {
+    direction -= rotateRate * elapsedTime;
+  }
+
   that.goUp = function (elapsedTime) {
     preferedDirection = -Math.PI / 2;
-    console.log("go up");
   };
   that.goDown = function (elapsedTime) {
     preferedDirection = Math.PI / 2;
   };
   that.goRight = function (elapsedTime) {
     preferedDirection = 0;
+    rotateRight(elapsedTime);
   };
   that.goLeft = function (elapsedTime) {
     preferedDirection = Math.PI;
+    rotateLeft(elapsedTime);
+    // that.rotateLeft();//I dont think we can call this it just snaps us to the top left.
   };
-
+  let updateRotateRate = 5000000;
   function rotateToDirection(elapsedTime) {
-    direction = preferedDirection;
-    // console.log(rotateRate * elapsedTime);
-    // console.log(direction - preferedDirection, preferedDirection);
-    // if (Math.abs(direction - preferedDirection) < 5) {
-    //   direction = preferedDirection;
-    //   return;
-    // }
-    // if (direction < preferedDirection) {
-    //   direction += rotateRate * elapsedTime;
-    // } else if (direction > preferedDirection) {
-    //   direction -= rotateRate * elapsedTime;
-    // }
+    if (Math.abs(direction - preferedDirection) < 0.1) {
+      direction = preferedDirection;
+      return;
+    }
+    if (direction < preferedDirection) {
+      direction += (rotateRate * elapsedTime) / updateRotateRate;
+    } else if (direction > preferedDirection) {
+      direction -= (rotateRate * elapsedTime) / updateRotateRate;
+    }
   }
 
   that.update = function (when) {
-    if (preferedDirection !== direction) {
+    if (direction !== preferedDirection) {
       rotateToDirection(when);
     }
   };

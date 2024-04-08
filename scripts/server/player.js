@@ -30,7 +30,7 @@ function createPlayer() {
   let speed = 0.0002; // unit distance per millisecond
   let reportUpdate = false; // Indicates if this model was updated during the last update
   let preferedDirection = 0;
-  let threshold = Math.pi / 16;
+  let threshold = 2;
 
   Object.defineProperty(that, "direction", {
     get: () => direction,
@@ -82,6 +82,10 @@ function createPlayer() {
     reportUpdate = true;
     direction += rotateRate * elapsedTime;
   };
+  function rotateRight(elapsedTime) {
+    reportUpdate = true;
+    direction += rotateRate * elapsedTime;
+  }
 
   //------------------------------------------------------------------
   //
@@ -93,6 +97,10 @@ function createPlayer() {
     reportUpdate = true;
     direction -= rotateRate * elapsedTime;
   };
+  function rotateLeft(elapsedTime) {
+    reportUpdate = true;
+    direction -= rotateRate * elapsedTime;
+  }
 
   that.goUp = function (elapsedTime) {
     reportUpdate = true;
@@ -105,24 +113,25 @@ function createPlayer() {
   that.goRight = function (elapsedTime) {
     reportUpdate = true;
     preferedDirection = 0;
+    rotateRight(elapsedTime);
   };
   that.goLeft = function (elapsedTime) {
     reportUpdate = true;
     preferedDirection = Math.PI;
+    rotateLeft(elapsedTime);
   };
 
   function rotateToDirection(elapsedTime) {
-    // console.log(Math.abs(direction - preferedDirection));
-    direction = preferedDirection;
-    // if (Math.abs(direction - preferedDirection) < 5) {
-    //   direction = preferedDirection;
-    //   return;
-    // }
-    // if (direction < preferedDirection) {
-    //   direction += rotateRate * elapsedTime;
-    // } else if (direction > preferedDirection) {
-    //   direction -= rotateRate * elapsedTime;
-    // }
+    reportUpdate = true;
+    if (Math.abs(direction - preferedDirection) < 0.1) {
+      direction = preferedDirection;
+      return;
+    }
+    if (direction < preferedDirection) {
+      direction += (rotateRate * elapsedTime) / updateRotateRate;
+    } else if (direction > preferedDirection) {
+      direction -= (rotateRate * elapsedTime) / updateRotateRate;
+    }
   }
 
   //------------------------------------------------------------------
@@ -130,12 +139,11 @@ function createPlayer() {
   // Function used to update the player during the game loop.
   //
   //------------------------------------------------------------------
-
+  let updateRotateRate = 5000000;
   that.update = function (when) {
-    if (preferedDirection !== direction) {
+    if (direction !== preferedDirection) {
       rotateToDirection(when);
     }
-    // direction = preferedDirection;
   };
 
   return that;
