@@ -231,11 +231,11 @@ MyGame.screens["game-play"] = (function (
         let message = {
           id: messageId++,
           elapsedTime: elapsedTime,
-          type: "move",
+          type: "test",
         };
         socket.emit("input", message);
         messageHistory.enqueue(message);
-        playerSelf.model.move(elapsedTime);
+        playerSelf.model.rotateRight(elapsedTime);
       },
       "t",
       true

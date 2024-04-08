@@ -50,6 +50,9 @@ function processInput() {
       case "left":
         client.player.goLeft(input.message.elapsedTime);
         break;
+      case "test":
+        client.player.rotateRight(input.message.elapsedTime);
+        break;
     }
   }
 }
