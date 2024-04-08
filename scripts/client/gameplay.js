@@ -185,6 +185,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   function render() {
     graphics.clear();
+    renderer.Background.render(playerSelf.model.position, {height: .75, width: .75}, MyGame.assets["tile"]);
     // console.log("playerSelf.model, playerSelf.texture: ", playerSelf.model, playerSelf.texture);
     renderer.Player.render(playerSelf.model, playerSelf.texture);
     for (let id in playerOthers) {
