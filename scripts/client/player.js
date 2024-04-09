@@ -101,14 +101,32 @@ MyGame.components.Player = function () {
   };
   let updateRotateRate = 5000000;
   function rotateToDirection(elapsedTime) {
-    if (Math.abs(direction - preferedDirection) < 0.1) {
+    // Calculate the shortest distance to the desired direction
+    let shortestDistance = preferedDirection - direction;
+    if (shortestDistance < -Math.PI) {
+      shortestDistance += 2 * Math.PI;
+    } else if (shortestDistance > Math.PI) {
+      shortestDistance -= 2 * Math.PI;
+    }
+
+    // Check if the absolute shortest distance is less than 0.2 radians
+    if (Math.abs(shortestDistance) < 0.2) {
       direction = preferedDirection;
       return;
     }
-    if (direction < preferedDirection) {
-      direction += (rotateRate * elapsedTime) / updateRotateRate;
-    } else if (direction > preferedDirection) {
-      direction -= (rotateRate * elapsedTime) / updateRotateRate;
+
+    // Determine the rotation direction based on the shortest distance
+    let rotateDirection = shortestDistance > 0 ? 1 : -1;
+
+    // Adjust the rotation rate based on the shortest distance
+    let adjustedRotateRate = rotateRate * rotateDirection;
+    direction += (adjustedRotateRate * elapsedTime) / updateRotateRate;
+
+    // Ensure the direction stays within the range of -π to π
+    if (direction > Math.PI) {
+      direction -= 2 * Math.PI;
+    } else if (direction < -Math.PI) {
+      direction += 2 * Math.PI;
     }
   }
 
@@ -116,6 +134,7 @@ MyGame.components.Player = function () {
     if (direction !== preferedDirection) {
       rotateToDirection(when);
     }
+    console.log(direction);
   };
 
   return that;
