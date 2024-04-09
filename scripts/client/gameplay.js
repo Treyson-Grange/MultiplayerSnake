@@ -8,7 +8,8 @@ MyGame.screens["game-play"] = (function (
   components,
   renderer,
   graphics,
-  input
+  input,
+  persistence
 ) {
   "use strict";
 
@@ -216,6 +217,27 @@ MyGame.screens["game-play"] = (function (
     playerSelf.texture = MyGame.assets["player-self"];
   }
 
+  //----------------------------------------------------------------
+  //
+  // Function used to get the user's player control keys registered
+  //
+  //----------------------------------------------------------------
+//   function registerKeys() {
+//     myKeyboard.register(persistence.getMoveUp(), myLander.moveUp);
+//     myKeyboard.register(persistence.getMoveUp(), particleManager.toggleShowThrust);
+//     myKeyboard.register(persistence.getTurnLeft(), myLander.turnLeft);
+//     myKeyboard.register(persistence.getTurnRight(), myLander.turnRight);
+//     myKeyboard.register('Escape', function() {
+//         //
+//         // Stop the game loop by canceling the request for the next animation frame
+//         cancelNextRequest = true;
+//         //
+//         // Then, return to the main menu
+//         game.showScreen('main-menu');
+//     });
+// }
+
+
   //------------------------------------------------------------------
   //
   // Public function used to get the game initialized and then up
@@ -252,7 +274,7 @@ MyGame.screens["game-play"] = (function (
         messageHistory.enqueue(message);
         playerSelf.model.goUp(elapsedTime);
       },
-      "w",
+      persistence.getMoveUp(),
       true
     );
     myKeyboard.registerHandler(
@@ -266,7 +288,7 @@ MyGame.screens["game-play"] = (function (
         messageHistory.enqueue(message);
         playerSelf.model.goRight(elapsedTime);
       },
-      "d",
+      persistence.getMoveRight(),
       true
     );
 
@@ -281,7 +303,7 @@ MyGame.screens["game-play"] = (function (
         messageHistory.enqueue(message);
         playerSelf.model.goLeft(elapsedTime);
       },
-      "a",
+      persistence.getMoveLeft(),
       true
     );
     myKeyboard.registerHandler(
@@ -295,7 +317,7 @@ MyGame.screens["game-play"] = (function (
         messageHistory.enqueue(message);
         playerSelf.model.goDown(elapsedTime);
       },
-      "s",
+      persistence.getMoveDown(),
       true
     );
 
@@ -308,6 +330,7 @@ MyGame.screens["game-play"] = (function (
   }
 
   function run() {
+    // registerKeys();
     lastTimeStamp = performance.now();
     cancelNextRequest = false;
     requestAnimationFrame(gameLoop);
@@ -323,5 +346,6 @@ MyGame.screens["game-play"] = (function (
   MyGame.components,
   MyGame.renderer,
   MyGame.graphics,
-  MyGame.input
+  MyGame.input,
+  MyGame.persistence
 );
