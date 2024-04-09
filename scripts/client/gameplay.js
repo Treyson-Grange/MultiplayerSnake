@@ -222,7 +222,7 @@ MyGame.screens["game-play"] = (function (
   // Function used to get the user's player control keys registered
   //
   //----------------------------------------------------------------
-//   function registerKeys() {
+  function registerKeys() {
 //     myKeyboard.register(persistence.getMoveUp(), myLander.moveUp);
 //     myKeyboard.register(persistence.getMoveUp(), particleManager.toggleShowThrust);
 //     myKeyboard.register(persistence.getTurnLeft(), myLander.turnLeft);
@@ -235,7 +235,80 @@ MyGame.screens["game-play"] = (function (
 //         // Then, return to the main menu
 //         game.showScreen('main-menu');
 //     });
-// }
+    //
+    // Create the keyboard input handler and register the keyboard commands
+    myKeyboard.registerHandler(
+        (elapsedTime) => {
+          let message = {
+            id: messageId++,
+            elapsedTime: elapsedTime,
+            type: "test",
+          };
+          socket.emit("input", message);
+          messageHistory.enqueue(message);
+          playerSelf.model.rotateRight(elapsedTime);
+        },
+        "t",
+        true
+      );
+      myKeyboard.registerHandler(
+        (elapsedTime) => {
+          let message = {
+            id: messageId++,
+            elapsedTime: elapsedTime,
+            type: "up",
+          };
+          socket.emit("input", message);
+          messageHistory.enqueue(message);
+          playerSelf.model.goUp(elapsedTime);
+        },
+        persistence.getMoveUp(),
+        true
+      );
+      myKeyboard.registerHandler(
+        (elapsedTime) => {
+          let message = {
+            id: messageId++,
+            elapsedTime: elapsedTime,
+            type: "right",
+          };
+          socket.emit("input", message);
+          messageHistory.enqueue(message);
+          playerSelf.model.goRight(elapsedTime);
+        },
+        persistence.getMoveRight(),
+        true
+      );
+  
+      myKeyboard.registerHandler(
+        (elapsedTime) => {
+          let message = {
+            id: messageId++,
+            elapsedTime: elapsedTime,
+            type: "left",
+          };
+          socket.emit("input", message);
+          messageHistory.enqueue(message);
+          playerSelf.model.goLeft(elapsedTime);
+        },
+        persistence.getMoveLeft(),
+        true
+      );
+      myKeyboard.registerHandler(
+        (elapsedTime) => {
+          let message = {
+            id: messageId++,
+            elapsedTime: elapsedTime,
+            type: "down",
+          };
+          socket.emit("input", message);
+          messageHistory.enqueue(message);
+          playerSelf.model.goDown(elapsedTime);
+        },
+        persistence.getMoveDown(),
+        true
+      );  
+}
 
 
   //------------------------------------------------------------------
@@ -248,80 +321,6 @@ MyGame.screens["game-play"] = (function (
     console.log("game initializing...");
 
     //
-    // Create the keyboard input handler and register the keyboard commands
-    myKeyboard.registerHandler(
-      (elapsedTime) => {
-        let message = {
-          id: messageId++,
-          elapsedTime: elapsedTime,
-          type: "test",
-        };
-        socket.emit("input", message);
-        messageHistory.enqueue(message);
-        playerSelf.model.rotateRight(elapsedTime);
-      },
-      "t",
-      true
-    );
-    myKeyboard.registerHandler(
-      (elapsedTime) => {
-        let message = {
-          id: messageId++,
-          elapsedTime: elapsedTime,
-          type: "up",
-        };
-        socket.emit("input", message);
-        messageHistory.enqueue(message);
-        playerSelf.model.goUp(elapsedTime);
-      },
-      persistence.getMoveUp(),
-      true
-    );
-    myKeyboard.registerHandler(
-      (elapsedTime) => {
-        let message = {
-          id: messageId++,
-          elapsedTime: elapsedTime,
-          type: "right",
-        };
-        socket.emit("input", message);
-        messageHistory.enqueue(message);
-        playerSelf.model.goRight(elapsedTime);
-      },
-      persistence.getMoveRight(),
-      true
-    );
-
-    myKeyboard.registerHandler(
-      (elapsedTime) => {
-        let message = {
-          id: messageId++,
-          elapsedTime: elapsedTime,
-          type: "left",
-        };
-        socket.emit("input", message);
-        messageHistory.enqueue(message);
-        playerSelf.model.goLeft(elapsedTime);
-      },
-      persistence.getMoveLeft(),
-      true
-    );
-    myKeyboard.registerHandler(
-      (elapsedTime) => {
-        let message = {
-          id: messageId++,
-          elapsedTime: elapsedTime,
-          type: "down",
-        };
-        socket.emit("input", message);
-        messageHistory.enqueue(message);
-        playerSelf.model.goDown(elapsedTime);
-      },
-      persistence.getMoveDown(),
-      true
-    );
-
-    //
     // Stop the game loop by canceling the request for the next animation frame
     cancelNextRequest = true;
     //
@@ -330,7 +329,7 @@ MyGame.screens["game-play"] = (function (
   }
 
   function run() {
-    // registerKeys();
+    registerKeys();
     lastTimeStamp = performance.now();
     cancelNextRequest = false;
     requestAnimationFrame(gameLoop);
