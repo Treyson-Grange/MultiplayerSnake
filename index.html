@@ -15,6 +15,7 @@
                 <li><button id = "id-high-scores">High&nbsp;Scores</button></li>
                 <li><button id = "id-help">Help</button></li>
                 <li><button id = "id-about">About</button></li>
+                <li><button id = "id-custom-control">Customize Controls</button></li>
             </ul>
         </div>
         <div id = "pre-game" class = "screen">
@@ -54,6 +55,17 @@
                 <li><button id = "id-about-back">Back</button></li>
             </ul>
         </div>
+        <div id = "custom-control" class = "screen">
+            <h1>Customize Controls</h1>
+            <p>Select the control you wish to change, then press that key.</p>
+            <button id = "id-custom-control-move-left">Turn Left: </button>
+            <button id = "id-custom-control-move-right">Turn Right: </button>
+            <button id = "id-custom-control-move-up">Move Up: </button>
+            <button id = "id-custom-control-move-down">Move Down: </button>
+            <ul class = "menu">
+                <li><button id = "id-custom-control-back">Back</button></li>
+            </ul>
+        </div>
     </div>
 
     <script>
@@ -77,6 +89,7 @@
     <script src = "scripts/client/input.js"></script>
     <script src = "scripts/client/queue.js"></script>
     <script src = "scripts/client/persistence.js"></script>
+    <script src = "scripts/client/input-controls.js"></script>
 
     <script src = "scripts/client/game.js"></script>
     <script src = "scripts/client/mainmenu.js"></script>
@@ -85,7 +98,8 @@
     <script src = "scripts/client/highscores.js"></script>
     <script src = "scripts/client/help.js"></script>
     <script src = "scripts/client/about.js"></script>
-    
+    <script src = "scripts/client/custom-controls.js"></script>
+
     <script data-main = "scripts/client/loader" src = "scripts/client/require.js"></script>
 
 </body>

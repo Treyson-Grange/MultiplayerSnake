@@ -16,7 +16,17 @@ MyGame.persistence = (function () {
     let previousPlayerName = localStorage.getItem('MyGame.playerName');
 
     if (previousPlayerName !== null) {
-        customControls = JSON.parse(previousPlayerName);
+        playerName = JSON.parse(previousPlayerName);
+    }
+
+    // Controls
+    let customControls = {left: 'a', right: 'd', up: 'w'};
+
+    let previousControls = localStorage.getItem('MyGame.customControls');
+    // console.log(previousControls);
+
+    if (previousControls !== null) {
+        customControls = JSON.parse(previousControls);
     }
 
     // High scores functions
@@ -60,6 +70,54 @@ MyGame.persistence = (function () {
                 // location.reload();
     }
 
+    // Custom keys functions
+
+    function getMoveLeft() {
+        // console.log(customControls['left']);
+        return customControls['left'];
+    }
+
+    function getMoveRight() {
+        // console.log(customControls['right']);
+        return customControls['right'];
+    }
+
+    function getMoveUp() {
+        // console.log(customControls['up']);
+        return customControls['up'];
+    }
+
+    function getMoveDown() {
+        return customControls['down'];
+    }
+
+    function changeCustomControl(key, value) {
+        customControls[key] = value;
+        console.log(customControls);
+        localStorage['MyGame.customControls'] = JSON.stringify(customControls);
+
+                // location.reload();
+        reportCustomControls();
+    }
+
+    function reportCustomControls() {
+        let htmlNodeLeft = document.getElementById('id-custom-control-move-left');
+        htmlNodeLeft.innerHTML = '';
+        htmlNodeLeft.innerHTML = 'Left: ' + (customControls['left']);
+
+        let htmlNodeRight = document.getElementById('id-custom-control-move-right');
+        htmlNodeRight.innerHTML = '';
+        htmlNodeRight.innerHTML = 'Right: ' + (customControls['right']);
+
+        let htmlNodeUp = document.getElementById('id-custom-control-move-up');
+        htmlNodeUp.innerHTML = '';
+        htmlNodeUp.innerHTML = 'Up: ' + (customControls['up']);
+
+        let htmlNodeDown = document.getElementById('id-custom-control-move-down');
+        htmlNodeDown.innerHTML = '';
+        htmlNodeDown.innerHTML = 'Down: ' + (customControls['down']);
+    }
+
     return {
         get highScores() { return highScores; },
         addScore : addScore,
@@ -67,5 +125,11 @@ MyGame.persistence = (function () {
         reportScores : reportScores,
         getPlayerName: getPlayerName,
         changePlayerName: changePlayerName,
+        getMoveLeft: getMoveLeft,
+        getMoveRight: getMoveRight,
+        getMoveUp: getMoveUp,
+        getMoveDown: getMoveDown,
+        changeCustomControl: changeCustomControl,
+        reportCustomControls: reportCustomControls,
     };
 }());
