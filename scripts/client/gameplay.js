@@ -189,8 +189,8 @@ MyGame.screens["game-play"] = (function (
     // console.log("playerSelf.model, playerSelf.texture: ", playerSelf.model, playerSelf.texture);
     renderer.Player.render(playerSelf.model, playerSelf.texture);
     for (let id in playerOthers) {
-      let player = playerOthers[id];
-      renderer.PlayerRemote.render(player.model, MyGame.assets["player-other"]); // player.texture is 'undefined' here :( should prolly fix that!
+      let otherPlayer = playerOthers[id];
+      renderer.PlayerRemote.render(otherPlayer.model, MyGame.assets["player-other"], playerSelf.model.position); // player.texture is 'undefined' here :( should prolly fix that!
     }
   }
 
