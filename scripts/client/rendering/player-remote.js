@@ -12,13 +12,17 @@ MyGame.renderer.PlayerRemote = (function(graphics) {
     // Renders a PlayerRemote model.
     //
     // ------------------------------------------------------------------
-    that.render = function(model, texture) {
+    that.render = function(model, texture, playerSelfPos) {
         graphics.saveContext();
-        graphics.rotateCanvas(model.state.position, model.state.direction);
-        graphics.drawImage(texture, model.state.position, model.size);
+        let position = {
+            x: model.state.position.x - playerSelfPos.x,
+            y: model.state.position.y - playerSelfPos.y
+        }
+        graphics.rotateCanvas(position, model.state.direction);
+        graphics.drawImage(texture, position, model.size);
         graphics.restoreContext();
     };
-
+    // change + 0 = new
     return that;
 
 }(MyGame.graphics));
