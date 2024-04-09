@@ -16,7 +16,7 @@ MyGame.persistence = (function () {
     let previousPlayerName = localStorage.getItem('MyGame.playerName');
 
     if (previousPlayerName !== null) {
-        customControls = JSON.parse(previousPlayerName);
+        playerName = JSON.parse(previousPlayerName);
     }
 
     // High scores functions

@@ -7,7 +7,7 @@ MyGame.screens['pre-game'] = (function(game, persistence) {
             function() { 
                 let inputName = document.getElementById('id-input-name').value;
                 console.log("name is: ", inputName);
-                // persistence.changePlayerName(inputName); // TODO: GET THIS SENT TO THE SERVER?
+                persistence.changePlayerName(inputName); // TODO: GET THIS SENT TO THE SERVER?
                 game.showScreen('game-play'); 
             });
     }
