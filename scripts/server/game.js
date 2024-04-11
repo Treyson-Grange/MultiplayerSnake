@@ -14,7 +14,7 @@ let quit = false;
 let activeClients = {};
 let inputQueue = [];
 
-let foodSOA = Food.create(100);
+let foodSOA = Food.create(5);
 
 //------------------------------------------------------------------
 //
