@@ -62,6 +62,10 @@ MyGame.loader = (function () {
         key: "tile",
         source: "assets/dirt.png",
       },
+      {
+        key: "food",
+        source: "assets/snakeHead.png", // TODO: CHANGE THIS!!!
+      }
     ];
 
   //------------------------------------------------------------------
@@ -191,6 +195,7 @@ MyGame.loader = (function () {
     console.log(MyGame);
     // MyGame.screens['game-play'].initialize();
     MyGame.screens["game-play"].updatePlayers();
+    MyGame.screens["game-play"].updateFood();
   }
 
   //

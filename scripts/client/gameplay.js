@@ -15,6 +15,7 @@ MyGame.screens["game-play"] = (function (
 
   console.log(components.PlayerRemote());
   console.log(components.Player());
+  console.log(components.Food());
 
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
@@ -24,6 +25,10 @@ MyGame.screens["game-play"] = (function (
       texture: MyGame.assets["player-self"],
     },
     playerOthers = {},
+    food = {
+        model: components.Food(),
+        texture: MyGame.assets["food"],
+    },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
     socket = io();
@@ -149,6 +154,19 @@ MyGame.screens["game-play"] = (function (
     }
   });
 
+
+  //------------------------------------------------------------------
+  //
+  // Handler for receiving state updates about food.
+  //
+  //------------------------------------------------------------------
+  socket.on("update-food", function (data) {
+    food.model.update(data);
+    // for (let i = 0; i < data.eaten.length; i++) {
+    //     food.model.update(i, data.eaten[i]);
+    // }
+  });
+
   //------------------------------------------------------------------
   //
   // Process the registered input handlers here.
@@ -193,6 +211,7 @@ MyGame.screens["game-play"] = (function (
       let otherPlayer = playerOthers[id];
       renderer.PlayerRemote.render(otherPlayer.model, MyGame.assets["player-other"], playerSelf.model.position); // player.texture is 'undefined' here :( should prolly fix that!
     }
+    renderer.Food.render(food.model, food.texture, playerSelf.model.position);
   }
 
   //------------------------------------------------------------------
@@ -215,6 +234,10 @@ MyGame.screens["game-play"] = (function (
 
   function updatePlayers() {
     playerSelf.texture = MyGame.assets["player-self"];
+  }
+
+  function updateFood() {
+    food.texture = MyGame.assets["food"];
   }
 
   //----------------------------------------------------------------
@@ -339,6 +362,7 @@ MyGame.screens["game-play"] = (function (
     initialize: initialize,
     run: run,
     updatePlayers: updatePlayers,
+    updateFood: updateFood,
   };
 })(
   MyGame.game,

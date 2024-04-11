@@ -6,12 +6,24 @@
 "use strict";
 
 let present = require("present");
+let random = require("./random");
 let Player = require("./player");
+let Food = require("./food");
 
 const UPDATE_RATE_MS = 50;
 let quit = false;
 let activeClients = {};
 let inputQueue = [];
+
+let foodCount = 10;
+let foodSOA = Food.create(foodCount);
+for (let i = 0; i < foodCount; i++) {
+    foodSOA.positionsX[i] = random.nextDouble();
+}
+
+for (let i = 0; i < foodCount; i++) {
+    foodSOA.positionsY[i] = random.nextDouble();
+}
 
 //------------------------------------------------------------------
 //
@@ -51,7 +63,7 @@ function processInput() {
         client.player.goLeft(input.message.elapsedTime);
         break;
       case "test":
-        client.player.rotateRight(input.message.elapsedTime);
+        client.player.goRight(input.message.elapsedTime);
         break;
     }
   }
@@ -95,6 +107,21 @@ function updateClients(elapsedTime) {
         }
       }
     }
+
+    //
+    // Notify all clients about every food that's been updated
+    let foodUpdate = {
+        reportUpdates: foodSOA.reportUpdates,
+        positionsX: foodSOA.positionsX,
+        positionsY: foodSOA.positionsY,
+        count: foodSOA.count,
+    };
+    // for (let i = 0; i < foodSOA.positionsX.length; i++) {
+    //     if (foodSOA.reportUpdates[i]) {
+    //         foodUpdate.eaten[i] = true;
+    //     }
+    // }
+    client.socket.emit("update-food", foodUpdate);
   }
 
   for (let clientId in activeClients) {
@@ -214,7 +241,37 @@ function initializeSocketIO(httpServer) {
 
     notifyConnect(socket, newPlayer);
   });
+
+
+  //------------------------------------------------------------------
+  //
+  // Notifies clients about updates to the food
+  //
+  //------------------------------------------------------------------
+
+  function notifyFoodUpdate() {
+    for (let clientId in activeClients) {
+        let client = activeClients[clientId];
+  
+        for (let i = 0; i < foodSOA.count; i++) {
+            if (foodSOA.reportUpdates[i]) {
+                client.socket.emit("update-food", {
+                    index: i,
+                    positionX: foodSOA.positionsX[i],
+                    positionY: foodSOA.positionsY[i],
+                });
+            }
+        }
+    }
+  }
+
+  notifyFoodUpdate();
 }
+
+
+
+
+
 
 //------------------------------------------------------------------
 //
