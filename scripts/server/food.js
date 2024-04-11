@@ -16,18 +16,14 @@ function createFood(howMany) {
   let that = {};
 
     let count = howMany;
-    // TODO: PROLLY DON'T INITIALIZE HERE, OR ELSE HAVE SOME BETTER WAY OF SENDING FOOD INFO TO CLIENT AT THE START?
     let positionsX = new Array(howMany);
-    // for (let i = 0; i < howMany; i++) {
-    //     positionsX[i] = random.nextDouble();
-    // }
-
     let positionsY = new Array(howMany);
-    // for (let i = 0; i < howMany; i++) {
-    //     positionsY[i] = random.nextDouble();
-    // }
-
     let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
+    
+    let spriteSheetIndices = new Array(6); // number of sprite sheets is hard-coded here, is there a way to take it from loader.js?
+    let spriteCount = 8;
+    let spriteTime = [200, 200, 200, 200, 200, 200, 200, 200]; // milliseconds per sprite animation frame
+    let moveRate = 200 / 1000; // pixels per millisecond
 
   let size = {
     width: 0.05,
@@ -55,6 +51,23 @@ function createFood(howMany) {
   Object.defineProperty(that, "reportUpdates", {
     get: () => reportUpdates,
     set: (index, value) => (reportUpdates[index] = value),
+  });
+
+  Object.defineProperty(that, "spriteSheetIndices", {
+    get: () => spriteSheetIndices,
+    set: (index, value) => (spriteSheetIndices[index] = value),
+  });
+
+  Object.defineProperty(that, "spriteCount", {
+    get: () => spriteCount,
+  });
+
+  Object.defineProperty(that, "spriteTime", {
+    get: () => spriteTime,
+  });
+
+  Object.defineProperty(that, "moveRate", {
+    get: () => moveRate,
   });
 
 //------------------------------------------------------------------

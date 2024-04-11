@@ -64,7 +64,14 @@ MyGame.loader = (function () {
       },
       {
         key: "food",
-        source: "assets/snakeHead.png", // TODO: CHANGE THIS!!!
+        source: [
+            "assets/food/BlueBlue/ToxicFrogBlueBlue_Idle.png", 
+            "assets/food/BlueBrown/ToxicFrogBlueBrown_Idle.png", 
+            "assets/food/GreenBlue/ToxicFrogGreenBlue_Idle.png", 
+            "assets/food/GreenBrown/ToxicFrogGreenBrown_Idle.png", 
+            "assets/food/PurpleBlue/ToxicFrogPurpleBlue_Idle.png", 
+            "assets/food/PurpleWhite/ToxicFrogPurpleWhite_Idle.png",
+        ],
       }
     ];
 

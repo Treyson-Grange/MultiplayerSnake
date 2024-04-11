@@ -20,7 +20,7 @@ MyGame.renderer.Food = (function(graphics) {
                 x: model.positionsX[i] - playerSelfPos.x,
                 y: model.positionsY[i] - playerSelfPos.y
             }
-            graphics.drawImage(texture, position, model.size);
+            graphics.drawSprite(texture, position, model.size);
             graphics.restoreContext();
         }
     }

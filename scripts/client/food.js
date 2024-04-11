@@ -1,6 +1,6 @@
 //------------------------------------------------------------------
 //
-// Model for each player in the game.
+// Model for all food in the game.
 //
 //---------------------------------------------------------------------
 MyGame.components.Food = function(howMany) {
@@ -12,6 +12,12 @@ MyGame.components.Food = function(howMany) {
     let positionsX = new Array(howMany);
     let positionsY = new Array(howMany);
     let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
+    
+    let spriteSheetIndices = new Array(6); // number of sprite sheets is hard-coded here, is there a way to take it from loader.js?
+    let spriteCount = 8;
+    let spriteTime = [200, 200, 200, 200, 200, 200, 200, 200]; // milliseconds per sprite animation frame
+    let moveRate = 200 / 1000; // pixels per millisecond
+    
     let size = {
         width: 0.05,
         height: 0.05,
@@ -38,7 +44,24 @@ MyGame.components.Food = function(howMany) {
         set: (index, value) => (reportUpdates[index] = value),
       });
 
-    //------------------------------------------------------------------
+      Object.defineProperty(that, "spriteSheetIndices", {
+        get: () => spriteSheetIndices,
+        set: (index, value) => (spriteSheetIndices[index] = value),
+      });
+    
+      Object.defineProperty(that, "spriteCount", {
+        get: () => spriteCount,
+      });
+    
+      Object.defineProperty(that, "spriteTime", {
+        get: () => spriteTime,
+      });
+    
+      Object.defineProperty(that, "moveRate", {
+        get: () => moveRate,
+      });    
+
+  //------------------------------------------------------------------
   //
   // Function used to "remove and re-generate" (ie just relocate :P) a particle of food from the structure of arrays
   //

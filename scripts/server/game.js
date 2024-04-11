@@ -25,6 +25,11 @@ for (let i = 0; i < foodCount; i++) {
     foodSOA.positionsY[i] = random.nextDouble();
 }
 
+// fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
+for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
+    foodSOA.spriteSheetIndices[i] = random.nextRange(0, foodSOA.spriteSheetIndices.length - 1);
+}
+
 //------------------------------------------------------------------
 //
 // Process the network inputs we have received since the last time
