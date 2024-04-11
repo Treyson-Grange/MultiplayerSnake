@@ -97,11 +97,13 @@ function createPlayer() {
     reportUpdate = true;
     direction -= rotateRate * elapsedTime;
   };
-  function rotateLeft(elapsedTime) {
-    reportUpdate = true;
-    direction -= rotateRate * elapsedTime;
-  }
 
+  //------------------------------------------------------------------
+  //
+  // Functions that given input, change the prefered direction
+  // of the player
+  //
+  //------------------------------------------------------------------
   that.goUp = function (elapsedTime) {
     reportUpdate = true;
     preferedDirection = -Math.PI / 2;
@@ -113,14 +115,18 @@ function createPlayer() {
   that.goRight = function (elapsedTime) {
     reportUpdate = true;
     preferedDirection = 0;
-    rotateRight(elapsedTime);
   };
   that.goLeft = function (elapsedTime) {
     reportUpdate = true;
     preferedDirection = Math.PI;
-    rotateLeft(elapsedTime);
   };
 
+  //------------------------------------------------------------------
+  //
+  // Function that rotates the player to the prefered direction over time
+  //
+  //
+  //------------------------------------------------------------------
   function rotateToDirection(elapsedTime) {
     let shortestDistance = preferedDirection - direction;
     if (shortestDistance < -Math.PI) {
