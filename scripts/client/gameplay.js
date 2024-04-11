@@ -15,6 +15,7 @@ MyGame.screens["game-play"] = (function (
 
   console.log(components.PlayerRemote());
   console.log(components.Player());
+  console.log(components.Food());
 
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
@@ -24,6 +25,10 @@ MyGame.screens["game-play"] = (function (
       texture: MyGame.assets["player-self"],
     },
     playerOthers = {},
+    food = {
+        model: components.Food(),
+        texture: MyGame.assets["food"],
+    },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
     socket = io();
@@ -147,6 +152,19 @@ MyGame.screens["game-play"] = (function (
       model.goal.position.y = data.position.y;
       model.goal.direction = data.direction;
     }
+  });
+
+
+  //------------------------------------------------------------------
+  //
+  // Handler for receiving state updates about food.
+  //
+  //------------------------------------------------------------------
+  socket.on("update-food", function (data) {
+    food.model.update(data);
+    // for (let i = 0; i < data.eaten.length; i++) {
+    //     food.model.update(i, data.eaten[i]);
+    // }
   });
 
   //------------------------------------------------------------------

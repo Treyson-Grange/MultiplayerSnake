@@ -14,7 +14,7 @@ let quit = false;
 let activeClients = {};
 let inputQueue = [];
 
-
+let foodSOA = Food.create(100);
 
 //------------------------------------------------------------------
 //
@@ -98,6 +98,20 @@ function updateClients(elapsedTime) {
         }
       }
     }
+
+    //
+    // Notify all clients about every food that's been updated
+    let foodUpdate = {
+        reportUpdates: foodSOA.reportUpdates,
+        positionsX: foodSOA.positionsX,
+        positionsY: foodSOA.positionsY,
+    };
+    // for (let i = 0; i < foodSOA.positionsX.length; i++) {
+    //     if (foodSOA.reportUpdates[i]) {
+    //         foodUpdate.eaten[i] = true;
+    //     }
+    // }
+    client.socket.emit("update-food", foodUpdate);
   }
 
   for (let clientId in activeClients) {
@@ -217,7 +231,37 @@ function initializeSocketIO(httpServer) {
 
     notifyConnect(socket, newPlayer);
   });
+
+
+  //------------------------------------------------------------------
+  //
+  // Notifies clients about updates to the food
+  //
+  //------------------------------------------------------------------
+
+  function notifyFoodUpdate() {
+    for (let clientId in activeClients) {
+        let client = activeClients[clientId];
+  
+        for (let i = 0; i < foodSOA.positionsX.length; i++) {
+            if (foodSOA.reportUpdates[i]) {
+                client.socket.emit("update-food", {
+                    index: i,
+                    positionX: foodSOA.positionsX[i],
+                    positionY: foodSOA.positionsY[i],
+                });
+            }
+        }
+    }
+  }
+
+  notifyFoodUpdate();
 }
+
+
+
+
+
 
 //------------------------------------------------------------------
 //

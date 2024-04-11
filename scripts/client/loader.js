@@ -62,6 +62,10 @@ MyGame.loader = (function () {
         key: "tile",
         source: "assets/dirt.png",
       },
+      {
+        key: "food",
+        source: "assets/snakeHead.png", // TODO: CHANGE THIS!!!
+      }
     ];
 
   //------------------------------------------------------------------

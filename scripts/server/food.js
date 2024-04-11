@@ -15,9 +15,19 @@ let random = require("./random");
 function createFood(howMany) {
   let that = {};
 
+
+    // TODO: PROLLY DON'T INITIALIZE HERE, OR ELSE HAVE SOME BETTER WAY OF SENDING FOOD INFO TO CLIENT AT THE START?
     let positionsX = new Array(howMany);
+    for (let i = 0; i < howMany; i++) {
+        positionsX[i] = random.nextDouble();
+    }
+
     let positionsY = new Array(howMany);
-    let reportUpdates = new Array(howMany).fill(false); // Indicates if a model was updated during the last update
+    for (let i = 0; i < howMany; i++) {
+        positionsY[i] = random.nextDouble();
+    }
+
+    let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
 
   let size = {
     width: 0.05,
@@ -26,10 +36,12 @@ function createFood(howMany) {
 
   Object.defineProperty(that, "positionsX", {
     get: () => positionsX,
+    set: (index, value) => (positionsX[index] = value),
   });
 
   Object.defineProperty(that, "positionsY", {
     get: () => positionsY,
+    set: (index, value) => (positionsY[index] = value),
   });
 
   Object.defineProperty(that, "size", {
@@ -45,19 +57,19 @@ function createFood(howMany) {
     set: (index, value) => (reportUpdates[index] = value),
   });
 
-    //------------------------------------------------------------------
+//------------------------------------------------------------------
   //
   // Function used to "remove and re-generate" (ie just relocate :P) a particle of food from the structure of arrays
   //
   //------------------------------------------------------------------
 
-  function relocateFood(index) {
+  function relocateFood(index, positionX, positionY) {
     // need to update player score in here, too? Or build a new function for that?
 
     reportUpdates[index] = true;
 
-    positionsX[index] = random.nextDouble();
-    positionsY[index] = random.nextDouble();
+    positionsX[index] = positionX;
+    positionsY[index] = positionY;
   }
 
   //------------------------------------------------------------------
@@ -65,13 +77,16 @@ function createFood(howMany) {
   // Function used to update the food during the game loop.
   //
   //------------------------------------------------------------------
-  that.update = function (eaten, index) {
-    if (eaten) {
-      relocateFood(index);
-    }
-  };
 
-  return that;
+    that.update = function (data) {
+        for (let i = 0; i < howMany; i++) {
+            if (data.reportUpdates[i]) {
+                relocateFood(i, data.positionsX[i], data.positionsY[i]);
+            }
+        }
+    };
+    return that;
+
 }
 
-module.exports.create = () => createFood();
+module.exports.create = (howMany) => createFood(howMany);

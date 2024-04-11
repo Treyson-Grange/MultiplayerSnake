@@ -3,13 +3,14 @@
 // Model for each player in the game.
 //
 //---------------------------------------------------------------------
-MyGame.objects.Food = function(howMany) {
+MyGame.components.Food = function(howMany) {
     'use strict';
 
     let that = {};
 
     let positionsX = new Array(howMany);
     let positionsY = new Array(howMany);
+    let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
     let size = {
         width: 0.05,
         height: 0.05,
@@ -37,18 +38,21 @@ MyGame.objects.Food = function(howMany) {
   //
   //------------------------------------------------------------------
 
-  function relocateFood(index) {
+  function relocateFood(index, positionX, positionY) {
     // need to update player score in here, too? Or build a new function for that?
 
     reportUpdates[index] = true;
 
-    positionsX[index] = random.nextDouble();
-    positionsY[index] = random.nextDouble();
+    positionsX[index] = positionX;
+    positionsY[index] = positionY;
   }
 
-    that.update = function (eaten, index) {
-        if (eaten) {
-            relocateFood(index);
+    that.update = function (data) {
+        console.log(data);
+        for (let i = 0; i < howMany; i++) {
+            if (data.reportUpdates[i]) {
+                relocateFood(i, data.positionsX[i], data.positionsY[i]);
+            }
         }
     };
     return that;
