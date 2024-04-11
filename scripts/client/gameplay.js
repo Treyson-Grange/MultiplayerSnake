@@ -27,7 +27,7 @@ MyGame.screens["game-play"] = (function (
     playerOthers = {},
     food = {
         model: components.Food(),
-        texture: MyGame.assets["food"],
+        texture: [ MyGame.assets["food0"], MyGame.assets["food1"], MyGame.assets["food2"], MyGame.assets["food3"], MyGame.assets["food4"], MyGame.assets["food5"] ], // THIS IS HOW MANY FOOD ASSETS THERE ARE, WOULD BE BETTER TO INFER THIS NUMBER SOMEHOW
     },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
@@ -237,7 +237,14 @@ MyGame.screens["game-play"] = (function (
   }
 
   function updateFood() {
-    food.texture = MyGame.assets["food"];
+    food.texture = [ 
+        MyGame.assets["food0"], 
+        MyGame.assets["food1"], 
+        MyGame.assets["food2"], 
+        MyGame.assets["food3"], 
+        MyGame.assets["food4"], 
+        MyGame.assets["food5"] 
+    ];
   }
 
   //----------------------------------------------------------------

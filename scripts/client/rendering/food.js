@@ -14,13 +14,15 @@ MyGame.renderer.Food = (function(graphics) {
     //
     // ------------------------------------------------------------------
     that.render = function(model, texture, playerSelfPos) {
+        console.log("model.spriteSheetIndices: ", model.spriteSheetIndices);
         for (let i = 0; i < model.positionsX.length; i++) {
             graphics.saveContext();
             let position = {
                 x: model.positionsX[i] - playerSelfPos.x,
                 y: model.positionsY[i] - playerSelfPos.y
             }
-            graphics.drawSprite(texture, position, model.size);
+            console.log("texture[model.spriteSheetIndices[i]] is: ", i, model.spriteSheetIndices[i], texture[model.spriteSheetIndices[i]]);
+            graphics.drawSprite(texture[model.spriteSheetIndices[i]], position, model.size, i);
             graphics.restoreContext();
         }
     }

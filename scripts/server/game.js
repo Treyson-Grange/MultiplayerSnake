@@ -26,9 +26,12 @@ for (let i = 0; i < foodCount; i++) {
 }
 
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
+// TODO: PING THE food TO TELL it that it NEEDs TO UPDATE its INDICES!!
 for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
     foodSOA.spriteSheetIndices[i] = random.nextRange(0, foodSOA.spriteSheetIndices.length - 1);
 }
+
+console.log(spriteSheetIndices);
 
 //------------------------------------------------------------------
 //
@@ -120,6 +123,7 @@ function updateClients(elapsedTime) {
         positionsX: foodSOA.positionsX,
         positionsY: foodSOA.positionsY,
         count: foodSOA.count,
+        spriteSheetIndices: foodSOA.spriteSheetIndices,
     };
     // for (let i = 0; i < foodSOA.positionsX.length; i++) {
     //     if (foodSOA.reportUpdates[i]) {

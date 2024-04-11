@@ -20,7 +20,7 @@ function createFood(howMany) {
     let positionsY = new Array(howMany);
     let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
     
-    let spriteSheetIndices = new Array(6); // number of sprite sheets is hard-coded here, is there a way to take it from loader.js?
+    let spriteSheetIndices = new Array(howMany);
     let spriteCount = 8;
     let spriteTime = [200, 200, 200, 200, 200, 200, 200, 200]; // milliseconds per sprite animation frame
     let moveRate = 200 / 1000; // pixels per millisecond
@@ -91,10 +91,12 @@ function createFood(howMany) {
 
     that.update = function (data) {
         for (let i = 0; i < data.count; i++) {
-            if (data.reportUpdates[i]) {
+            if (data.reportUpdates[i] == true) {
                 relocateFood(i, data.positionsX[i], data.positionsY[i]);
             }
         }
+        spriteSheetIndices = data.spriteSheetIndices; // MAYHAPS MOVE THIS TO ITS OWN UPDATE FUNCTION?
+
     };
     return that;
 
