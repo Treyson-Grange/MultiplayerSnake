@@ -195,6 +195,7 @@ MyGame.loader = (function () {
     console.log(MyGame);
     // MyGame.screens['game-play'].initialize();
     MyGame.screens["game-play"].updatePlayers();
+    MyGame.screens["game-play"].updateFood();
   }
 
   //

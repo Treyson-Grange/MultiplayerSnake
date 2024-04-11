@@ -236,6 +236,10 @@ MyGame.screens["game-play"] = (function (
     playerSelf.texture = MyGame.assets["player-self"];
   }
 
+  function updateFood() {
+    food.texture = MyGame.assets["food"];
+  }
+
   //----------------------------------------------------------------
   //
   // Function used to get the user's player control keys registered
@@ -358,6 +362,7 @@ MyGame.screens["game-play"] = (function (
     initialize: initialize,
     run: run,
     updatePlayers: updatePlayers,
+    updateFood: updateFood,
   };
 })(
   MyGame.game,

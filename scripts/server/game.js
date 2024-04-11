@@ -15,7 +15,7 @@ let quit = false;
 let activeClients = {};
 let inputQueue = [];
 
-let foodCount = 100;
+let foodCount = 10;
 let foodSOA = Food.create(foodCount);
 for (let i = 0; i < foodCount; i++) {
     foodSOA.positionsX[i] = random.nextDouble();

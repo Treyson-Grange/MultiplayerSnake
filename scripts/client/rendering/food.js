@@ -14,6 +14,7 @@ MyGame.renderer.Food = (function(graphics) {
     //
     // ------------------------------------------------------------------
     that.renderIndividual = function(positionX, positionY, size, texture) {
+        console.log(positionX, positionY, size, texture);
         graphics.saveContext();
         graphics.drawImage(texture, {x: positionX, y: positionY}, size);
         graphics.restoreContext();
@@ -26,8 +27,9 @@ MyGame.renderer.Food = (function(graphics) {
     //
     // ------------------------------------------------------------------
     that.renderAll = function(model, texture) {
-        for (let i = 0; i < model.howMany; i++) {
-            renderIndividual(model.positionsX[i], model.positionsY[i], model.size, texture);
+        for (let i = 0; i < model.positionsX.length; i++) {
+            console.log("rendering food ", i);
+            that.renderIndividual(model.positionsX[i], model.positionsY[i], model.size, texture);
         }
     };
 
