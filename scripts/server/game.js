@@ -7,11 +7,14 @@
 
 let present = require("present");
 let Player = require("./player");
+let Food = require("./client/objects/food");
 
 const UPDATE_RATE_MS = 50;
 let quit = false;
 let activeClients = {};
 let inputQueue = [];
+
+
 
 //------------------------------------------------------------------
 //
