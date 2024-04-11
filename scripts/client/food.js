@@ -8,6 +8,7 @@ MyGame.components.Food = function(howMany) {
 
     let that = {};
 
+    let count = howMany;
     let positionsX = new Array(howMany);
     let positionsY = new Array(howMany);
     let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
@@ -28,8 +29,13 @@ MyGame.components.Food = function(howMany) {
         get: () => size,
     });
 
-    Object.defineProperty(that, "howMany", {
-        get: () => howMany,
+    Object.defineProperty(that, "count", {
+        get: () => count,
+      });
+
+      Object.defineProperty(that, "reportUpdates", {
+        get: () => reportUpdates,
+        set: (index, value) => (reportUpdates[index] = value),
       });
 
     //------------------------------------------------------------------
@@ -40,17 +46,20 @@ MyGame.components.Food = function(howMany) {
 
   function relocateFood(index, positionX, positionY) {
     // need to update player score in here, too? Or build a new function for that?
-
     reportUpdates[index] = true;
-
     positionsX[index] = positionX;
     positionsY[index] = positionY;
   }
+  
+  //------------------------------------------------------------------
+  //
+  // Function used to update the food during the game loop.
+  //
+  //------------------------------------------------------------------
 
     that.update = function (data) {
-        console.log(data);
-        for (let i = 0; i < howMany; i++) {
-            if (data.reportUpdates[i]) {
+        for (let i = 0; i < data.count; i++) {
+            if (data.reportUpdates[i] == true) {
                 relocateFood(i, data.positionsX[i], data.positionsY[i]);
             }
         }

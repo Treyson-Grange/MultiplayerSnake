@@ -15,17 +15,17 @@ let random = require("./random");
 function createFood(howMany) {
   let that = {};
 
-
+    let count = howMany;
     // TODO: PROLLY DON'T INITIALIZE HERE, OR ELSE HAVE SOME BETTER WAY OF SENDING FOOD INFO TO CLIENT AT THE START?
     let positionsX = new Array(howMany);
-    for (let i = 0; i < howMany; i++) {
-        positionsX[i] = random.nextDouble();
-    }
+    // for (let i = 0; i < howMany; i++) {
+    //     positionsX[i] = random.nextDouble();
+    // }
 
     let positionsY = new Array(howMany);
-    for (let i = 0; i < howMany; i++) {
-        positionsY[i] = random.nextDouble();
-    }
+    // for (let i = 0; i < howMany; i++) {
+    //     positionsY[i] = random.nextDouble();
+    // }
 
     let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
 
@@ -48,8 +48,8 @@ function createFood(howMany) {
     get: () => size,
   });
 
-  Object.defineProperty(that, "howMany", {
-    get: () => howMany,
+  Object.defineProperty(that, "count", {
+    get: () => count,
   });
 
   Object.defineProperty(that, "reportUpdates", {
@@ -65,9 +65,7 @@ function createFood(howMany) {
 
   function relocateFood(index, positionX, positionY) {
     // need to update player score in here, too? Or build a new function for that?
-
-    reportUpdates[index] = true;
-
+    reportUpdates[index] = true; // IS THIS EVEN RIGHT? WHAT DOES IT MEAN?
     positionsX[index] = positionX;
     positionsY[index] = positionY;
   }
@@ -79,7 +77,7 @@ function createFood(howMany) {
   //------------------------------------------------------------------
 
     that.update = function (data) {
-        for (let i = 0; i < howMany; i++) {
+        for (let i = 0; i < data.count; i++) {
             if (data.reportUpdates[i]) {
                 relocateFood(i, data.positionsX[i], data.positionsY[i]);
             }

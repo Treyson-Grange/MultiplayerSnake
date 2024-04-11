@@ -6,6 +6,7 @@
 "use strict";
 
 let present = require("present");
+let random = require("./random");
 let Player = require("./player");
 let Food = require("./food");
 
@@ -14,7 +15,15 @@ let quit = false;
 let activeClients = {};
 let inputQueue = [];
 
-let foodSOA = Food.create(5);
+let foodCount = 100;
+let foodSOA = Food.create(foodCount);
+for (let i = 0; i < foodCount; i++) {
+    foodSOA.positionsX[i] = random.nextDouble();
+}
+
+for (let i = 0; i < foodCount; i++) {
+    foodSOA.positionsY[i] = random.nextDouble();
+}
 
 //------------------------------------------------------------------
 //
@@ -105,6 +114,7 @@ function updateClients(elapsedTime) {
         reportUpdates: foodSOA.reportUpdates,
         positionsX: foodSOA.positionsX,
         positionsY: foodSOA.positionsY,
+        count: foodSOA.count,
     };
     // for (let i = 0; i < foodSOA.positionsX.length; i++) {
     //     if (foodSOA.reportUpdates[i]) {
@@ -243,7 +253,7 @@ function initializeSocketIO(httpServer) {
     for (let clientId in activeClients) {
         let client = activeClients[clientId];
   
-        for (let i = 0; i < foodSOA.positionsX.length; i++) {
+        for (let i = 0; i < foodSOA.count; i++) {
             if (foodSOA.reportUpdates[i]) {
                 client.socket.emit("update-food", {
                     index: i,
