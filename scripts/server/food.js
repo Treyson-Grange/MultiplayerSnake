@@ -15,7 +15,6 @@ let random = require("./random");
 function createFood(howMany) {
   let that = {};
 
-
     let positionsX = new Array(howMany);
     let positionsY = new Array(howMany);
     let reportUpdates = new Array(howMany).fill(false); // Indicates if a model was updated during the last update
@@ -37,6 +36,10 @@ function createFood(howMany) {
     get: () => size,
   });
 
+  Object.defineProperty(that, "howMany", {
+    get: () => howMany,
+  });
+
   Object.defineProperty(that, "reportUpdates", {
     get: () => reportUpdates,
     set: (index, value) => (reportUpdates[index] = value),
@@ -44,15 +47,17 @@ function createFood(howMany) {
 
     //------------------------------------------------------------------
   //
-  // Function used to remove a particle of food from the structure of arrays
+  // Function used to "remove and re-generate" (ie just relocate :P) a particle of food from the structure of arrays
   //
   //------------------------------------------------------------------
 
-  function deleteFood(index) {
+  function relocateFood(index) {
+    // need to update player score in here, too? Or build a new function for that?
+
     reportUpdates[index] = true;
 
-    positionsX[index] = null;
-    positionsY[index] = null;
+    positionsX[index] = random.nextDouble();
+    positionsY[index] = random.nextDouble();
   }
 
   //------------------------------------------------------------------
@@ -62,7 +67,7 @@ function createFood(howMany) {
   //------------------------------------------------------------------
   that.update = function (eaten, index) {
     if (eaten) {
-      deleteFood(index);
+      relocateFood(index);
     }
   };
 

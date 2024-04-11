@@ -7,7 +7,7 @@
 
 let present = require("present");
 let Player = require("./player");
-let Food = require("./client/objects/food");
+let Food = require("./food");
 
 const UPDATE_RATE_MS = 50;
 let quit = false;
