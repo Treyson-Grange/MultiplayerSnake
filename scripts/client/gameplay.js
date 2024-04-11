@@ -211,7 +211,7 @@ MyGame.screens["game-play"] = (function (
       let otherPlayer = playerOthers[id];
       renderer.PlayerRemote.render(otherPlayer.model, MyGame.assets["player-other"], playerSelf.model.position); // player.texture is 'undefined' here :( should prolly fix that!
     }
-    renderer.Food.renderAll(food.model, food.texture);
+    renderer.Food.render(food.model, food.texture, playerSelf.model.position);
   }
 
   //------------------------------------------------------------------
