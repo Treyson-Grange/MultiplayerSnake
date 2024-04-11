@@ -126,7 +126,6 @@ MyGame.components.Player = function () {
     if (direction !== preferedDirection) {
       rotateToDirection(when);
     }
-    console.log(direction);
   };
 
   return that;
