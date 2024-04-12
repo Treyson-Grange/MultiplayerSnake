@@ -89,6 +89,11 @@ MyGame.components.Food = function(howMany) {
         spriteSheetIndices = data.spriteSheetIndices; // MAYHAPS MOVE THIS TO ITS OWN UPDATE FUNCTION?
 
     };
+
+    that.updateSprites = function (data) {
+        spriteSheetIndices = data.spriteSheetIndices;
+    };
+
     return that;
 
     // let imageReady = false;

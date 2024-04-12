@@ -28,10 +28,8 @@ for (let i = 0; i < foodCount; i++) {
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
 // TODO: PING THE food TO TELL it that it NEEDs TO UPDATE its INDICES!!
 for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
-    foodSOA.spriteSheetIndices[i] = random.nextRange(0, foodSOA.spriteSheetIndices.length - 1);
+    foodSOA.spriteSheetIndices[i] = random.nextRange(0, 6); // amount of sprites is hardcoded 
 }
-
-console.log(spriteSheetIndices);
 
 //------------------------------------------------------------------
 //
@@ -125,12 +123,15 @@ function updateClients(elapsedTime) {
         count: foodSOA.count,
         spriteSheetIndices: foodSOA.spriteSheetIndices,
     };
-    // for (let i = 0; i < foodSOA.positionsX.length; i++) {
-    //     if (foodSOA.reportUpdates[i]) {
-    //         foodUpdate.eaten[i] = true;
-    //     }
-    // }
     client.socket.emit("update-food", foodUpdate);
+
+    //
+    // Notify all clients about every food sprite that's been instantiated
+    let foodSpriteUpdate = {
+        spriteSheetIndices: foodSOA.spriteSheetIndices,
+    };
+    client.socket.emit("food-positions", foodSpriteUpdate);
+
   }
 
   for (let clientId in activeClients) {
@@ -169,7 +170,7 @@ function initializeSocketIO(httpServer) {
   //
   // Notifies the already connected clients about the arrival of this
   // new client.  Plus, tell the newly connected client about the
-  // other players already connected.
+  // other players already connected. Plus, tell the newly connected client about the food.
   //
   //------------------------------------------------------------------
   function notifyConnect(socket, newPlayer) {
@@ -197,6 +198,12 @@ function initializeSocketIO(httpServer) {
           speed: client.player.speed,
           size: client.player.size,
         });
+
+        // let foodUpdate = {
+        //     spriteSheetIndices: foodSOA.spriteSheetIndices,
+        // };
+    
+        // socket.emit("food-positions", foodUpdate);
       }
     }
   }
@@ -258,23 +265,23 @@ function initializeSocketIO(httpServer) {
   //
   //------------------------------------------------------------------
 
-  function notifyFoodUpdate() {
-    for (let clientId in activeClients) {
-        let client = activeClients[clientId];
+//   function notifyFoodUpdate() {
+//     for (let clientId in activeClients) {
+//         let client = activeClients[clientId];
   
-        for (let i = 0; i < foodSOA.count; i++) {
-            if (foodSOA.reportUpdates[i]) {
-                client.socket.emit("update-food", {
-                    index: i,
-                    positionX: foodSOA.positionsX[i],
-                    positionY: foodSOA.positionsY[i],
-                });
-            }
-        }
-    }
-  }
+//         for (let i = 0; i < foodSOA.count; i++) {
+//             if (foodSOA.reportUpdates[i]) {
+//                 client.socket.emit("update-food", {
+//                     index: i,
+//                     positionX: foodSOA.positionsX[i],
+//                     positionY: foodSOA.positionsY[i],
+//                 });
+//             }
+//         }
+//     }
+//   }
 
-  notifyFoodUpdate();
+//   notifyFoodUpdate();
 }
 
 

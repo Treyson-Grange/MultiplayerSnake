@@ -157,14 +157,25 @@ MyGame.screens["game-play"] = (function (
 
   //------------------------------------------------------------------
   //
-  // Handler for receiving state updates about food.
+  // Handlers for receiving state updates about food sprites.
   //
   //------------------------------------------------------------------
-  socket.on("update-food", function (data) {
-    food.model.update(data);
+  socket.on("food-positions", function (data) {
+    food.model.updateSprites(data);
     // for (let i = 0; i < data.eaten.length; i++) {
     //     food.model.update(i, data.eaten[i]);
     // }
+  });
+
+  //------------------------------------------------------------------
+  //
+  // Handler for receiving state updates about food.
+  //
+  //------------------------------------------------------------------
+  socket.on("food-update", function (data) {
+    for (let i = 0; i < data.eaten.length; i++) {
+        food.model.update(i, data.eaten[i]);
+    }
   });
 
   //------------------------------------------------------------------
