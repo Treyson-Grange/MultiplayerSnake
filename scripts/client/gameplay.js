@@ -26,8 +26,8 @@ MyGame.screens["game-play"] = (function (
     },
     playerOthers = {},
     food = {
-        model: components.Food(),
-        texture: MyGame.assets["food"],
+      model: components.Food(),
+      texture: MyGame.assets["food"],
     },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
@@ -154,7 +154,6 @@ MyGame.screens["game-play"] = (function (
     }
   });
 
-
   //------------------------------------------------------------------
   //
   // Handler for receiving state updates about food.
@@ -204,12 +203,20 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   function render() {
     graphics.clear();
-    renderer.Background.render(playerSelf.model.position, {height: .75, width: .75}, MyGame.assets["tile"]);
+    renderer.Background.render(
+      playerSelf.model.position,
+      { height: 0.75, width: 0.75 },
+      MyGame.assets["tile"]
+    );
     // console.log("playerSelf.model, playerSelf.texture: ", playerSelf.model, playerSelf.texture);
     renderer.Player.render(playerSelf.model, playerSelf.texture);
     for (let id in playerOthers) {
       let otherPlayer = playerOthers[id];
-      renderer.PlayerRemote.render(otherPlayer.model, MyGame.assets["player-other"], playerSelf.model.position); // player.texture is 'undefined' here :( should prolly fix that!
+      renderer.PlayerRemote.render(
+        otherPlayer.model,
+        MyGame.assets["player-other"],
+        playerSelf.model.position
+      ); // player.texture is 'undefined' here :( should prolly fix that!
     }
     renderer.Food.render(food.model, food.texture, playerSelf.model.position);
   }
@@ -246,93 +253,104 @@ MyGame.screens["game-play"] = (function (
   //
   //----------------------------------------------------------------
   function registerKeys() {
-//     myKeyboard.register(persistence.getMoveUp(), myLander.moveUp);
-//     myKeyboard.register(persistence.getMoveUp(), particleManager.toggleShowThrust);
-//     myKeyboard.register(persistence.getTurnLeft(), myLander.turnLeft);
-//     myKeyboard.register(persistence.getTurnRight(), myLander.turnRight);
-//     myKeyboard.register('Escape', function() {
-//         //
-//         // Stop the game loop by canceling the request for the next animation frame
-//         cancelNextRequest = true;
-//         //
-//         // Then, return to the main menu
-//         game.showScreen('main-menu');
-//     });
+    //     myKeyboard.register(persistence.getMoveUp(), myLander.moveUp);
+    //     myKeyboard.register(persistence.getMoveUp(), particleManager.toggleShowThrust);
+    //     myKeyboard.register(persistence.getTurnLeft(), myLander.turnLeft);
+    //     myKeyboard.register(persistence.getTurnRight(), myLander.turnRight);
+    //     myKeyboard.register('Escape', function() {
+    //         //
+    //         // Stop the game loop by canceling the request for the next animation frame
+    //         cancelNextRequest = true;
+    //         //
+    //         // Then, return to the main menu
+    //         game.showScreen('main-menu');
+    //     });
     //
     // Create the keyboard input handler and register the keyboard commands
     myKeyboard.registerHandler(
-        (elapsedTime) => {
-          let message = {
-            id: messageId++,
-            elapsedTime: elapsedTime,
-            type: "test",
-          };
-          socket.emit("input", message);
-          messageHistory.enqueue(message);
-          playerSelf.model.rotateRight(elapsedTime);
-        },
-        "t",
-        true
-      );
-      myKeyboard.registerHandler(
-        (elapsedTime) => {
-          let message = {
-            id: messageId++,
-            elapsedTime: elapsedTime,
-            type: "up",
-          };
-          socket.emit("input", message);
-          messageHistory.enqueue(message);
-          playerSelf.model.goUp(elapsedTime);
-        },
-        persistence.getMoveUp(),
-        true
-      );
-      myKeyboard.registerHandler(
-        (elapsedTime) => {
-          let message = {
-            id: messageId++,
-            elapsedTime: elapsedTime,
-            type: "right",
-          };
-          socket.emit("input", message);
-          messageHistory.enqueue(message);
-          playerSelf.model.goRight(elapsedTime);
-        },
-        persistence.getMoveRight(),
-        true
-      );
-  
-      myKeyboard.registerHandler(
-        (elapsedTime) => {
-          let message = {
-            id: messageId++,
-            elapsedTime: elapsedTime,
-            type: "left",
-          };
-          socket.emit("input", message);
-          messageHistory.enqueue(message);
-          playerSelf.model.goLeft(elapsedTime);
-        },
-        persistence.getMoveLeft(),
-        true
-      );
-      myKeyboard.registerHandler(
-        (elapsedTime) => {
-          let message = {
-            id: messageId++,
-            elapsedTime: elapsedTime,
-            type: "down",
-          };
-          socket.emit("input", message);
-          messageHistory.enqueue(message);
-          playerSelf.model.goDown(elapsedTime);
-        },
-        persistence.getMoveDown(),
-        true
-      );  
-}
+      (elapsedTime) => {
+        let message = {
+          id: messageId++,
+          elapsedTime: elapsedTime,
+          type: "test",
+        };
+        socket.emit("input", message);
+        messageHistory.enqueue(message);
+        playerSelf.model.rotateRight(elapsedTime);
+      },
+      "t",
+      true
+    );
+    myKeyboard.registerHandler(
+      (elapsedTime) => {
+        let message = {
+          id: messageId++,
+          elapsedTime: elapsedTime,
+          type: "up",
+        };
+        socket.emit("input", message);
+        messageHistory.enqueue(message);
+        playerSelf.model.goUp(elapsedTime, messageHistory, socket);
+      },
+      persistence.getMoveUp(),
+      true
+    );
+    myKeyboard.registerHandler(
+      (elapsedTime) => {
+        let message = {
+          id: messageId++,
+          elapsedTime: elapsedTime,
+          type: "right",
+        };
+        socket.emit("input", message);
+        messageHistory.enqueue(message);
+        playerSelf.model.goRight(elapsedTime, messageHistory, socket);
+      },
+      persistence.getMoveRight(),
+      true
+    );
 
+    myKeyboard.registerHandler(
+      (elapsedTime) => {
+        let message = {
+          id: messageId++,
+          elapsedTime: elapsedTime,
+          type: "left",
+        };
+        socket.emit("input", message);
+        messageHistory.enqueue(message);
+        playerSelf.model.goLeft(elapsedTime, messageHistory, socket);
+      },
+      persistence.getMoveLeft(),
+      true
+    );
+    myKeyboard.registerHandler(
+      (elapsedTime) => {
+        let message = {
+          id: messageId++,
+          elapsedTime: elapsedTime,
+          type: "down",
+        };
+        socket.emit("input", message);
+        messageHistory.enqueue(message);
+        playerSelf.model.goDown(elapsedTime, messageHistory, socket);
+      },
+      persistence.getMoveDown(),
+      true
+    );
+
+    //   myKeyboard.registerHandler(elapsedTime => {
+    //     let message = {
+    //         id: messageId++,
+    //         elapsedTime: elapsedTime,
+    //         type: 'move'
+    //     };
+    //     socket.emit('input', message);
+    //     messageHistory.enqueue(message);
+    //     playerSelf.model.move(elapsedTime);
+    // },
+    // 'w', true);
+  }
 
   //------------------------------------------------------------------
   //
