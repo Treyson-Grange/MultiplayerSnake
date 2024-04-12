@@ -135,7 +135,7 @@ function updateClients(elapsedTime) {
     // Notify all clients about every food sprite that's been instantiated
     let foodSpriteUpdate = {
         spriteSheetIndices: foodSOA.spriteSheetIndices,
-        renderFrame: foodSOA.renderFrame,
+        renderFrame: foodSOA.renderFrame, // I think that the server is sending this over and over and that's causing the client to render wonky; cause renderFrame isn't incrementing properly
     };
     client.socket.emit("food-initial", foodSpriteUpdate);
 

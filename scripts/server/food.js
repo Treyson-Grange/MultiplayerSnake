@@ -25,7 +25,7 @@ function createFood(howMany) {
     let moveRate = 200 / 1000; // pixels per millisecond
 
     let timeSinceFrameUpdate = 0;
-    const renderTime = 500; // render each frame of the sprite for 200 ms 
+    const renderTime = 900; // time in ms for each frame of the sprite to be rendered 
 
   let size = {
     width: 0.08,

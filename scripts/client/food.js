@@ -21,7 +21,7 @@ MyGame.components.Food = function(howMany) {
     let moveRate = 200 / 1000; // pixels per millisecond
 
     let timeSinceFrameUpdate = 0;
-    const renderTime = 500; // render each frame of the sprite for 200 ms 
+    const renderTime = 900; // time in ms for each frame of the sprite to be rendered 
     
     let size = {
         width: 0.08,
@@ -108,6 +108,7 @@ MyGame.components.Food = function(howMany) {
 
     that.updateRenderFrames = function (elapsedTime) {
         timeSinceFrameUpdate += elapsedTime;
+        // console.log("elapsed time: ", elapsedTime, "renderTime: ", renderTime, "timeSinceFrameUpdate: ", timeSinceFrameUpdate);
         if (timeSinceFrameUpdate > renderTime) {
             timeSinceFrameUpdate -= renderTime;
             
@@ -117,24 +118,8 @@ MyGame.components.Food = function(howMany) {
                 renderFrame[i] %= 8; // hardcoded in here -- renderFrames need to go from 0 to 7; Prolly find a better way to store this info
             }
         }
+        console.log("renderFrame: ", renderFrame);
     }
 
     return that;
-
-    // let imageReady = false;
-    // let image = new Image();
-
-    // image.onload = function() {
-    //     imageReady = true;
-    // };
-    // image.src = spec.imageSrc;
-
-    // let api = {
-    //     get imageSrc() { return spec.imageSrc; },
-    //     get center() { return spec.center; },
-    //     get size() { return spec.size; },
-    //     get points() { return spec.points; },
-    // };
-
-    // return api;
 };
