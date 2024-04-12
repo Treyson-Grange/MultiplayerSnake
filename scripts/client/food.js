@@ -23,25 +23,14 @@ MyGame.components.Food = function(howMany) {
     let spriteTime = [200, 200, 200, 200, 200, 200, 200, 200]; // milliseconds per sprite animation frame
     let moveRate = 200 / 1000; // pixels per millisecond
 
+    let renderFrame = 0;
     let timeSinceFrameUpdate = 0;
-    const renderTime = 900; // time in ms for each frame of the sprite to be rendered 
+    const renderTime = 100; // time in ms for each frame of the sprite to be rendered 
     
     let size = {
         width: 0.08,
         height: 0.08,
     };
-
-    function nextRange(min, max) {
-        let range = max - min + 1;
-
-        return Math.floor((Math.random() * range) + min);
-    }
-
-    let renderFrame = new Array(howMany);
-    for (let i = 0; i < howMany; i++) {
-        renderFrame[i] = nextRange(0, 7); // hardcoded: 7 because the animation frames go from 0 to 7 
-    }
-    console.log("renderFrame: ", renderFrame);
 
     Object.defineProperty(that, "positionsX", {
         get: () => positionsX,
@@ -71,7 +60,6 @@ MyGame.components.Food = function(howMany) {
 
       Object.defineProperty(that, "renderFrame", {
         get: () => renderFrame,
-        set: (index, value) => renderFrame[index] = value,
       });
     
       Object.defineProperty(that, "spriteCount", {
@@ -111,29 +99,20 @@ MyGame.components.Food = function(howMany) {
                 relocateFood(i, data.positionsX[i], data.positionsY[i]);
             }
         }
-        // spriteSheetIndices = data.spriteSheetIndices; // MAYHAPS MOVE THIS TO ITS OWN UPDATE FUNCTION?
-
     };
 
     that.updateSprites = function (data) {
         spriteSheetIndices = data.spriteSheetIndices;
-        renderFrame = data.renderFrame;
-        console.log("renderFrame: ", renderFrame);
     };
 
     that.updateRenderFrames = function (elapsedTime) {
         timeSinceFrameUpdate += elapsedTime;
-        // console.log("elapsed time: ", elapsedTime, "renderTime: ", renderTime, "timeSinceFrameUpdate: ", timeSinceFrameUpdate);
         if (timeSinceFrameUpdate > renderTime) {
             timeSinceFrameUpdate -= renderTime;
-            
             // increment each frame in the sprite animation
-            for (let i = 0; i < renderFrame.length; i++) {
-                renderFrame[i] += 1;
-                renderFrame[i] %= 8; // hardcoded in here -- renderFrames need to go from 0 to 7; Prolly find a better way to store this info
-            }
+            renderFrame += 1;
+            renderFrame %= 8; // hardcoded in here -- renderFrames need to go from 0 to 7; Prolly find a better way to store this info
         }
-        console.log("renderFrame: ", renderFrame);
     }
 
     return that;
