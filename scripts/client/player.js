@@ -80,53 +80,40 @@ MyGame.components.Player = function () {
   that.rotateLeft = function (elapsedTime) {
     direction -= rotateRate * elapsedTime;
   };
-  function rotateLeft(elapsedTime) {
-    direction -= rotateRate * elapsedTime;
-  }
 
+  //------------------------------------------------------------------
+  //
+  // Functions that given input, change the prefered direction
+  // of the player
+  //
+  //------------------------------------------------------------------
   that.goUp = function (elapsedTime) {
-    preferedDirection = -Math.PI / 2;
-  };
-  that.goDown = function (elapsedTime) {
-    preferedDirection = Math.PI / 2;
-  };
-  that.goRight = function (elapsedTime) {
-    preferedDirection = 0;
-    rotateRight(elapsedTime);
-  };
-  that.goLeft = function (elapsedTime) {
-    preferedDirection = Math.PI;
-    rotateLeft(elapsedTime);
-    // that.rotateLeft();//I dont think we can call this it just snaps us to the top left.
-  };
-  let updateRotateRate = 5000000;
-  function rotateToDirection(elapsedTime) {
-    // Calculate the shortest distance to the desired direction
-    let shortestDistance = preferedDirection - direction;
-    if (shortestDistance < -Math.PI) {
-      shortestDistance += 2 * Math.PI;
-    } else if (shortestDistance > Math.PI) {
-      shortestDistance -= 2 * Math.PI;
-    }
-    if (Math.abs(shortestDistance) < 0.2) {
-      direction = preferedDirection;
+    if (direction == Math.PI / 2) {
       return;
     }
-    let rotateDirection = shortestDistance > 0 ? 1 : -1;
-    let adjustedRotateRate = rotateRate * rotateDirection;
-    direction += (adjustedRotateRate * elapsedTime) / updateRotateRate;
-    if (direction > Math.PI) {
-      direction -= 2 * Math.PI;
-    } else if (direction < -Math.PI) {
-      direction += 2 * Math.PI;
-    }
-  }
-
-  that.update = function (when) {
-    if (direction !== preferedDirection) {
-      rotateToDirection(when);
-    }
+    direction = -Math.PI / 2;
   };
+  that.goDown = function (elapsedTime) {
+    if (direction == -Math.PI / 2) {
+      return;
+    }
+    direction = Math.PI / 2;
+  };
+  that.goRight = function (elapsedTime) {
+    if (direction == Math.PI) {
+      return;
+    }
+    direction = 0;
+  };
+  that.goLeft = function (elapsedTime) {
+    if (direction == 0) {
+      return;
+    }
+    direction = Math.PI;
+  };
+  let updateRotateRate = 5000000;
+
+  that.update = function (when) {};
 
   return that;
 };
