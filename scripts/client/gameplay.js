@@ -26,8 +26,8 @@ MyGame.screens["game-play"] = (function (
     },
     playerOthers = {},
     food = {
-      model: components.Food(),
-      texture: MyGame.assets["food"],
+        model: components.Food(),
+        texture: [ MyGame.assets["food0"], MyGame.assets["food1"], MyGame.assets["food2"], MyGame.assets["food3"], MyGame.assets["food4"], MyGame.assets["food5"] ], // THIS IS HOW MANY FOOD ASSETS THERE ARE, WOULD BE BETTER TO INFER THIS NUMBER SOMEHOW
     },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
@@ -156,13 +156,24 @@ MyGame.screens["game-play"] = (function (
 
   //------------------------------------------------------------------
   //
+  // Handlers for receiving state updates about food sprites.
+  //
+  //------------------------------------------------------------------
+  socket.on("food-initial", function (data) {
+    food.model.updateSprites(data);
+    // for (let i = 0; i < data.eaten.length; i++) {
+    //     food.model.update(i, data.eaten[i]);
+    // }
+  });
+
+  //------------------------------------------------------------------
+  //
   // Handler for receiving state updates about food.
   //
   //------------------------------------------------------------------
-  socket.on("update-food", function (data) {
-    food.model.update(data);
+  socket.on("food-update", function (data) {
     // for (let i = 0; i < data.eaten.length; i++) {
-    //     food.model.update(i, data.eaten[i]);
+        food.model.update(data);
     // }
   });
 
@@ -194,6 +205,7 @@ MyGame.screens["game-play"] = (function (
     for (let id in playerOthers) {
       playerOthers[id].model.update(elapsedTime);
     }
+    food.model.updateRenderFrames(elapsedTime); // increment the render frame on each sprite so it's animated
   }
 
   //------------------------------------------------------------------
@@ -244,7 +256,14 @@ MyGame.screens["game-play"] = (function (
   }
 
   function updateFood() {
-    food.texture = MyGame.assets["food"];
+    food.texture = [ 
+        MyGame.assets["food0"], 
+        MyGame.assets["food1"], 
+        MyGame.assets["food2"], 
+        MyGame.assets["food3"], 
+        MyGame.assets["food4"], 
+        MyGame.assets["food5"] 
+    ];
   }
 
   //----------------------------------------------------------------

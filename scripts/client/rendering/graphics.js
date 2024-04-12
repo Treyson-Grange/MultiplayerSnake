@@ -84,11 +84,50 @@ MyGame.graphics = (function () {
     );
   }
 
+  	//------------------------------------------------------------------
+	//
+	// Provides rendering support for a sprite animated from a sprite sheet.
+	//
+	//------------------------------------------------------------------
+    function drawSprite(texture, position, size, spriteIndex) {
+        let localCenter = {
+            x: position.x * canvas.width,
+            y: position.y * canvas.width,
+            };
+            let localSize = {
+            width: size.width * canvas.width,
+            height: size.height * canvas.height,
+            };
+
+        context.save();
+
+        //
+        // Pick the selected sprite from the sprite sheet to render
+        context.drawImage(
+            texture,
+            localSize.width * spriteIndex, 0,	// Which sprite to pick out
+            localSize.width, localSize.height,		// The size of the sprite
+            localCenter.x - localSize.width/2,	// Where to draw the sprite
+            localCenter.y - localSize.height/2,
+            localSize.width, localSize.height);
+          
+        context.restore();
+    }
+			//
+			// Once the image is loaded, we can compute the height and width based upon
+			// what we know of the image and the number of sprites in the sheet.
+            // DO THIS IN GAME.JS OR SOMETHING !!!???
+		// 	spec.height = image.height;
+		// 	spec.width = image.width / spec.spriteCount;
+		// };
+		// image.src = spec.spriteSheet;
+
   return {
     clear: clear,
     saveContext: saveContext,
     restoreContext: restoreContext,
     rotateCanvas: rotateCanvas,
     drawImage: drawImage,
+    drawSprite : drawSprite
   };
 })();

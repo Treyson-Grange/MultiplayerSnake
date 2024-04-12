@@ -63,9 +63,29 @@ MyGame.loader = (function () {
         source: "assets/dirt.png",
       },
       {
-        key: "food",
-        source: "assets/snakeHead.png", // TODO: CHANGE THIS!!!
-      }
+        key: "food0",
+        source: "assets/food/BlueBlue/ToxicFrogBlueBlue_Idle.png",
+      },
+      {
+        key: "food1",
+        source: "assets/food/BlueBrown/ToxicFrogBlueBrown_Idle.png", 
+      },
+      {
+        key: "food2",
+        source: "assets/food/GreenBlue/ToxicFrogGreenBlue_Idle.png", 
+      },
+      {
+        key: "food3",
+        source: "assets/food/GreenBrown/ToxicFrogGreenBrown_Idle.png", 
+      },
+      {
+        key: "food4",
+        source: "assets/food/PurpleBlue/ToxicFrogPurpleBlue_Idle.png", 
+      },
+      {
+        key: "food5",
+        source: "assets/food/PurpleWhite/ToxicFrogPurpleWhite_Idle.png",
+      },
     ];
 
   //------------------------------------------------------------------

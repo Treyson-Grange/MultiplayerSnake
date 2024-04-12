@@ -3,9 +3,10 @@
 // Nodejs module that represents the model for the structure of arrays for Food.
 //
 // ------------------------------------------------------------------
+
 "use strict";
 
-let random = require("./random");
+// let random = require("./random");
 
 //------------------------------------------------------------------
 //
@@ -16,23 +17,23 @@ function createFood(howMany) {
   let that = {};
 
     let count = howMany;
-    // TODO: PROLLY DON'T INITIALIZE HERE, OR ELSE HAVE SOME BETTER WAY OF SENDING FOOD INFO TO CLIENT AT THE START?
     let positionsX = new Array(howMany);
-    // for (let i = 0; i < howMany; i++) {
-    //     positionsX[i] = random.nextDouble();
-    // }
-
     let positionsY = new Array(howMany);
-    // for (let i = 0; i < howMany; i++) {
-    //     positionsY[i] = random.nextDouble();
-    // }
-
     let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
+    
+    let spriteSheetIndices = new Array(howMany);
+    let spriteCount = 8;
+    let spriteTime = [200, 200, 200, 200, 200, 200, 200, 200]; // milliseconds per sprite animation frame
+    let moveRate = 200 / 1000; // pixels per millisecond
 
-  let size = {
-    width: 0.05,
-    height: 0.05,
-  };
+    let renderFrame = 0;
+    let timeSinceFrameUpdate = 0;
+    const renderTime = 100; // time in ms for each frame of the sprite to be rendered 
+
+    let size = {
+        width: 0.08,
+        height: 0.08,
+    };
 
   Object.defineProperty(that, "positionsX", {
     get: () => positionsX,
@@ -57,6 +58,27 @@ function createFood(howMany) {
     set: (index, value) => (reportUpdates[index] = value),
   });
 
+  Object.defineProperty(that, "spriteSheetIndices", {
+    get: () => spriteSheetIndices,
+    set: (index, value) => (spriteSheetIndices[index] = value),
+  });
+
+  Object.defineProperty(that, "renderFrame", {
+    get: () => renderFrame,
+  });
+
+  Object.defineProperty(that, "spriteCount", {
+    get: () => spriteCount,
+  });
+
+  Object.defineProperty(that, "spriteTime", {
+    get: () => spriteTime,
+  });
+
+  Object.defineProperty(that, "moveRate", {
+    get: () => moveRate,
+  });
+
 //------------------------------------------------------------------
   //
   // Function used to "remove and re-generate" (ie just relocate :P) a particle of food from the structure of arrays
@@ -78,11 +100,30 @@ function createFood(howMany) {
 
     that.update = function (data) {
         for (let i = 0; i < data.count; i++) {
-            if (data.reportUpdates[i]) {
+            if (data.reportUpdates[i] == true) {
                 relocateFood(i, data.positionsX[i], data.positionsY[i]);
             }
         }
+        spriteSheetIndices = data.spriteSheetIndices;
+
     };
+
+    that.updateSprites = function (data) {
+        spriteSheetIndices = data.spriteSheetIndices;
+        renderFrame = data.renderFrame;
+    };
+
+    that.updateRenderFrames = function (elapsedTime) {
+        timeSinceFrameUpdate += elapsedTime;
+        if (timeSinceFrameUpdate > renderTime) {
+            timeSinceFrameUpdate -= renderTime;
+            // increment each frame in the sprite animation
+            renderFrame += 1;
+            renderFrame %= 8; // hardcoded in here -- renderFrames need to go from 0 to 7; Prolly find a better way to store this info
+        }
+    }
+
+
     return that;
 
 }

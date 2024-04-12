@@ -8,6 +8,7 @@ MyGame.renderer.Food = (function(graphics) {
     'use strict';
     let that = {};
     
+    
     // ------------------------------------------------------------------
     //
     // Renders all food models.
@@ -20,7 +21,8 @@ MyGame.renderer.Food = (function(graphics) {
                 x: model.positionsX[i] - playerSelfPos.x,
                 y: model.positionsY[i] - playerSelfPos.y
             }
-            graphics.drawImage(texture, position, model.size);
+            // we need the last i in this call to increment every time the function is called; that way we render a new frame of the frog each time
+            graphics.drawSprite(texture[model.spriteSheetIndices[i]], position, model.size, model.renderFrame); 
             graphics.restoreContext();
         }
     }
