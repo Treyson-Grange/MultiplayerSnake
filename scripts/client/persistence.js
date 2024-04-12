@@ -20,7 +20,7 @@ MyGame.persistence = (function () {
     }
 
     // Controls
-    let customControls = {left: 'a', right: 'd', up: 'w'};
+    let customControls = {left: 'a', right: 'd', up: 'w', down: 's'};
 
     let previousControls = localStorage.getItem('MyGame.customControls');
     // console.log(previousControls);
