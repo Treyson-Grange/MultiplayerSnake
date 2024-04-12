@@ -91,6 +91,17 @@ MyGame.graphics = (function () {
 	//------------------------------------------------------------------
     function drawSprite(texture, position, size, spriteIndex) {
         console.log("drawSprite: ", texture, position, size, spriteIndex);
+
+        let localCenter = {
+            x: position.x * canvas.width,
+            y: position.y * canvas.width,
+            };
+            let localSize = {
+            width: size.width * canvas.width,
+            height: size.height * canvas.height,
+            };
+
+
         // console.log(texture,
         //     size.width * spriteIndex + 1, 0,	// Which sprite to pick out
         //     size.width, size.height,		// The size of the sprite
@@ -102,33 +113,34 @@ MyGame.graphics = (function () {
 
         //
         // Pick the selected sprite from the sprite sheet to render
-        // context.drawImage(
-        //     texture,
-        //     size.width * spriteIndex, 0,	// Which sprite to pick out
-        //     size.width, size.height,		// The size of the sprite
-        //     position.x - size.width/2,	// Where to draw the sprite
-        //     position.y - size.height/2,
-        //     size.width, size.height);
-
-
-        let localCenter = {
-            x: position.x * canvas.width,
-            y: position.y * canvas.width,
-            };
-            let localSize = {
-            width: size.width * canvas.width,
-            height: size.height * canvas.height,
-            };
-        
-            context.drawImage(
+        context.drawImage(
             texture,
-            .01, .01,
-            localSize.width, localSize.height,
-            localCenter.x - localSize.width / 2,
-            localCenter.y - localSize.height / 2,
-            localSize.width,
-            localSize.height
-            );
+            localSize.width * spriteIndex, 0,	// Which sprite to pick out
+            localSize.width, localSize.height,		// The size of the sprite
+            localCenter.x - localSize.width/2,	// Where to draw the sprite
+            localCenter.y - localSize.height/2,
+            localSize.width, localSize.height);
+
+//--------------------
+
+        // let localCenter = {
+        //     x: position.x * canvas.width,
+        //     y: position.y * canvas.width,
+        //     };
+        //     let localSize = {
+        //     width: size.width * canvas.width,
+        //     height: size.height * canvas.height,
+        //     };
+        
+        //     context.drawImage(
+        //     texture,
+        //     localSize.width / 2, 0,
+        //     localSize.width, localSize.height,
+        //     localCenter.x - localSize.width / 2,
+        //     localCenter.y - localSize.height / 2,
+        //     localSize.width,
+        //     localSize.height
+        //     );
           
         context.restore();
     }
