@@ -25,6 +25,12 @@ for (let i = 0; i < foodCount; i++) {
     foodSOA.positionsY[i] = random.nextDouble();
 }
 
+for (let i = 0; i < foodCount; i++) {
+    foodSOA.renderFrame[i] = random.nextRange(0, 7); // amount of sprites to a sprite sheet is hardcoded
+}
+
+console.log("foodSOA.renderFrame: ", foodSOA.renderFrame);
+
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
 // TODO: PING THE food TO TELL it that it NEEDs TO UPDATE its INDICES!!
 for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
@@ -129,8 +135,9 @@ function updateClients(elapsedTime) {
     // Notify all clients about every food sprite that's been instantiated
     let foodSpriteUpdate = {
         spriteSheetIndices: foodSOA.spriteSheetIndices,
+        renderFrame: foodSOA.renderFrame,
     };
-    client.socket.emit("food-positions", foodSpriteUpdate);
+    client.socket.emit("food-initial", foodSpriteUpdate);
 
   }
 

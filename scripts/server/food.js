@@ -5,8 +5,6 @@
 // ------------------------------------------------------------------
 "use strict";
 
-let random = require("./random");
-
 //------------------------------------------------------------------
 //
 // Public function used to initially create the structure of arrays for food
@@ -21,6 +19,7 @@ function createFood(howMany) {
     let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
     
     let spriteSheetIndices = new Array(howMany);
+    let renderFrame = new Array(howMany);
     let spriteCount = 8;
     let spriteTime = [200, 200, 200, 200, 200, 200, 200, 200]; // milliseconds per sprite animation frame
     let moveRate = 200 / 1000; // pixels per millisecond
@@ -56,6 +55,11 @@ function createFood(howMany) {
   Object.defineProperty(that, "spriteSheetIndices", {
     get: () => spriteSheetIndices,
     set: (index, value) => (spriteSheetIndices[index] = value),
+  });
+
+  Object.defineProperty(that, "renderFrame", {
+    get: () => renderFrame,
+    set: (index, value) => renderFrame[index] = value,
   });
 
   Object.defineProperty(that, "spriteCount", {
@@ -101,7 +105,18 @@ function createFood(howMany) {
 
     that.updateSprites = function (data) {
         spriteSheetIndices = data.spriteSheetIndices;
+        renderFrame = data.renderFrame;
+        // console.log("renderFrame: ", renderFrame);
     };
+
+    that.updateRenderFrames = function () {
+        for (let i = 0; i < renderFrame.length; i++) {
+            renderFrame[i] += 1;
+            renderFrame[i] %= 8; // hardcoded in here -- renderFrames need to go from 0 to 7; Prolly find a better way to store this info
+        }
+        // console.log(renderFrame);
+    }
+
 
     return that;
 

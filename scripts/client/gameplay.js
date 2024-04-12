@@ -160,7 +160,7 @@ MyGame.screens["game-play"] = (function (
   // Handlers for receiving state updates about food sprites.
   //
   //------------------------------------------------------------------
-  socket.on("food-positions", function (data) {
+  socket.on("food-initial", function (data) {
     food.model.updateSprites(data);
     // for (let i = 0; i < data.eaten.length; i++) {
     //     food.model.update(i, data.eaten[i]);
