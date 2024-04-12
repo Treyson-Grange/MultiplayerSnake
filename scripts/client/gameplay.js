@@ -206,6 +206,7 @@ MyGame.screens["game-play"] = (function (
     for (let id in playerOthers) {
       playerOthers[id].model.update(elapsedTime);
     }
+    food.model.updateRenderFrames(elapsedTime); // increment the render frame on each sprite so it's animated
   }
 
   //------------------------------------------------------------------

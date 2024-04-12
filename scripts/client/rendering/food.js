@@ -23,8 +23,6 @@ MyGame.renderer.Food = (function(graphics) {
             // we need the last i in this call to increment every time the function is called; that way we render a new frame of the frog each time
             graphics.drawSprite(texture[model.spriteSheetIndices[i]], position, model.size, model.renderFrame[i]); 
             graphics.restoreContext();
-
-            model.updateRenderFrames(); // increment the render frame on each sprite so it's animated
         }
     }
 

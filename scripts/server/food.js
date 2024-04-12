@@ -24,6 +24,9 @@ function createFood(howMany) {
     let spriteTime = [200, 200, 200, 200, 200, 200, 200, 200]; // milliseconds per sprite animation frame
     let moveRate = 200 / 1000; // pixels per millisecond
 
+    let timeSinceFrameUpdate = 0;
+    const renderTime = 500; // render each frame of the sprite for 200 ms 
+
   let size = {
     width: 0.08,
     height: 0.08,
@@ -109,10 +112,16 @@ function createFood(howMany) {
         // console.log("renderFrame: ", renderFrame);
     };
 
-    that.updateRenderFrames = function () {
-        for (let i = 0; i < renderFrame.length; i++) {
-            renderFrame[i] += 1;
-            renderFrame[i] %= 8; // hardcoded in here -- renderFrames need to go from 0 to 7; Prolly find a better way to store this info
+    that.updateRenderFrames = function (elapsedTime) {
+        timeSinceFrameUpdate += elapsedTime;
+        if (timeSinceFrameUpdate > renderTime) {
+            timeSinceFrameUpdate -= renderTime;
+            
+            // increment each frame in the sprite animation
+            for (let i = 0; i < renderFrame.length; i++) {
+                renderFrame[i] += 1;
+                renderFrame[i] %= 8; // hardcoded in here -- renderFrames need to go from 0 to 7; Prolly find a better way to store this info
+            }
         }
         // console.log(renderFrame);
     }
