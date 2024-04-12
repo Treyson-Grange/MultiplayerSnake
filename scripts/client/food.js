@@ -86,7 +86,7 @@ MyGame.components.Food = function(howMany) {
                 relocateFood(i, data.positionsX[i], data.positionsY[i]);
             }
         }
-        spriteSheetIndices = data.spriteSheetIndices; // MAYHAPS MOVE THIS TO ITS OWN UPDATE FUNCTION?
+        // spriteSheetIndices = data.spriteSheetIndices; // MAYHAPS MOVE THIS TO ITS OWN UPDATE FUNCTION?
 
     };
 

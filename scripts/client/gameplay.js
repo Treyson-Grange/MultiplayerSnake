@@ -173,9 +173,9 @@ MyGame.screens["game-play"] = (function (
   //
   //------------------------------------------------------------------
   socket.on("food-update", function (data) {
-    for (let i = 0; i < data.eaten.length; i++) {
-        food.model.update(i, data.eaten[i]);
-    }
+    // for (let i = 0; i < data.eaten.length; i++) {
+        food.model.update(data);
+    // }
   });
 
   //------------------------------------------------------------------

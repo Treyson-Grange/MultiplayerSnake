@@ -90,6 +90,7 @@ MyGame.graphics = (function () {
 	//
 	//------------------------------------------------------------------
     function drawSprite(texture, position, size, spriteIndex) {
+        // console.log("drawSprite: ", texture, position, size, spriteIndex);
         context.save();
 
         //

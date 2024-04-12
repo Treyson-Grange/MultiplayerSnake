@@ -28,7 +28,7 @@ for (let i = 0; i < foodCount; i++) {
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
 // TODO: PING THE food TO TELL it that it NEEDs TO UPDATE its INDICES!!
 for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
-    foodSOA.spriteSheetIndices[i] = random.nextRange(0, 6); // amount of sprites is hardcoded 
+    foodSOA.spriteSheetIndices[i] = random.nextRange(0, 5); // amount of sprites is hardcoded 
 }
 
 //------------------------------------------------------------------
@@ -123,7 +123,7 @@ function updateClients(elapsedTime) {
         count: foodSOA.count,
         spriteSheetIndices: foodSOA.spriteSheetIndices,
     };
-    client.socket.emit("update-food", foodUpdate);
+    client.socket.emit("food-update", foodUpdate);
 
     //
     // Notify all clients about every food sprite that's been instantiated
