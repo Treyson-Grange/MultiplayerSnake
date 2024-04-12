@@ -26,8 +26,8 @@ function createFood(howMany) {
     let moveRate = 200 / 1000; // pixels per millisecond
 
   let size = {
-    width: 0.05,
-    height: 0.05,
+    width: 0.08,
+    height: 0.08,
   };
 
   Object.defineProperty(that, "positionsX", {
