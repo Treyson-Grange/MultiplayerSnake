@@ -3,11 +3,15 @@
 // Model for all food in the game.
 //
 
+// import { nextRange } from "./random";
+
 //---------------------------------------------------------------------
 MyGame.components.Food = function(howMany) {
     'use strict';
 
     let that = {};
+
+    // let random = require("./random");
 
     let count = howMany;
     let positionsX = new Array(howMany);
@@ -15,7 +19,6 @@ MyGame.components.Food = function(howMany) {
     let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
     
     let spriteSheetIndices = new Array(howMany);
-    let renderFrame = new Array(howMany);
     let spriteCount = 8;
     let spriteTime = [200, 200, 200, 200, 200, 200, 200, 200]; // milliseconds per sprite animation frame
     let moveRate = 200 / 1000; // pixels per millisecond
@@ -27,6 +30,18 @@ MyGame.components.Food = function(howMany) {
         width: 0.08,
         height: 0.08,
     };
+
+    function nextRange(min, max) {
+        let range = max - min + 1;
+
+        return Math.floor((Math.random() * range) + min);
+    }
+
+    let renderFrame = new Array(howMany);
+    for (let i = 0; i < howMany; i++) {
+        renderFrame[i] = nextRange(0, 7); // hardcoded: 7 because the animation frames go from 0 to 7 
+    }
+    console.log("renderFrame: ", renderFrame);
 
     Object.defineProperty(that, "positionsX", {
         get: () => positionsX,

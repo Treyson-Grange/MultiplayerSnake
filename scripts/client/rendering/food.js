@@ -8,6 +8,7 @@ MyGame.renderer.Food = (function(graphics) {
     'use strict';
     let that = {};
     
+    
     // ------------------------------------------------------------------
     //
     // Renders all food models.

@@ -3,7 +3,10 @@
 // Nodejs module that represents the model for the structure of arrays for Food.
 //
 // ------------------------------------------------------------------
+
 "use strict";
+
+// let random = require("./random");
 
 //------------------------------------------------------------------
 //
@@ -19,7 +22,6 @@ function createFood(howMany) {
     let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
     
     let spriteSheetIndices = new Array(howMany);
-    let renderFrame = new Array(howMany);
     let spriteCount = 8;
     let spriteTime = [200, 200, 200, 200, 200, 200, 200, 200]; // milliseconds per sprite animation frame
     let moveRate = 200 / 1000; // pixels per millisecond
@@ -27,10 +29,21 @@ function createFood(howMany) {
     let timeSinceFrameUpdate = 0;
     const renderTime = 900; // time in ms for each frame of the sprite to be rendered 
 
-  let size = {
-    width: 0.08,
-    height: 0.08,
-  };
+    let size = {
+        width: 0.08,
+        height: 0.08,
+    };
+
+    function nextRange(min, max) {
+        let range = max - min + 1;
+
+        return Math.floor((Math.random() * range) + min);
+    }
+
+    let renderFrame = new Array(howMany);
+    for (let i = 0; i < howMany; i++) {
+        renderFrame[i] = nextRange(0, 7); // hardcoded: 7 because the animation frames go from 0 to 7 
+    }
 
   Object.defineProperty(that, "positionsX", {
     get: () => positionsX,
