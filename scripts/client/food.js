@@ -109,7 +109,6 @@ MyGame.components.Food = function(howMany) {
 
     that.updateSprites = function (data) {
         spriteSheetIndices = data.spriteSheetIndices;
-        renderFrame = data.renderFrame;
         bigFood = data.bigFood;
     };
 
