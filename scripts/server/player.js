@@ -70,6 +70,7 @@ function createPlayer() {
 
     position.x += vectorX * elapsedTime * speed;
     position.y += vectorY * elapsedTime * speed;
+    console.log(position);
   };
 
   //------------------------------------------------------------------

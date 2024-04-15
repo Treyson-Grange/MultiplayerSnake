@@ -10,6 +10,8 @@ let random = require("./random");
 let Player = require("./player");
 let Food = require("./food");
 
+const WORLD_SIZE = 4; // Both x and y
+
 const UPDATE_RATE_MS = 50;
 let quit = false;
 let activeClients = {};
