@@ -16,6 +16,7 @@ let activeClients = {};
 let inputQueue = [];
 
 let foodCount = 10;
+
 let foodSOA = Food.create(foodCount);
 for (let i = 0; i < foodCount; i++) {
     foodSOA.positionsX[i] = random.nextDouble();
@@ -24,6 +25,8 @@ for (let i = 0; i < foodCount; i++) {
 for (let i = 0; i < foodCount; i++) {
     foodSOA.positionsY[i] = random.nextDouble();
 }
+
+let bigFood = new Array(foodCount).fill(false);
 
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
 // TODO: PING THE food TO TELL it that it NEEDs TO UPDATE its INDICES!!
@@ -129,6 +132,7 @@ function updateClients(elapsedTime) {
     // Notify all clients about every food sprite that's been instantiated
     let foodSpriteUpdate = {
         spriteSheetIndices: foodSOA.spriteSheetIndices,
+        bigFood: bigFood,
         // renderFrame: foodSOA.renderFrame, // I think that the server is sending this over and over and that's causing the client to render wonky; cause renderFrame isn't incrementing properly
     };
     client.socket.emit("food-initial", foodSpriteUpdate);
