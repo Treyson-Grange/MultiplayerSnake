@@ -122,7 +122,16 @@ function checkAllCollisions() {
 
         // check for collision
         if (playerFoodCollided(playerSpec, foodPiece)) {
-            console.log("a collision!");
+            console.log("a food collision!");
+
+            // "eat" food by relocating it somewhere else in the map
+            let newPosX = random.nextDouble() * 4;
+            let newPosY = random.nextDouble() * 4;
+
+            // tell the food to re-locate
+            foodSOA.relocateFood(i, newPosX, newPosY);
+
+            // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
         }
     }
 
