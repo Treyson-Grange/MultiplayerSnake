@@ -43,6 +43,32 @@ for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
 
 //------------------------------------------------------------------
 //
+// Utility function to perform a hit test between player and food.  The
+// objects must have a position: { x: , y: } property and radius property.
+//
+//------------------------------------------------------------------
+function playerFoodCollided(player, food) {
+    let distance = Math.sqrt(Math.pow(player.position.x - food.position.x, 2) + Math.pow(player.position.y - food.position.y, 2));
+    let radii = (player.size.width / 2) + (food.size.width / 2);
+
+    return distance <= radii;
+}
+
+//------------------------------------------------------------------
+//
+// Utility function to perform a hit test between two objects.  The
+// objects must have a position: { x: , y: } property and radius property.
+//
+//------------------------------------------------------------------
+function playerFoodCollided(player, food) {
+    let distance = Math.sqrt(Math.pow(player.position.x - food.position.x, 2) + Math.pow(player.position.y - food.position.y, 2));
+    let radii = (player.size.width / 2) + (food.size.width / 2);
+
+    return distance <= radii;
+}
+
+//------------------------------------------------------------------
+//
 // Process the network inputs we have received since the last time
 // the game loop was processed.
 //
@@ -94,6 +120,42 @@ function update(elapsedTime, currentTime) {
   for (let clientId in activeClients) {
     activeClients[clientId].player.update(currentTime);
   }
+  // check for player v player collisions
+  for (let clientId in activeClients) {
+    let client = activeClients[clientId];
+    let player = client.player;
+
+    for (let i = 0; i < foodSOA.positionsX.length; i++) {
+        let foodSize = foodSOA.size;
+
+        // update the size to be bigger if it's a piece of big food
+        if (foodSOA.bigFood[i]) {
+            foodSize = foodSOA.size;
+        }
+        
+        // create food obj for collision detection
+        let foodPiece = {
+            size: foodSize,
+            radius: { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] },
+        };
+
+        let playerSpec = {
+            size: player.size,
+            position: player.position
+        };
+
+        // check for collision
+        if (playerFoodCollided(playerSpec, foodPiece)) {
+            console.log("a collision!");
+        }
+    }
+  }
+
+  // check for player v food collisions
+
+
+  // check for player v wall collisions
+
 }
 
 //------------------------------------------------------------------
