@@ -94,6 +94,10 @@ function createFood(howMany) {
     get: () => moveRate,
   });
 
+  Object.defineProperty(that, "relocateFood", {
+    get: () => relocateFood,
+    });
+
 //------------------------------------------------------------------
   //
   // Function used to "remove and re-generate" (ie just relocate :P) a particle of food from the structure of arrays
