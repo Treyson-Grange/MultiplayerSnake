@@ -19,11 +19,11 @@ let foodCount = 10;
 
 let foodSOA = Food.create(foodCount);
 for (let i = 0; i < foodCount; i++) {
-    foodSOA.positionsX[i] = random.nextDouble();
+    foodSOA.positionsX[i] = random.nextRange(0, 4); // 4 becauase the map size is 4
 }
 
 for (let i = 0; i < foodCount; i++) {
-    foodSOA.positionsY[i] = random.nextDouble();
+    foodSOA.positionsY[i] = random.nextRange(0, 4);
 }
 
 let bigFood = new Array(foodCount).fill(true);
