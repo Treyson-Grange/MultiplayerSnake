@@ -29,7 +29,22 @@ MyGame.screens["game-play"] = (function (
     playerOthers = {},
     food = {
         model: components.Food(),
-        texture: [ MyGame.assets["food0"], MyGame.assets["food1"], MyGame.assets["food2"], MyGame.assets["food3"], MyGame.assets["food4"], MyGame.assets["food5"] ], // THIS IS HOW MANY FOOD ASSETS THERE ARE, WOULD BE BETTER TO INFER THIS NUMBER SOMEHOW
+        texture: [ 
+            MyGame.assets["food0"], 
+            MyGame.assets["food1"], 
+            MyGame.assets["food2"], 
+            MyGame.assets["food3"], 
+            MyGame.assets["food4"], 
+            MyGame.assets["food5"] 
+        ], // THIS IS HOW MANY FOOD ASSETS THERE ARE, WOULD BE BETTER TO INFER THIS NUMBER SOMEHOW
+        bigTexture: [
+            MyGame.assets["food0Big"], 
+            MyGame.assets["food1Big"], 
+            MyGame.assets["food2Big"], 
+            MyGame.assets["food3Big"], 
+            MyGame.assets["food4Big"], 
+            MyGame.assets["food5Big"] 
+        ]
     },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
@@ -241,6 +256,7 @@ MyGame.screens["game-play"] = (function (
     renderer.Food.render(
         food.model, 
         food.texture, 
+        food.bigTexture,
         playerSelf.model.position,
         WORLD_SIZE
     );
@@ -277,6 +293,14 @@ MyGame.screens["game-play"] = (function (
         MyGame.assets["food4"], 
         MyGame.assets["food5"] 
     ];
+    food.bigTexture = [
+        MyGame.assets["food0Big"],
+        MyGame.assets["food1Big"], 
+        MyGame.assets["food2Big"], 
+        MyGame.assets["food3Big"], 
+        MyGame.assets["food4Big"], 
+        MyGame.assets["food5Big"] 
+    ]
   }
 
   //----------------------------------------------------------------

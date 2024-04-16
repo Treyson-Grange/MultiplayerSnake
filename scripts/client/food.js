@@ -33,6 +33,11 @@ MyGame.components.Food = function(howMany) {
         height: 0.08,
     };
 
+    let bigSize = {
+        width: 0.11,
+        height: 0.11,
+    };
+
     Object.defineProperty(that, "positionsX", {
         get: () => positionsX,
     });
@@ -44,6 +49,10 @@ MyGame.components.Food = function(howMany) {
     Object.defineProperty(that, "size", {
         get: () => size,
     });
+
+    Object.defineProperty(that, "bigSize", {
+        get: () => bigSize,
+      });
 
     Object.defineProperty(that, "count", {
         get: () => count,

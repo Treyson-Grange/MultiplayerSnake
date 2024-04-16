@@ -17,7 +17,9 @@ MyGame.renderer.Food = (function(graphics) {
     // Renders all food models.
     //
     // ------------------------------------------------------------------
-    that.render = function(model, texture, playerSelfPos, WORLD_SIZE) {
+    that.render = function(model, texture, bigTexture, playerSelfPos, WORLD_SIZE) {
+        // console.log("bigTexture: ", bigTexture);
+
         let screenPos = {x: playerSelfPos.x - .5, y: playerSelfPos.y - .5}; //top-left corner of screen
 
         graphics.saveContext();
@@ -35,11 +37,12 @@ MyGame.renderer.Food = (function(graphics) {
                     }
                     // console.log("position: ", position);
                     // PROLLY CHANGE THIS vvv TO JUST A SEPARATE FOOD THING FOR BIG FOOD
-                    // if (model.bigFood[i]) { // this isn't working; also we need to get bigFood values from server cause those should be the same across clients!!
-                    //     graphics.drawSprite(texture[model.spriteSheetIndices[i]], position, {width: model.size.width * 2, height: model.size.height * 2}, model.renderFrame); 
-                    // }
-                    // else {
+                    if (model.bigFood[i]) { // this isn't working; also we need to get bigFood values from server cause those should be the same across clients!!
+                        graphics.drawSprite(bigTexture[model.spriteSheetIndices[i]], position, model.bigSize, model.renderFrame); 
+                    }
+                    else {
                         graphics.drawSprite(texture[model.spriteSheetIndices[i]], position, model.size, model.renderFrame); 
+                    }
                 }                        
             }
         }

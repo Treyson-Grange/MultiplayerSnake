@@ -90,6 +90,30 @@ MyGame.loader = (function () {
         key: "food5",
         source: "assets/food/PurpleWhite/ToxicFrogPurpleWhite_Idle.png",
       },
+      {
+        key: "food0Big",
+        source: "assets/food/BlueBlue/ToxicFrogBlueBlue_Idle_Big.png",
+      },
+      {
+        key: "food1Big",
+        source: "assets/food/BlueBrown/ToxicFrogBlueBrown_Idle_Big.png", 
+      },
+      {
+        key: "food2Big",
+        source: "assets/food/GreenBlue/ToxicFrogGreenBlue_Idle_Big.png", 
+      },
+      {
+        key: "food3Big",
+        source: "assets/food/GreenBrown/ToxicFrogGreenBrown_Idle_Big.png", 
+      },
+      {
+        key: "food4Big",
+        source: "assets/food/PurpleBlue/ToxicFrogPurpleBlue_Idle_Big.png", 
+      },
+      {
+        key: "food5Big",
+        source: "assets/food/PurpleWhite/ToxicFrogPurpleWhite_Idle_Big.png",
+      },
     ];
 
   //------------------------------------------------------------------
