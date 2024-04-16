@@ -17,6 +17,8 @@ MyGame.screens["game-play"] = (function (
   console.log(components.Player());
   console.log(components.Food());
 
+  const WORLD_SIZE = 4; // Both x and y
+
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
     myKeyboard = input.Keyboard(),
@@ -220,6 +222,12 @@ MyGame.screens["game-play"] = (function (
       { height: 0.75, width: 0.75 },
       MyGame.assets["tile"]
     );
+    renderer.Walls.render(
+      playerSelf.model.position,
+      { length: .5, width: .1},
+      WORLD_SIZE,
+      MyGame.assets["wall"]
+    )
     // console.log("playerSelf.model, playerSelf.texture: ", playerSelf.model, playerSelf.texture);
     renderer.Player.render(playerSelf.model, playerSelf.texture);
     for (let id in playerOthers) {

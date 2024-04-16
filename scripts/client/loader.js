@@ -39,7 +39,7 @@ MyGame.loader = (function () {
         onComplete: null,
       },
       {
-        scripts: ["rendering/player", "rendering/player-remote", "rendering/background"],
+        scripts: ["rendering/player", "rendering/player-remote", "rendering/background", "rendering/walls"],
         message: "Renderers loaded",
         onComplete: null,
       },
@@ -61,6 +61,10 @@ MyGame.loader = (function () {
       {
         key: "tile",
         source: "assets/dirt.png",
+      },
+      {
+        key: "wall",
+        source: "assets/stick.png",
       },
       {
         key: "food0",
