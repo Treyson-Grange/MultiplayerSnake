@@ -17,7 +17,7 @@ let quit = false;
 let activeClients = {};
 let inputQueue = [];
 
-let foodCount = 500;
+let foodCount = 100;
 
 let foodSOA = Food.create(foodCount);
 for (let i = 0; i < foodCount; i++) {
@@ -28,9 +28,12 @@ for (let i = 0; i < foodCount; i++) {
     foodSOA.positionsY[i] = random.nextDouble() * 4;
 }
 
-console.log(foodSOA.positionsX);
-
-let bigFood = new Array(foodCount).fill(true);
+let bigFood = new Array(foodCount).fill(false);
+for (let i = 0; i < foodCount; i++) {
+    if (i % 2 == 0) {
+        bigFood[i] = true;
+    }
+}
 
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
 // TODO: PING THE food TO TELL it that it NEEDs TO UPDATE its INDICES!!

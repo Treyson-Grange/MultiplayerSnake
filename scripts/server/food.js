@@ -36,6 +36,11 @@ function createFood(howMany) {
         height: 0.08,
     };
 
+    let bigSize = {
+        width: 0.11,
+        height: 0.11,
+    };
+
   Object.defineProperty(that, "positionsX", {
     get: () => positionsX,
     set: (index, value) => (positionsX[index] = value),
@@ -48,6 +53,10 @@ function createFood(howMany) {
 
   Object.defineProperty(that, "size", {
     get: () => size,
+  });
+
+  Object.defineProperty(that, "bigSize", {
+    get: () => bigSize,
   });
 
   Object.defineProperty(that, "count", {
