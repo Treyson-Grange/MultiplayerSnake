@@ -11,6 +11,7 @@ let Player = require("./player");
 let Food = require("./food");
 
 const WORLD_SIZE = 4; // Both x and y
+const WALL_SIZE = { length: .5, width: .1};
 
 const UPDATE_RATE_MS = 50;
 let quit = false;
@@ -49,22 +50,29 @@ for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
 //------------------------------------------------------------------
 function playerFoodCollided(player, food) {
     let distance = Math.sqrt(Math.pow(player.position.x - food.position.x, 2) + Math.pow(player.position.y - food.position.y, 2));
-    let radii = (player.size.width / 2) + (food.size.width / 2);
+    let radii = player.radius + food.radius;
 
     return distance <= radii;
 }
 
 //------------------------------------------------------------------
 //
-// Utility function to perform a hit test between two objects.  The
-// objects must have a position: { x: , y: } property and radius property.
+// Utility function to perform a hit test between player and wall.  The
+// objects must have a position: { x: , y: } property
 //
 //------------------------------------------------------------------
-function playerFoodCollided(player, food) {
-    let distance = Math.sqrt(Math.pow(player.position.x - food.position.x, 2) + Math.pow(player.position.y - food.position.y, 2));
-    let radii = (player.size.width / 2) + (food.size.width / 2);
+function playerWallCollided(playerPos) {
+    let hitWall = false;
 
-    return distance <= radii;
+    let halfWallWidth = WALL_SIZE.width / 2;
+    
+    if (playerPos.x < (0 + halfWallWidth) || playerPos.x > (WORLD_SIZE - halfWallWidth)){
+        hitWall = true;
+    } else if (playerPos.y < (0 + halfWallWidth) || playerPos.y > (WORLD_SIZE - halfWallWidth)) {
+        hitWall = true;
+    }
+
+    return hitWall;
 }
 
 //------------------------------------------------------------------
@@ -120,11 +128,12 @@ function update(elapsedTime, currentTime) {
   for (let clientId in activeClients) {
     activeClients[clientId].player.update(currentTime);
   }
-  // check for player v player collisions
+  // for every player
   for (let clientId in activeClients) {
     let client = activeClients[clientId];
     let player = client.player;
 
+    // check for player v food collisions
     for (let i = 0; i < foodSOA.positionsX.length; i++) {
         let foodSize = foodSOA.size;
 
@@ -135,12 +144,12 @@ function update(elapsedTime, currentTime) {
         
         // create food obj for collision detection
         let foodPiece = {
-            size: foodSize,
-            radius: { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] },
+            radius: foodSize.width / 2,
+            position: { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] },
         };
 
         let playerSpec = {
-            size: player.size,
+            radius: player.size.width / 2,
             position: player.position
         };
 
@@ -149,9 +158,13 @@ function update(elapsedTime, currentTime) {
             console.log("a collision!");
         }
     }
+
+    // check for player v wall collisions
+    if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
+        console.log("hit a wall!");
+    }
   }
 
-  // check for player v food collisions
 
 
   // check for player v wall collisions
