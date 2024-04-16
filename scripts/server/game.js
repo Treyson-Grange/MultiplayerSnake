@@ -28,8 +28,6 @@ for (let i = 0; i < foodCount; i++) {
     foodSOA.positionsY[i] = random.nextDouble() * 4;
 }
 
-console.log(foodSOA.positionsX);
-
 let bigFood = new Array(foodCount).fill(true);
 
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
