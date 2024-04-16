@@ -17,7 +17,7 @@ let quit = false;
 let activeClients = {};
 let inputQueue = [];
 
-let foodCount = 500;
+let foodCount = 100;
 
 let foodSOA = Food.create(foodCount);
 for (let i = 0; i < foodCount; i++) {

@@ -90,7 +90,6 @@ MyGame.graphics = (function () {
 	//
 	//------------------------------------------------------------------
     function drawSprite(texture, position, size, spriteIndex) {
-        console.log(position, size);
         let localCenter = {
             x: position.x * canvas.width,
             y: position.y * canvas.width,
@@ -100,7 +99,7 @@ MyGame.graphics = (function () {
             height: size.height * canvas.height,
             };
     
-        console.log(localCenter, localSize);
+        // console.log(localCenter, localSize);
         // context.save();
 
         //

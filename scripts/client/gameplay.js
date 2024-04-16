@@ -238,7 +238,12 @@ MyGame.screens["game-play"] = (function (
         playerSelf.model.position
       ); // player.texture is 'undefined' here :( should prolly fix that!
     }
-    renderer.Food.render(food.model, food.texture, playerSelf.model.position);
+    renderer.Food.render(
+        food.model, 
+        food.texture, 
+        playerSelf.model.position,
+        WORLD_SIZE
+    );
   }
 
   //------------------------------------------------------------------
