@@ -26,8 +26,15 @@ MyGame.screens["game-play"] = (function (
     },
     playerOthers = {},
     food = {
-        model: components.Food(),
-        texture: [ MyGame.assets["food0"], MyGame.assets["food1"], MyGame.assets["food2"], MyGame.assets["food3"], MyGame.assets["food4"], MyGame.assets["food5"] ], // THIS IS HOW MANY FOOD ASSETS THERE ARE, WOULD BE BETTER TO INFER THIS NUMBER SOMEHOW
+      model: components.Food(),
+      texture: [
+        MyGame.assets["food0"],
+        MyGame.assets["food1"],
+        MyGame.assets["food2"],
+        MyGame.assets["food3"],
+        MyGame.assets["food4"],
+        MyGame.assets["food5"],
+      ], // THIS IS HOW MANY FOOD ASSETS THERE ARE, WOULD BE BETTER TO INFER THIS NUMBER SOMEHOW
     },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
@@ -173,7 +180,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   socket.on("food-update", function (data) {
     // for (let i = 0; i < data.eaten.length; i++) {
-        food.model.update(data);
+    food.model.update(data);
     // }
   });
 
@@ -256,13 +263,13 @@ MyGame.screens["game-play"] = (function (
   }
 
   function updateFood() {
-    food.texture = [ 
-        MyGame.assets["food0"], 
-        MyGame.assets["food1"], 
-        MyGame.assets["food2"], 
-        MyGame.assets["food3"], 
-        MyGame.assets["food4"], 
-        MyGame.assets["food5"] 
+    food.texture = [
+      MyGame.assets["food0"],
+      MyGame.assets["food1"],
+      MyGame.assets["food2"],
+      MyGame.assets["food3"],
+      MyGame.assets["food4"],
+      MyGame.assets["food5"],
     ];
   }
 
@@ -358,17 +365,20 @@ MyGame.screens["game-play"] = (function (
       true
     );
 
-    //   myKeyboard.registerHandler(elapsedTime => {
-    //     let message = {
-    //         id: messageId++,
-    //         elapsedTime: elapsedTime,
-    //         type: 'move'
-    //     };
-    //     socket.emit('input', message);
-    //     messageHistory.enqueue(message);
-    //     playerSelf.model.move(elapsedTime);
-    // },
-    // 'w', true);
+    myKeyboard.registerHandler(
+      (elapsedTime) => {
+        let message = {
+          id: messageId++,
+          elapsedTime: elapsedTime,
+          type: "addBodyPart",
+        };
+        socket.emit("input", message);
+        messageHistory.enqueue(message);
+        playerSelf.model.addBodyPart(elapsedTime);
+      },
+      "q",
+      true
+    );
   }
 
   //------------------------------------------------------------------

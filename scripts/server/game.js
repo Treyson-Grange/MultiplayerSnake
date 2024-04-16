@@ -18,17 +18,17 @@ let inputQueue = [];
 let foodCount = 10;
 let foodSOA = Food.create(foodCount);
 for (let i = 0; i < foodCount; i++) {
-    foodSOA.positionsX[i] = random.nextDouble();
+  foodSOA.positionsX[i] = random.nextDouble();
 }
 
 for (let i = 0; i < foodCount; i++) {
-    foodSOA.positionsY[i] = random.nextDouble();
+  foodSOA.positionsY[i] = random.nextDouble();
 }
 
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
 // TODO: PING THE food TO TELL it that it NEEDs TO UPDATE its INDICES!!
 for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
-    foodSOA.spriteSheetIndices[i] = random.nextRange(0, 5); // amount of sprites is hardcoded 
+  foodSOA.spriteSheetIndices[i] = random.nextRange(0, 5); // amount of sprites is hardcoded
 }
 
 //------------------------------------------------------------------
@@ -70,6 +70,9 @@ function processInput() {
         break;
       case "test":
         client.player.goRight(input.message.elapsedTime);
+        break;
+      case "addBodyPart":
+        client.player.addBodyPart(input.message.elapsedTime);
         break;
     }
   }
@@ -117,22 +120,21 @@ function updateClients(elapsedTime) {
     //
     // Notify all clients about every food that's been updated
     let foodUpdate = {
-        reportUpdates: foodSOA.reportUpdates,
-        positionsX: foodSOA.positionsX,
-        positionsY: foodSOA.positionsY,
-        count: foodSOA.count,
-        spriteSheetIndices: foodSOA.spriteSheetIndices,
+      reportUpdates: foodSOA.reportUpdates,
+      positionsX: foodSOA.positionsX,
+      positionsY: foodSOA.positionsY,
+      count: foodSOA.count,
+      spriteSheetIndices: foodSOA.spriteSheetIndices,
     };
     client.socket.emit("food-update", foodUpdate);
 
     //
     // Notify all clients about every food sprite that's been instantiated
     let foodSpriteUpdate = {
-        spriteSheetIndices: foodSOA.spriteSheetIndices,
-        // renderFrame: foodSOA.renderFrame, // I think that the server is sending this over and over and that's causing the client to render wonky; cause renderFrame isn't incrementing properly
+      spriteSheetIndices: foodSOA.spriteSheetIndices,
+      // renderFrame: foodSOA.renderFrame, // I think that the server is sending this over and over and that's causing the client to render wonky; cause renderFrame isn't incrementing properly
     };
     client.socket.emit("food-initial", foodSpriteUpdate);
-
   }
 
   for (let clientId in activeClients) {
@@ -203,7 +205,7 @@ function initializeSocketIO(httpServer) {
         // let foodUpdate = {
         //     spriteSheetIndices: foodSOA.spriteSheetIndices,
         // };
-    
+
         // socket.emit("food-positions", foodUpdate);
       }
     }
@@ -259,36 +261,30 @@ function initializeSocketIO(httpServer) {
     notifyConnect(socket, newPlayer);
   });
 
-
   //------------------------------------------------------------------
   //
   // Notifies clients about updates to the food
   //
   //------------------------------------------------------------------
 
-//   function notifyFoodUpdate() {
-//     for (let clientId in activeClients) {
-//         let client = activeClients[clientId];
-  
-//         for (let i = 0; i < foodSOA.count; i++) {
-//             if (foodSOA.reportUpdates[i]) {
-//                 client.socket.emit("update-food", {
-//                     index: i,
-//                     positionX: foodSOA.positionsX[i],
-//                     positionY: foodSOA.positionsY[i],
-//                 });
-//             }
-//         }
-//     }
-//   }
+  //   function notifyFoodUpdate() {
+  //     for (let clientId in activeClients) {
+  //         let client = activeClients[clientId];
 
-//   notifyFoodUpdate();
+  //         for (let i = 0; i < foodSOA.count; i++) {
+  //             if (foodSOA.reportUpdates[i]) {
+  //                 client.socket.emit("update-food", {
+  //                     index: i,
+  //                     positionX: foodSOA.positionsX[i],
+  //                     positionY: foodSOA.positionsY[i],
+  //                 });
+  //             }
+  //         }
+  //     }
+  //   }
+
+  //   notifyFoodUpdate();
 }
-
-
-
-
-
 
 //------------------------------------------------------------------
 //

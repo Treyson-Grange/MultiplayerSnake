@@ -6,7 +6,7 @@
 "use strict";
 
 let random = require("./random");
-
+let Body = require("./body");
 //------------------------------------------------------------------
 //
 // Public function used to initially create a newly connected player
@@ -29,8 +29,7 @@ function createPlayer() {
   let rotateRate = Math.PI / 1000; // radians per millisecond
   let speed = 0.0002; // unit distance per millisecond
   let reportUpdate = false; // Indicates if this model was updated during the last update
-  let preferedDirection = 0;
-  let threshold = 2;
+  let segments = [];
 
   Object.defineProperty(that, "direction", {
     get: () => direction,
@@ -57,6 +56,12 @@ function createPlayer() {
     set: (value) => (reportUpdate = value),
   });
 
+  that.addBodyPart = function (elapsedTime) {
+    reportUpdate = true;
+    let newSnakePart = Body.createBody();
+    newSnakePart.follow(elapsedTime);
+  };
+
   //------------------------------------------------------------------
   //
   // Moves the player forward based on how long it has been since the
@@ -70,6 +75,13 @@ function createPlayer() {
 
     position.x += vectorX * elapsedTime * speed;
     position.y += vectorY * elapsedTime * speed;
+    for (let i = 1; i < segments.length; i++) {
+      segments[i].follow(
+        elapsedTime,
+        segments[i - 1].position,
+        segments[i - 1].direction
+      );
+    }
   };
 
   //------------------------------------------------------------------

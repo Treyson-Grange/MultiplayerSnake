@@ -17,8 +17,8 @@ MyGame.components.Player = function () {
   let direction = 0;
   let rotateRate = Math.PI / 1000;
   let speed = 0.0002;
-  let preferedDirection = 0;
-  let threshold = 2;
+  let segments = [];
+
   Object.defineProperty(that, "direction", {
     get: () => direction,
     set: (value) => {
@@ -47,6 +47,15 @@ MyGame.components.Player = function () {
   Object.defineProperty(that, "size", {
     get: () => size,
   });
+  //------------------------------------------------------------------
+  //
+  // Public function that adds body parts
+  //
+  //------------------------------------------------------------------
+  that.addBodyPart = function (elapsedTime) {
+    let newSnakePart = MyGame.components.Body();
+    newSnakePart.follow(elapsedTime);
+  };
 
   //------------------------------------------------------------------
   //
@@ -59,6 +68,13 @@ MyGame.components.Player = function () {
 
     position.x += vectorX * elapsedTime * speed;
     position.y += vectorY * elapsedTime * speed;
+    for (let i = 1; i < segments.length; i++) {
+      segments[i].follow(
+        elapsedTime,
+        segments[i - 1].position,
+        segments[i - 1].direction
+      );
+    }
   };
 
   //------------------------------------------------------------------
@@ -114,6 +130,12 @@ MyGame.components.Player = function () {
   let updateRotateRate = 5000000;
 
   that.update = function (when) {};
+
+  that.follow = function (elapsedTime, prevPosition, prevDirection) {
+    position.x = prevPosition.x - Math.cos(prevDirection) * size.width;
+    position.y = prevPosition.y - Math.sin(prevDirection) * size.height;
+    direction = prevDirection;
+  };
 
   return that;
 };
