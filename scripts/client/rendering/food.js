@@ -18,7 +18,6 @@ MyGame.renderer.Food = (function(graphics) {
     //
     // ------------------------------------------------------------------
     that.render = function(model, texture, bigTexture, playerSelfPos, WORLD_SIZE) {
-        // console.log("bigTexture: ", bigTexture);
 
         let screenPos = {x: playerSelfPos.x - .5, y: playerSelfPos.y - .5}; //top-left corner of screen
 
@@ -26,17 +25,14 @@ MyGame.renderer.Food = (function(graphics) {
         for (let i = 0; i < model.positionsX.length; i++) {
     
             // render food if in render dist
-            if (screenPos.x < model.positionsX[i] && model.positionsX[i] < screenPos.x + SCREEN_WIDTH) {
-                if (screenPos.y < model.positionsY[i] && model.positionsY[i] < screenPos.y + SCREEN_WIDTH) {
-                    console.log("drawing frog ", i);
+            if (screenPos.x < model.positionsX[i] + (model.bigSize.width / 2) && model.positionsX[i] - (model.bigSize.width / 2) < screenPos.x + SCREEN_WIDTH) {
+                if (screenPos.y < model.positionsY[i] + (model.bigSize.height / 2) && model.positionsY[i] - (model.bigSize.height / 2) < screenPos.y + SCREEN_WIDTH) {
                     let foodX = model.positionsX[i] - screenPos.x;
                     let foodY = model.positionsY[i] - screenPos.y;
                     let position = {
                         x: foodX,
                         y: foodY,
                     }
-                    // console.log("position: ", position);
-                    // PROLLY CHANGE THIS vvv TO JUST A SEPARATE FOOD THING FOR BIG FOOD
                     if (model.bigFood[i]) { // this isn't working; also we need to get bigFood values from server cause those should be the same across clients!!
                         graphics.drawSprite(bigTexture[model.spriteSheetIndices[i]], position, model.bigSize, model.renderFrame); 
                     }

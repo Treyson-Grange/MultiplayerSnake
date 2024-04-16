@@ -72,7 +72,7 @@ MyGame.loader = (function () {
       },
       {
         key: "food1",
-        source: "assets/food/BlueBrown/ToxicFrogBlueBrown_Idle.png", 
+        source: "assets/food/BlueBlue/ToxicFrogBlueBlue_Idle.png", 
       },
       {
         key: "food2",
@@ -96,7 +96,7 @@ MyGame.loader = (function () {
       },
       {
         key: "food1Big",
-        source: "assets/food/BlueBrown/ToxicFrogBlueBrown_Idle_Big.png", 
+        source: "assets/food/BlueBlue/ToxicFrogBlueBlue_Idle_Big.png",
       },
       {
         key: "food2Big",
