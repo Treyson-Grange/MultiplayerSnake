@@ -90,7 +90,7 @@ MyGame.graphics = (function () {
 	//
 	//------------------------------------------------------------------
     function drawSprite(texture, position, size, spriteIndex) {
-        // console.log(texture, position, size, spriteIndex);
+        console.log(position, size);
         let localCenter = {
             x: position.x * canvas.width,
             y: position.y * canvas.width,
@@ -99,8 +99,9 @@ MyGame.graphics = (function () {
             width: size.width * canvas.width,
             height: size.height * canvas.height,
             };
-
-        context.save();
+    
+        console.log(localCenter, localSize);
+        // context.save();
 
         //
         // Pick the selected sprite from the sprite sheet to render
@@ -112,7 +113,7 @@ MyGame.graphics = (function () {
             localCenter.y - localSize.height/2,
             localSize.width, localSize.height);
           
-        context.restore();
+        // context.restore();
     }
 			//
 			// Once the image is loaded, we can compute the height and width based upon

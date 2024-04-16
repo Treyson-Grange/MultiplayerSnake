@@ -15,7 +15,7 @@ let quit = false;
 let activeClients = {};
 let inputQueue = [];
 
-let foodCount = 30;
+let foodCount = 10;
 
 let foodSOA = Food.create(foodCount);
 for (let i = 0; i < foodCount; i++) {
@@ -127,15 +127,6 @@ function updateClients(elapsedTime) {
         spriteSheetIndices: foodSOA.spriteSheetIndices,
     };
     client.socket.emit("food-update", foodUpdate);
-
-    // //
-    // // Notify all clients about every food sprite that's been instantiated
-    // let foodSpriteUpdate = {
-    //     spriteSheetIndices: foodSOA.spriteSheetIndices,
-    //     bigFood: bigFood,
-    // };
-    // client.socket.emit("food-initial", foodSpriteUpdate);
-
   }
 
   for (let clientId in activeClients) {
@@ -202,12 +193,6 @@ function initializeSocketIO(httpServer) {
           speed: client.player.speed,
           size: client.player.size,
         });
-
-        // let foodUpdate = {
-        //     spriteSheetIndices: foodSOA.spriteSheetIndices,
-        // };
-    
-        // socket.emit("food-positions", foodUpdate);
       }
     }
   }
@@ -275,30 +260,6 @@ function initializeSocketIO(httpServer) {
     notifyNewPlayerFood(newPlayer);
   });
 
-
-  //------------------------------------------------------------------
-  //
-  // Notifies clients about updates to the food
-  //
-  //------------------------------------------------------------------
-
-//   function notifyFoodUpdate() {
-//     for (let clientId in activeClients) {
-//         let client = activeClients[clientId];
-  
-//         for (let i = 0; i < foodSOA.count; i++) {
-//             if (foodSOA.reportUpdates[i]) {
-//                 client.socket.emit("update-food", {
-//                     index: i,
-//                     positionX: foodSOA.positionsX[i],
-//                     positionY: foodSOA.positionsY[i],
-//                 });
-//             }
-//         }
-//     }
-//   }
-
-//   notifyFoodUpdate();
 }
 
 
