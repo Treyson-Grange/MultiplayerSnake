@@ -77,6 +77,85 @@ function playerWallCollided(playerPos) {
 
 //------------------------------------------------------------------
 //
+// Utility function to perform a hit test between one player's head and another player.  The
+// objects must have a position: { x: , y: } property and radius property.
+//
+//------------------------------------------------------------------
+function playerPlayerCollided(player1, player2) {
+    // TODO: CHANGE THIS TO DETECT COLLISIONS BESIDES HEAD COLLIDING WITH HEAD!! :)
+    let distance = Math.sqrt(Math.pow(player1.position.x - player2.position.x, 2) + Math.pow(player1.position.y - player2.position.y, 2));
+    let radii = player1.radius + player2.radius;
+
+    return distance <= radii;
+}
+
+//------------------------------------------------------------------
+//
+// Utility function to perform a test for all collisions.
+//
+//------------------------------------------------------------------
+function checkAllCollisions() {
+  // for every player
+  for (let clientId in activeClients) {
+    let client = activeClients[clientId];
+    let player = client.player;
+
+    let playerSpec = {
+        radius: player.size.width / 2,
+        position: player.position
+    };
+
+    // check for player v food collisions
+    for (let i = 0; i < foodSOA.positionsX.length; i++) {
+        let foodSize = foodSOA.size;
+
+        // update the size to be bigger if it's a piece of big food
+        if (foodSOA.bigFood[i]) {
+            foodSize = foodSOA.size;
+        }
+        
+        // create food obj for collision detection
+        let foodPiece = {
+            radius: foodSize.width / 2,
+            position: { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] },
+        };
+
+        // check for collision
+        if (playerFoodCollided(playerSpec, foodPiece)) {
+            console.log("a collision!");
+        }
+    }
+
+    // check for player v wall collisions
+    if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
+        console.log("hit a wall!");
+    }
+
+    // check for player v player collisions
+    for (let otherId in activeClients) {    
+        if (otherId !== clientId) {
+            let otherClient = activeClients[otherId];
+            let otherPlayer = otherClient.player;
+
+            let otherPlayerSpec = {
+                radius: otherPlayer.size.width / 2,
+                position: otherPlayer.position
+            };
+            
+            // TODO: this isn't working yet; idk what's up
+            if (playerPlayerCollided(playerSpec, otherPlayerSpec)) {
+                console.log("players knocked heads")
+            }
+            // TODO: check for collisions between player and segments/head/tail of all other snakes :)
+        }
+    }
+  }
+
+
+}
+
+//------------------------------------------------------------------
+//
 // Process the network inputs we have received since the last time
 // the game loop was processed.
 //
@@ -128,47 +207,7 @@ function update(elapsedTime, currentTime) {
   for (let clientId in activeClients) {
     activeClients[clientId].player.update(currentTime);
   }
-  // for every player
-  for (let clientId in activeClients) {
-    let client = activeClients[clientId];
-    let player = client.player;
-
-    // check for player v food collisions
-    for (let i = 0; i < foodSOA.positionsX.length; i++) {
-        let foodSize = foodSOA.size;
-
-        // update the size to be bigger if it's a piece of big food
-        if (foodSOA.bigFood[i]) {
-            foodSize = foodSOA.size;
-        }
-        
-        // create food obj for collision detection
-        let foodPiece = {
-            radius: foodSize.width / 2,
-            position: { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] },
-        };
-
-        let playerSpec = {
-            radius: player.size.width / 2,
-            position: player.position
-        };
-
-        // check for collision
-        if (playerFoodCollided(playerSpec, foodPiece)) {
-            console.log("a collision!");
-        }
-    }
-
-    // check for player v wall collisions
-    if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
-        console.log("hit a wall!");
-    }
-  }
-
-
-
-  // check for player v wall collisions
-
+  checkAllCollisions();
 }
 
 //------------------------------------------------------------------
