@@ -97,50 +97,41 @@ function createPlayer() {
     reportUpdate = true;
     direction -= rotateRate * elapsedTime;
   };
-  function rotateLeft(elapsedTime) {
-    reportUpdate = true;
-    direction -= rotateRate * elapsedTime;
-  }
 
+  //------------------------------------------------------------------
+  //
+  // Functions that given input, change the prefered direction
+  // of the player
+  //
+  //------------------------------------------------------------------
   that.goUp = function (elapsedTime) {
-    reportUpdate = true;
-    preferedDirection = -Math.PI / 2;
-  };
-  that.goDown = function (elapsedTime) {
-    reportUpdate = true;
-    preferedDirection = Math.PI / 2;
-  };
-  that.goRight = function (elapsedTime) {
-    reportUpdate = true;
-    preferedDirection = 0;
-    rotateRight(elapsedTime);
-  };
-  that.goLeft = function (elapsedTime) {
-    reportUpdate = true;
-    preferedDirection = Math.PI;
-    rotateLeft(elapsedTime);
-  };
-
-  function rotateToDirection(elapsedTime) {
-    let shortestDistance = preferedDirection - direction;
-    if (shortestDistance < -Math.PI) {
-      shortestDistance += 2 * Math.PI;
-    } else if (shortestDistance > Math.PI) {
-      shortestDistance -= 2 * Math.PI;
-    }
-    if (Math.abs(shortestDistance) < 0.2) {
-      direction = preferedDirection;
+    if (direction == Math.PI / 2) {
       return;
     }
-    let rotateDirection = shortestDistance > 0 ? 1 : -1;
-    let adjustedRotateRate = rotateRate * rotateDirection;
-    direction += (adjustedRotateRate * elapsedTime) / updateRotateRate;
-    if (direction > Math.PI) {
-      direction -= 2 * Math.PI;
-    } else if (direction < -Math.PI) {
-      direction += 2 * Math.PI;
+    reportUpdate = true;
+    direction = -Math.PI / 2;
+  };
+  that.goDown = function (elapsedTime) {
+    if (direction == -Math.PI / 2) {
+      return;
     }
-  }
+    reportUpdate = true;
+    direction = Math.PI / 2;
+  };
+  that.goRight = function (elapsedTime) {
+    if (direction == Math.PI) {
+      return;
+    }
+    reportUpdate = true;
+    direction = 0;
+  };
+  that.goLeft = function (elapsedTime) {
+    if (direction == 0) {
+      return;
+    }
+    reportUpdate = true;
+    direction = Math.PI;
+  };
 
   //------------------------------------------------------------------
   //
@@ -148,11 +139,7 @@ function createPlayer() {
   //
   //------------------------------------------------------------------
   let updateRotateRate = 5000000;
-  that.update = function (when) {
-    if (direction !== preferedDirection) {
-      rotateToDirection(when);
-    }
-  };
+  that.update = function (when) {};
 
   return that;
 }
