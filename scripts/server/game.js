@@ -17,15 +17,20 @@ let quit = false;
 let activeClients = {};
 let inputQueue = [];
 
-let foodCount = 10;
+let foodCount = 500;
+
 let foodSOA = Food.create(foodCount);
 for (let i = 0; i < foodCount; i++) {
-    foodSOA.positionsX[i] = random.nextDouble();
+    foodSOA.positionsX[i] = random.nextDouble() * 4; // 4 becauase the map size is 4
 }
 
 for (let i = 0; i < foodCount; i++) {
-    foodSOA.positionsY[i] = random.nextDouble();
+    foodSOA.positionsY[i] = random.nextDouble() * 4;
 }
+
+console.log(foodSOA.positionsX);
+
+let bigFood = new Array(foodCount).fill(true);
 
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
 // TODO: PING THE food TO TELL it that it NEEDs TO UPDATE its INDICES!!
@@ -126,15 +131,6 @@ function updateClients(elapsedTime) {
         spriteSheetIndices: foodSOA.spriteSheetIndices,
     };
     client.socket.emit("food-update", foodUpdate);
-
-    //
-    // Notify all clients about every food sprite that's been instantiated
-    let foodSpriteUpdate = {
-        spriteSheetIndices: foodSOA.spriteSheetIndices,
-        // renderFrame: foodSOA.renderFrame, // I think that the server is sending this over and over and that's causing the client to render wonky; cause renderFrame isn't incrementing properly
-    };
-    client.socket.emit("food-initial", foodSpriteUpdate);
-
   }
 
   for (let clientId in activeClients) {
@@ -201,15 +197,21 @@ function initializeSocketIO(httpServer) {
           speed: client.player.speed,
           size: client.player.size,
         });
-
-        // let foodUpdate = {
-        //     spriteSheetIndices: foodSOA.spriteSheetIndices,
-        // };
-    
-        // socket.emit("food-positions", foodUpdate);
       }
     }
   }
+
+    //
+    // Tell the new player about the food
+    function notifyNewPlayerFood(newPlayer) {
+        let client = activeClients[newPlayer.clientId];
+        let foodSpriteUpdate = {
+            spriteSheetIndices: foodSOA.spriteSheetIndices,
+            bigFood: bigFood,
+        };
+        client.socket.emit("food-initial", foodSpriteUpdate);
+    }
+
 
   //------------------------------------------------------------------
   //
@@ -259,32 +261,9 @@ function initializeSocketIO(httpServer) {
     });
 
     notifyConnect(socket, newPlayer);
+    notifyNewPlayerFood(newPlayer);
   });
 
-
-  //------------------------------------------------------------------
-  //
-  // Notifies clients about updates to the food
-  //
-  //------------------------------------------------------------------
-
-//   function notifyFoodUpdate() {
-//     for (let clientId in activeClients) {
-//         let client = activeClients[clientId];
-  
-//         for (let i = 0; i < foodSOA.count; i++) {
-//             if (foodSOA.reportUpdates[i]) {
-//                 client.socket.emit("update-food", {
-//                     index: i,
-//                     positionX: foodSOA.positionsX[i],
-//                     positionY: foodSOA.positionsY[i],
-//                 });
-//             }
-//         }
-//     }
-//   }
-
-//   notifyFoodUpdate();
 }
 
 

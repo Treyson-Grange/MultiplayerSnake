@@ -17,7 +17,8 @@ MyGame.components.Food = function(howMany) {
     let positionsX = new Array(howMany);
     let positionsY = new Array(howMany);
     let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
-    
+    let bigFood = new Array(howMany);
+
     let spriteSheetIndices = new Array(howMany);
     let spriteCount = 8;
     let spriteTime = [200, 200, 200, 200, 200, 200, 200, 200]; // milliseconds per sprite animation frame
@@ -48,31 +49,36 @@ MyGame.components.Food = function(howMany) {
         get: () => count,
       });
 
-      Object.defineProperty(that, "reportUpdates", {
-        get: () => reportUpdates,
-        set: (index, value) => (reportUpdates[index] = value),
-      });
+    Object.defineProperty(that, "reportUpdates", {
+    get: () => reportUpdates,
+    set: (index, value) => (reportUpdates[index] = value),
+    });
 
-      Object.defineProperty(that, "spriteSheetIndices", {
-        get: () => spriteSheetIndices,
-        set: (index, value) => (spriteSheetIndices[index] = value),
-      });
+    Object.defineProperty(that, "bigFood", {
+        get: () => bigFood,
+        set: (index, value) => bigFood[index] = value,
+    });
 
-      Object.defineProperty(that, "renderFrame", {
-        get: () => renderFrame,
-      });
-    
-      Object.defineProperty(that, "spriteCount", {
-        get: () => spriteCount,
-      });
-    
-      Object.defineProperty(that, "spriteTime", {
-        get: () => spriteTime,
-      });
-    
-      Object.defineProperty(that, "moveRate", {
-        get: () => moveRate,
-      });    
+    Object.defineProperty(that, "spriteSheetIndices", {
+    get: () => spriteSheetIndices,
+    set: (index, value) => (spriteSheetIndices[index] = value),
+    });
+
+    Object.defineProperty(that, "renderFrame", {
+    get: () => renderFrame,
+    });
+
+    Object.defineProperty(that, "spriteCount", {
+    get: () => spriteCount,
+    });
+
+    Object.defineProperty(that, "spriteTime", {
+    get: () => spriteTime,
+    });
+
+    Object.defineProperty(that, "moveRate", {
+    get: () => moveRate,
+    });    
 
   //------------------------------------------------------------------
   //
@@ -103,6 +109,7 @@ MyGame.components.Food = function(howMany) {
 
     that.updateSprites = function (data) {
         spriteSheetIndices = data.spriteSheetIndices;
+        bigFood = data.bigFood;
     };
 
     that.updateRenderFrames = function (elapsedTime) {
