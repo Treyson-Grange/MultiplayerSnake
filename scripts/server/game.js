@@ -15,16 +15,18 @@ let quit = false;
 let activeClients = {};
 let inputQueue = [];
 
-let foodCount = 10;
+let foodCount = 500;
 
 let foodSOA = Food.create(foodCount);
 for (let i = 0; i < foodCount; i++) {
-    foodSOA.positionsX[i] = random.nextRange(0, 4); // 4 becauase the map size is 4
+    foodSOA.positionsX[i] = random.nextDouble() * 4; // 4 becauase the map size is 4
 }
 
 for (let i = 0; i < foodCount; i++) {
-    foodSOA.positionsY[i] = random.nextRange(0, 4);
+    foodSOA.positionsY[i] = random.nextDouble() * 4;
 }
+
+console.log(foodSOA.positionsX);
 
 let bigFood = new Array(foodCount).fill(true);
 
