@@ -70,7 +70,7 @@ MyGame.components.Body = function () {
   };
   that.update = function (elapsedTime) {
     if (goal.updateWindow === 0) return;
-
+    console.log("ah");
     let updateFraction = elapsedTime / goal.updateWindow;
     if (updateFraction > 0) {
       //
