@@ -31,10 +31,10 @@ MyGame.screens["game-play"] = (function (
     playerOthers = {},
     endText = MyGame.objects.Text( {
         text: "Game Over!",
-        font: "Arial",
+        font: "16pt Arial",
         fillStyle: "#FFFFFF",
         strokeStyle: "#000000",
-        position: { x: graphics.width / 2, y: graphics.height / 2 },
+        position: { x: 100, y: 100 },
     }),
     food = {
         model: components.Food(),
@@ -245,10 +245,6 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   function render() {
     graphics.clear();
-    
-    if (GAME_OVER) {
-        renderer.Text.render(endText);
-    }
 
     renderer.Background.render(
       playerSelf.model.position,
@@ -278,6 +274,10 @@ MyGame.screens["game-play"] = (function (
         playerSelf.model.position,
         WORLD_SIZE
     );
+
+    if (GAME_OVER) {
+        renderer.Text.render(endText);
+    }
   }
 
   //------------------------------------------------------------------

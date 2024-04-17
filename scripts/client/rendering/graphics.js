@@ -124,10 +124,30 @@ MyGame.graphics = (function () {
 		// };
 		// image.src = spec.spriteSheet;
 
-    function drawText(textObj) {
-        // do stuff here
-        console.log("should be drawing text now");
+    function drawText(spec) {
+        console.log(spec);
+
+        // let width = canvas.width / 2;
+        // let height = canvas.height / 2;
+
+        context.save();
+
+        context.font = spec.font;
+        context.fillStyle = spec.fillStyle;
+        context.strokeStyle = spec.strokeStyle;
+        context.textBaseline = 'top';
+
+        // context.translate(spec.position.x, spec.position.y);
+        // context.rotate(spec.rotation);
+        // context.translate(-spec.position.x, -spec.position.y);
+
+
+        context.fillText(spec.text, spec.position.x, spec.position.y);
+        context.strokeText(spec.text, spec.position.x, spec.position.y);
+
+        context.restore();
     }
+    
 
   return {
     clear: clear,
