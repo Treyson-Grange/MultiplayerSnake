@@ -66,8 +66,6 @@ MyGame.graphics = (function () {
   //
   //------------------------------------------------------------------
   function drawImage(texture, center, size) {
-    // console.log(texture, center, size);
-
     let localCenter = {
       x: center.x * canvas.width,
       y: center.y * canvas.width,
@@ -76,6 +74,8 @@ MyGame.graphics = (function () {
       width: size.width * canvas.width,
       height: size.height * canvas.height,
     };
+
+    console.log("local: ", center, size);
 
     context.drawImage(
       texture,

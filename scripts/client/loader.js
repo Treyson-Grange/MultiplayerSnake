@@ -67,8 +67,8 @@ MyGame.loader = (function () {
         source: "assets/stick.png",
       },
       {
-        key: "panel",
-        source: "assets/panel.png",
+        key: "panelDark",
+        source: "assets/panelDark1.png",
       },
       {
         key: "food0",
