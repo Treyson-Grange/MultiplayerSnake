@@ -30,6 +30,7 @@ function createPlayer() {
   let speed = 0.0002; // unit distance per millisecond
   let reportUpdate = false; // Indicates if this model was updated during the last update
   let segments = [];
+  let turnPoints = [{ x: position.x, y: position.y }];
 
   Object.defineProperty(that, "direction", {
     get: () => direction,
@@ -58,7 +59,9 @@ function createPlayer() {
   Object.defineProperty(that, "segments", {
     get: () => segments,
   });
-
+  Object.defineProperty(that, "turnPoints", {
+    get: () => turnPoints,
+  });
   that.addBodyPart = function (elapsedTime) {
     reportUpdate = true;
     let newSnakePart = Body.createBody();
@@ -120,28 +123,28 @@ function createPlayer() {
   //
   //------------------------------------------------------------------
   that.goUp = function (elapsedTime) {
-    if (direction == Math.PI / 2) {
+    if (direction == Math.PI / 2 || direction == -Math.PI / 2) {
       return;
     }
     reportUpdate = true;
     direction = -Math.PI / 2;
   };
   that.goDown = function (elapsedTime) {
-    if (direction == -Math.PI / 2) {
+    if (direction == -Math.PI / 2 || direction == Math.PI / 2) {
       return;
     }
     reportUpdate = true;
     direction = Math.PI / 2;
   };
   that.goRight = function (elapsedTime) {
-    if (direction == Math.PI) {
+    if (direction == Math.PI || direction == 0) {
       return;
     }
     reportUpdate = true;
     direction = 0;
   };
   that.goLeft = function (elapsedTime) {
-    if (direction == 0) {
+    if (direction == 0 || direction == Math.PI) {
       return;
     }
     reportUpdate = true;
@@ -154,7 +157,13 @@ function createPlayer() {
   //
   //------------------------------------------------------------------
   let updateRotateRate = 5000000;
-  that.update = function (when) {};
+  that.update = function (when) {
+    //This is getting called by the update function in server/game.js
+    console.log("update");
+  };
+  // k so i cant move them in update, we need to send message
+  //maybe the server should be the one to update the player
+  //maybe idk time for class
 
   return that;
 }

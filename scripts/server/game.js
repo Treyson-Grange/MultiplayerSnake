@@ -85,8 +85,12 @@ function processInput() {
 //------------------------------------------------------------------
 function update(elapsedTime, currentTime) {
   for (let clientId in activeClients) {
-    activeClients[clientId].player.update(currentTime);
+    activeClients[clientId].player.update(currentTime); //This doesn't do anything
   }
+  //Need to update body parts
+  // for (let clientId in activeClients) {
+  //   activeClients[clientId].player.updateBodyParts();
+  // }
 }
 
 //------------------------------------------------------------------

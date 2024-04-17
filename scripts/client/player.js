@@ -18,6 +18,7 @@ MyGame.components.Player = function () {
   let rotateRate = Math.PI / 1000;
   let speed = 0.0002;
   let segments = [];
+  let turnPoints = [{ x: position.x, y: position.y }];
 
   Object.defineProperty(that, "direction", {
     get: () => direction,
@@ -50,6 +51,9 @@ MyGame.components.Player = function () {
   Object.defineProperty(that, "segments", {
     get: () => segments,
   });
+  Object.defineProperty(that, "turnPoints", {
+    get: () => turnPoints,
+  });
   //------------------------------------------------------------------
   //
   // Public function that adds body parts
@@ -58,6 +62,7 @@ MyGame.components.Player = function () {
   that.addBodyPart = function (elapsedTime) {
     let newSnakePart = MyGame.components.Body();
     segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
+    console.log(turnPoints);
   };
 
   //------------------------------------------------------------------
@@ -111,28 +116,33 @@ MyGame.components.Player = function () {
   //
   //------------------------------------------------------------------
   that.goUp = function (elapsedTime) {
-    if (direction == Math.PI / 2) {
+    if (direction == Math.PI / 2 || direction == -Math.PI / 2) {
       return;
     }
     direction = -Math.PI / 2;
+    turnPoints.push({ x: position.x, y: position.y });
   };
   that.goDown = function (elapsedTime) {
-    if (direction == -Math.PI / 2) {
+    if (direction == -Math.PI / 2 || direction == Math.PI / 2) {
       return;
     }
     direction = Math.PI / 2;
+    turnPoints.push({ x: position.x, y: position.y });
   };
   that.goRight = function (elapsedTime) {
-    if (direction == Math.PI) {
+    if (direction == Math.PI || direction == 0) {
       return;
     }
+
     direction = 0;
+    turnPoints.push({ x: position.x, y: position.y });
   };
   that.goLeft = function (elapsedTime) {
-    if (direction == 0) {
+    if (direction == 0 || direction == Math.PI) {
       return;
     }
     direction = Math.PI;
+    turnPoints.push({ x: position.x, y: position.y });
   };
   let updateRotateRate = 5000000;
 

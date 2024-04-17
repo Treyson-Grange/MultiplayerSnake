@@ -68,19 +68,7 @@ MyGame.components.Body = function () {
   that.follow = function (elapsedTime, position, direction) {
     // console.log(elapsedTime);
   };
-  that.update = function (elapsedTime) {
-    if (goal.updateWindow === 0) return;
-    console.log("ah");
-    let updateFraction = elapsedTime / goal.updateWindow;
-    if (updateFraction > 0) {
-      //
-      // Turn first, then move.
-      state.direction -= (state.direction - goal.direction) * updateFraction;
-
-      state.position.x -= (state.position.x - goal.position.x) * updateFraction;
-      state.position.y -= (state.position.y - goal.position.y) * updateFraction;
-    }
-  };
+  that.update = function (elapsedTime, turnPoints) {};
 
   return that;
 };

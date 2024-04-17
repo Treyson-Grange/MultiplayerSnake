@@ -213,7 +213,7 @@ MyGame.screens["game-play"] = (function (
       playerOthers[id].model.update(elapsedTime);
     }
     for (let id in segments) {
-      segments[id].model.update(elapsedTime);
+      segments[id].model.update(elapsedTime, playerSelf.model.turnPoints);
     }
     food.model.updateRenderFrames(elapsedTime); // increment the render frame on each sprite so it's animated
   }
@@ -242,7 +242,7 @@ MyGame.screens["game-play"] = (function (
       ); // player.texture is 'undefined' here :( should prolly fix that!
     }
     segments = playerSelf.model.getSegments();
-    console.log(segments);
+    // console.log(segments);
     for (let id in segments) {
       // console.log("asdf" + id);
       // segments[id].render(segments[id].model, segments[id].texture);
