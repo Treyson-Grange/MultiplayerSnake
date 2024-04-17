@@ -66,6 +66,8 @@ MyGame.graphics = (function () {
   //
   //------------------------------------------------------------------
   function drawImage(texture, center, size) {
+    // console.log(texture, center, size);
+
     let localCenter = {
       x: center.x * canvas.width,
       y: center.y * canvas.width,
@@ -90,7 +92,6 @@ MyGame.graphics = (function () {
 	//
 	//------------------------------------------------------------------
     function drawSprite(texture, position, size, spriteIndex) {
-        // console.log(texture, position, size, spriteIndex);
         let localCenter = {
             x: position.x * canvas.width,
             y: position.y * canvas.width,
@@ -100,9 +101,6 @@ MyGame.graphics = (function () {
             height: size.height * canvas.height,
             };
     
-        // console.log(localCenter, localSize);
-        // context.save();
-
         //
         // Pick the selected sprite from the sprite sheet to render
         context.drawImage(
@@ -112,35 +110,16 @@ MyGame.graphics = (function () {
             localCenter.x - localSize.width/2,	// Where to draw the sprite
             localCenter.y - localSize.height/2,
             localSize.width, localSize.height);
+        }
           
-        // context.restore();
-    }
-			//
-			// Once the image is loaded, we can compute the height and width based upon
-			// what we know of the image and the number of sprites in the sheet.
-            // DO THIS IN GAME.JS OR SOMETHING !!!???
-		// 	spec.height = image.height;
-		// 	spec.width = image.width / spec.spriteCount;
-		// };
-		// image.src = spec.spriteSheet;
 
     function drawText(spec) {
-        console.log(spec);
-
-        // let width = canvas.width / 2;
-        // let height = canvas.height / 2;
-
         context.save();
 
         context.font = spec.font;
         context.fillStyle = spec.fillStyle;
         context.strokeStyle = spec.strokeStyle;
         context.textBaseline = 'top';
-
-        // context.translate(spec.position.x, spec.position.y);
-        // context.rotate(spec.rotation);
-        // context.translate(-spec.position.x, -spec.position.y);
-
 
         context.fillText(spec.text, spec.position.x, spec.position.y);
         context.strokeText(spec.text, spec.position.x, spec.position.y);

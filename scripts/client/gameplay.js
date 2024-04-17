@@ -276,6 +276,7 @@ MyGame.screens["game-play"] = (function (
     );
 
     if (GAME_OVER) {
+        graphics.drawImage(MyGame.assets["panel"], {x: 200, y: 200}, {width: 100, height: 100}); // this isn't happening, need to make it draw the panel :)
         renderer.Text.render(endText);
     }
   }
