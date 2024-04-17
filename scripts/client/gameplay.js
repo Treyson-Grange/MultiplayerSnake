@@ -31,10 +31,10 @@ MyGame.screens["game-play"] = (function (
     playerOthers = {},
     endText = MyGame.objects.Text( {
         text: "Game Over!",
-        font: "16pt Arial",
+        font: "25pt Arial",
         fillStyle: "#FFFFFF",
         strokeStyle: "#000000",
-        position: { x: 100, y: 100 },
+        position: { x: 0.35, y: 0.3 },
     }),
     food = {
         model: components.Food(),
@@ -277,15 +277,7 @@ MyGame.screens["game-play"] = (function (
 
     if (GAME_OVER) {
         graphics.drawImage(
-            MyGame.assets["panelDark"], 
-        {
-            x: .5, 
-            y: .5,
-        }, 
-        {
-            width: 0.2,
-            height: 0.2,
-          }); // this isn't happening, need to make it draw the panel :)
+            MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
         renderer.Text.render(endText);
     }
   }

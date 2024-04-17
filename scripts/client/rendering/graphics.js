@@ -75,8 +75,6 @@ MyGame.graphics = (function () {
       height: size.height * canvas.height,
     };
 
-    console.log("local: ", center, size);
-
     context.drawImage(
       texture,
       localCenter.x - localSize.width / 2,
@@ -116,13 +114,18 @@ MyGame.graphics = (function () {
     function drawText(spec) {
         context.save();
 
+        let localCenter = {
+            x: spec.position.x * canvas.width,
+            y: spec.position.y * canvas.width,
+            };
+
         context.font = spec.font;
         context.fillStyle = spec.fillStyle;
         context.strokeStyle = spec.strokeStyle;
         context.textBaseline = 'top';
 
-        context.fillText(spec.text, spec.position.x, spec.position.y);
-        context.strokeText(spec.text, spec.position.x, spec.position.y);
+        context.fillText(spec.text, localCenter.x, localCenter.y);
+        context.strokeText(spec.text, localCenter.x, localCenter.y);
 
         context.restore();
     }
