@@ -7,9 +7,13 @@ MyGame.renderer.Body = (function (graphics) {
   // Renders a Body model.
   //
   // ------------------------------------------------------------------
-  that.render = function (model, texture) {
+  that.render = function (model, texture, bodyLocation) {
     graphics.saveContext();
-    graphics.rotateCanvas(model.position, model.direction);
+    let position = {
+      x: model.state.position.x - bodyLocation.x,
+      y: model.state.position.y - bodyLocation.y,
+    };
+    graphics.rotateCanvas(position, model.direction);
     graphics.drawImage(texture, model.position, model.size);
     graphics.restoreContext();
   };

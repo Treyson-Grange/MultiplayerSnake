@@ -55,11 +55,14 @@ function createPlayer() {
     get: () => reportUpdate,
     set: (value) => (reportUpdate = value),
   });
+  Object.defineProperty(that, "segments", {
+    get: () => segments,
+  });
 
   that.addBodyPart = function (elapsedTime) {
     reportUpdate = true;
     let newSnakePart = Body.createBody();
-    newSnakePart.follow(elapsedTime);
+    segments.push(newSnakePart);
   };
 
   //------------------------------------------------------------------

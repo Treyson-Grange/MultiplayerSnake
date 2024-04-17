@@ -35,16 +35,17 @@ function createBody() {
     set: (value) => (reportUpdate = value),
   });
 
-  that.move = function (elapsedTime, direction) {
-    let vectorX = Math.cos(direction) * speed * elapsedTime;
-    let vectorY = Math.sin(direction) * speed * elapsedTime;
+  // that.move = function (elapsedTime, direction) {
+  //   let vectorX = Math.cos(direction) * speed * elapsedTime;
+  //   let vectorY = Math.sin(direction) * speed * elapsedTime;
 
-    position.x += vectorX;
-    position.y += vectorY;
-  };
+  //   position.x += vectorX;
+  //   position.y += vectorY;
+  // };
 
   that.follow = function (elapsedTime) {
-    console.log("follow");
+    // console.log(position);
+    // console.log("follow");
   };
 
   return that;

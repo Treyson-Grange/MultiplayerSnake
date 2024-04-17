@@ -5,6 +5,21 @@ MyGame.components.Body = function () {
     x: 0,
     y: 0,
   };
+  let state = {
+    direction: 0,
+    position: {
+      x: 0,
+      y: 0,
+    },
+  };
+  let goal = {
+    direction: 0,
+    position: {
+      x: 0,
+      y: 0,
+    },
+    updateWindow: 0,
+  };
   let size = {
     width: 0.05,
     height: 0.05,
@@ -18,6 +33,14 @@ MyGame.components.Body = function () {
     set: (value) => {
       direction = value;
     },
+  });
+
+  Object.defineProperty(that, "state", {
+    get: () => state,
+  });
+
+  Object.defineProperty(that, "goal", {
+    get: () => goal,
   });
 
   Object.defineProperty(that, "speed", {
@@ -43,7 +66,20 @@ MyGame.components.Body = function () {
   });
 
   that.follow = function (elapsedTime, position, direction) {
-    console.log(elapsedTime);
+    // console.log(elapsedTime);
+  };
+  that.update = function (elapsedTime) {
+    if (goal.updateWindow === 0) return;
+
+    let updateFraction = elapsedTime / goal.updateWindow;
+    if (updateFraction > 0) {
+      //
+      // Turn first, then move.
+      state.direction -= (state.direction - goal.direction) * updateFraction;
+
+      state.position.x -= (state.position.x - goal.position.x) * updateFraction;
+      state.position.y -= (state.position.y - goal.position.y) * updateFraction;
+    }
   };
 
   return that;

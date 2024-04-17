@@ -47,6 +47,9 @@ MyGame.components.Player = function () {
   Object.defineProperty(that, "size", {
     get: () => size,
   });
+  Object.defineProperty(that, "segments", {
+    get: () => segments,
+  });
   //------------------------------------------------------------------
   //
   // Public function that adds body parts
@@ -54,7 +57,7 @@ MyGame.components.Player = function () {
   //------------------------------------------------------------------
   that.addBodyPart = function (elapsedTime) {
     let newSnakePart = MyGame.components.Body();
-    newSnakePart.follow(elapsedTime);
+    segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
   };
 
   //------------------------------------------------------------------
@@ -69,7 +72,7 @@ MyGame.components.Player = function () {
     position.x += vectorX * elapsedTime * speed;
     position.y += vectorY * elapsedTime * speed;
     for (let i = 1; i < segments.length; i++) {
-      segments[i].follow(
+      segments[i].model.follow(
         elapsedTime,
         segments[i - 1].position,
         segments[i - 1].direction
@@ -95,6 +98,10 @@ MyGame.components.Player = function () {
   //------------------------------------------------------------------
   that.rotateLeft = function (elapsedTime) {
     direction -= rotateRate * elapsedTime;
+  };
+
+  that.getSegments = function () {
+    return segments;
   };
 
   //------------------------------------------------------------------

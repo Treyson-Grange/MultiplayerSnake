@@ -212,6 +212,9 @@ MyGame.screens["game-play"] = (function (
     for (let id in playerOthers) {
       playerOthers[id].model.update(elapsedTime);
     }
+    for (let id in segments) {
+      segments[id].model.update(elapsedTime);
+    }
     food.model.updateRenderFrames(elapsedTime); // increment the render frame on each sprite so it's animated
   }
 
@@ -220,6 +223,7 @@ MyGame.screens["game-play"] = (function (
   // Render the current state of the game simulation
   //
   //------------------------------------------------------------------
+  let segments = [];
   function render() {
     graphics.clear();
     renderer.Background.render(
@@ -236,6 +240,17 @@ MyGame.screens["game-play"] = (function (
         MyGame.assets["player-other"],
         playerSelf.model.position
       ); // player.texture is 'undefined' here :( should prolly fix that!
+    }
+    segments = playerSelf.model.getSegments();
+    console.log(segments);
+    for (let id in segments) {
+      // console.log("asdf" + id);
+      // segments[id].render(segments[id].model, segments[id].texture);
+      renderer.Body.render(
+        segments[id].model,
+        segments[id].texture,
+        segments[id].model.state
+      );
     }
     renderer.Food.render(food.model, food.texture, playerSelf.model.position);
   }
