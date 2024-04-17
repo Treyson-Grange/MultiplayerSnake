@@ -138,6 +138,7 @@ function checkAllCollisions() {
     // check for player v wall collisions
     if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
         console.log("hit a wall!");
+        client.socket.emit("game-over");
     }
 
     // check for player v player collisions
