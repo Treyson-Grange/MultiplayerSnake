@@ -9,7 +9,8 @@ MyGame.screens["game-play"] = (function (
   renderer,
   graphics,
   input,
-  persistence
+  persistence,
+  objects
 ) {
   "use strict";
 
@@ -18,6 +19,7 @@ MyGame.screens["game-play"] = (function (
   console.log(components.Food());
 
   const WORLD_SIZE = 4; // Both x and y
+  let GAME_OVER = false;
 
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
@@ -27,6 +29,13 @@ MyGame.screens["game-play"] = (function (
       texture: MyGame.assets["player-self"],
     },
     playerOthers = {},
+    endText = MyGame.objects.Text( {
+        text: "Game Over!",
+        font: "Arial",
+        fillStyle: "#FFFFFF",
+        strokeStyle: "#000000",
+        position: { x: graphics.width / 2, y: graphics.height / 2 },
+    }),
     food = {
         model: components.Food(),
         texture: [ 
@@ -66,6 +75,10 @@ MyGame.screens["game-play"] = (function (
     playerSelf.model.direction = data.direction;
     playerSelf.model.speed = data.speed;
     playerSelf.model.rotateRate = data.rotateRate;
+  });
+
+  socket.on("game-over", function() {
+    GAME_OVER = true;
   });
 
   //------------------------------------------------------------------
@@ -232,6 +245,11 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   function render() {
     graphics.clear();
+    
+    if (GAME_OVER) {
+        renderer.Text.render(endText);
+    }
+
     renderer.Background.render(
       playerSelf.model.position,
       { height: 0.75, width: 0.75 },
@@ -444,5 +462,6 @@ MyGame.screens["game-play"] = (function (
   MyGame.renderer,
   MyGame.graphics,
   MyGame.input,
-  MyGame.persistence
+  MyGame.persistence,
+  MyGame.objects
 );

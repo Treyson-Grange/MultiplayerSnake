@@ -67,6 +67,10 @@ MyGame.loader = (function () {
         source: "assets/stick.png",
       },
       {
+        key: "panel",
+        source: "assets/panel.png",
+      },
+      {
         key: "food0",
         source: "assets/food/BlueBlue/ToxicFrogBlueBlue_Idle.png",
       },

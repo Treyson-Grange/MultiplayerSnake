@@ -124,12 +124,18 @@ MyGame.graphics = (function () {
 		// };
 		// image.src = spec.spriteSheet;
 
+    function drawText(textObj) {
+        // do stuff here
+        console.log("should be drawing text now");
+    }
+
   return {
     clear: clear,
     saveContext: saveContext,
     restoreContext: restoreContext,
     rotateCanvas: rotateCanvas,
     drawImage: drawImage,
-    drawSprite : drawSprite
+    drawSprite: drawSprite,
+    drawText: drawText,
   };
 })();
