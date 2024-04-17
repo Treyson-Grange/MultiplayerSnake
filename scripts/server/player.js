@@ -159,7 +159,6 @@ function createPlayer() {
   let updateRotateRate = 5000000;
   that.update = function (when) {
     //This is getting called by the update function in server/game.js
-    console.log("update");
   };
   // k so i cant move them in update, we need to send message
   //maybe the server should be the one to update the player
