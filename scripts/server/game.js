@@ -11,7 +11,7 @@ let Player = require("./player");
 let Food = require("./food");
 
 const WORLD_SIZE = 4; // Both x and y
-const WALL_SIZE = { length: .5, width: .1};
+const WALL_SIZE = { length: 0.5, width: 0.1 };
 
 const UPDATE_RATE_MS = 50;
 let quit = false;
@@ -22,24 +22,24 @@ let foodCount = 100;
 
 let foodSOA = Food.create(foodCount);
 for (let i = 0; i < foodCount; i++) {
-    foodSOA.positionsX[i] = random.nextDouble() * 4; // 4 becauase the map size is 4
+  foodSOA.positionsX[i] = random.nextDouble() * 4; // 4 becauase the map size is 4
 }
 
 for (let i = 0; i < foodCount; i++) {
-    foodSOA.positionsY[i] = random.nextDouble() * 4;
+  foodSOA.positionsY[i] = random.nextDouble() * 4;
 }
 
 let bigFood = new Array(foodCount).fill(false);
 for (let i = 0; i < foodCount; i++) {
-    if (i % 2 == 0) {
-        bigFood[i] = true;
-    }
+  if (i % 2 == 0) {
+    bigFood[i] = true;
+  }
 }
 
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
 // TODO: PING THE food TO TELL it that it NEEDs TO UPDATE its INDICES!!
 for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
-    foodSOA.spriteSheetIndices[i] = random.nextRange(0, 5); // amount of sprites is hardcoded 
+  foodSOA.spriteSheetIndices[i] = random.nextRange(0, 5); // amount of sprites is hardcoded
 }
 
 //------------------------------------------------------------------
@@ -49,10 +49,13 @@ for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
 //
 //------------------------------------------------------------------
 function playerFoodCollided(player, food) {
-    let distance = Math.sqrt(Math.pow(player.position.x - food.position.x, 2) + Math.pow(player.position.y - food.position.y, 2));
-    let radii = player.radius + food.radius;
+  let distance = Math.sqrt(
+    Math.pow(player.position.x - food.position.x, 2) +
+      Math.pow(player.position.y - food.position.y, 2)
+  );
+  let radii = player.radius + food.radius;
 
-    return distance <= radii;
+  return distance <= radii;
 }
 
 //------------------------------------------------------------------
@@ -62,17 +65,23 @@ function playerFoodCollided(player, food) {
 //
 //------------------------------------------------------------------
 function playerWallCollided(playerPos) {
-    let hitWall = false;
+  let hitWall = false;
 
-    let halfWallWidth = WALL_SIZE.width / 2;
-    
-    if (playerPos.x < (0 + halfWallWidth) || playerPos.x > (WORLD_SIZE - halfWallWidth)){
-        hitWall = true;
-    } else if (playerPos.y < (0 + halfWallWidth) || playerPos.y > (WORLD_SIZE - halfWallWidth)) {
-        hitWall = true;
-    }
+  let halfWallWidth = WALL_SIZE.width / 2;
 
-    return hitWall;
+  if (
+    playerPos.x < 0 + halfWallWidth ||
+    playerPos.x > WORLD_SIZE - halfWallWidth
+  ) {
+    hitWall = true;
+  } else if (
+    playerPos.y < 0 + halfWallWidth ||
+    playerPos.y > WORLD_SIZE - halfWallWidth
+  ) {
+    hitWall = true;
+  }
+
+  return hitWall;
 }
 
 //------------------------------------------------------------------
@@ -82,11 +91,14 @@ function playerWallCollided(playerPos) {
 //
 //------------------------------------------------------------------
 function playerPlayerCollided(player1, player2) {
-    // TODO: CHANGE THIS TO DETECT COLLISIONS BESIDES HEAD COLLIDING WITH HEAD!! :)
-    let distance = Math.sqrt(Math.pow(player1.position.x - player2.position.x, 2) + Math.pow(player1.position.y - player2.position.y, 2));
-    let radii = player1.radius + player2.radius;
+  // TODO: CHANGE THIS TO DETECT COLLISIONS BESIDES HEAD COLLIDING WITH HEAD!! :)
+  let distance = Math.sqrt(
+    Math.pow(player1.position.x - player2.position.x, 2) +
+      Math.pow(player1.position.y - player2.position.y, 2)
+  );
+  let radii = player1.radius + player2.radius;
 
-    return distance <= radii;
+  return distance <= radii;
 }
 
 //------------------------------------------------------------------
@@ -101,67 +113,65 @@ function checkAllCollisions() {
     let player = client.player;
 
     let playerSpec = {
-        radius: player.size.width / 2,
-        position: player.position
+      radius: player.size.width / 2,
+      position: player.position,
     };
 
     // check for player v food collisions
     for (let i = 0; i < foodSOA.positionsX.length; i++) {
-        let foodSize = foodSOA.size;
+      let foodSize = foodSOA.size;
 
-        // update the size to be bigger if it's a piece of big food
-        if (foodSOA.bigFood[i]) {
-            foodSize = foodSOA.size;
-        }
-        
-        // create food obj for collision detection
-        let foodPiece = {
-            radius: foodSize.width / 2,
-            position: { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] },
-        };
+      // update the size to be bigger if it's a piece of big food
+      if (foodSOA.bigFood[i]) {
+        foodSize = foodSOA.size;
+      }
 
-        // check for collision
-        if (playerFoodCollided(playerSpec, foodPiece)) {
-            console.log("a food collision!");
+      // create food obj for collision detection
+      let foodPiece = {
+        radius: foodSize.width / 2,
+        position: { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] },
+      };
 
-            // "eat" food by relocating it somewhere else in the map
-            let newPosX = random.nextDouble() * 4;
-            let newPosY = random.nextDouble() * 4;
+      // check for collision
+      if (playerFoodCollided(playerSpec, foodPiece)) {
+        console.log("a food collision!");
 
-            // tell the food to re-locate
-            foodSOA.relocateFood(i, newPosX, newPosY);
+        // "eat" food by relocating it somewhere else in the map
+        let newPosX = random.nextDouble() * 4;
+        let newPosY = random.nextDouble() * 4;
 
-            // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
-        }
+        // tell the food to re-locate
+        foodSOA.relocateFood(i, newPosX, newPosY);
+
+        // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
+      }
     }
 
     // check for player v wall collisions
     if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
-        console.log("hit a wall!");
-        client.socket.emit("game-over");
+      console.log("hit a wall!");
+      client.socket.emit("game-over");
     }
 
     // check for player v player collisions
-    for (let otherId in activeClients) {    
-        if (otherId !== clientId) {
-            let otherClient = activeClients[otherId];
-            let otherPlayer = otherClient.player;
+    for (let otherId in activeClients) {
+      if (otherId !== clientId) {
+        let otherClient = activeClients[otherId];
+        let otherPlayer = otherClient.player;
 
-            let otherPlayerSpec = {
-                radius: otherPlayer.size.width / 2,
-                position: otherPlayer.position
-            };
-            
-            // TODO: this isn't working yet; idk what's up
-            if (playerPlayerCollided(playerSpec, otherPlayerSpec)) {
-                console.log("players knocked heads")
-            }
-            // TODO: check for collisions between player and segments/head/tail of all other snakes :)
+        let otherPlayerSpec = {
+          radius: otherPlayer.size.width / 2,
+          position: otherPlayer.position,
+        };
+
+        // TODO: this isn't working yet; idk what's up
+        if (playerPlayerCollided(playerSpec, otherPlayerSpec)) {
+          console.log("players knocked heads");
         }
+        // TODO: check for collisions between player and segments/head/tail of all other snakes :)
+      }
     }
   }
-
-
 }
 
 //------------------------------------------------------------------
@@ -251,11 +261,11 @@ function updateClients(elapsedTime) {
     //
     // Notify all clients about every food that's been updated
     let foodUpdate = {
-        reportUpdates: foodSOA.reportUpdates,
-        positionsX: foodSOA.positionsX,
-        positionsY: foodSOA.positionsY,
-        count: foodSOA.count,
-        spriteSheetIndices: foodSOA.spriteSheetIndices,
+      reportUpdates: foodSOA.reportUpdates,
+      positionsX: foodSOA.positionsX,
+      positionsY: foodSOA.positionsY,
+      count: foodSOA.count,
+      spriteSheetIndices: foodSOA.spriteSheetIndices,
     };
     client.socket.emit("food-update", foodUpdate);
   }
@@ -312,6 +322,7 @@ function initializeSocketIO(httpServer) {
           rotateRate: newPlayer.rotateRate,
           speed: newPlayer.speed,
           size: newPlayer.size,
+          name: newPlayer.name,
         });
 
         //
@@ -328,17 +339,16 @@ function initializeSocketIO(httpServer) {
     }
   }
 
-    //
-    // Tell the new player about the food
-    function notifyNewPlayerFood(newPlayer) {
-        let client = activeClients[newPlayer.clientId];
-        let foodSpriteUpdate = {
-            spriteSheetIndices: foodSOA.spriteSheetIndices,
-            bigFood: bigFood,
-        };
-        client.socket.emit("food-initial", foodSpriteUpdate);
-    }
-
+  //
+  // Tell the new player about the food
+  function notifyNewPlayerFood(newPlayer) {
+    let client = activeClients[newPlayer.clientId];
+    let foodSpriteUpdate = {
+      spriteSheetIndices: foodSOA.spriteSheetIndices,
+      bigFood: bigFood,
+    };
+    client.socket.emit("food-initial", foodSpriteUpdate);
+  }
 
   //------------------------------------------------------------------
   //
@@ -390,13 +400,7 @@ function initializeSocketIO(httpServer) {
     notifyConnect(socket, newPlayer);
     notifyNewPlayerFood(newPlayer);
   });
-
 }
-
-
-
-
-
 
 //------------------------------------------------------------------
 //

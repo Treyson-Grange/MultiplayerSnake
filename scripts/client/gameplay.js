@@ -19,9 +19,10 @@ MyGame.screens["game-play"] = (function (
   console.log(components.Food());
 
   const WORLD_SIZE = 4; // Both x and y
+
   let game_over = false;
   let canvas = document.getElementById("canvas-main");
-
+  let otherPlayerName;
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
     myKeyboard = input.Keyboard(),
@@ -30,53 +31,62 @@ MyGame.screens["game-play"] = (function (
       texture: MyGame.assets["player-self"],
     },
     playerOthers = {},
-    endText = MyGame.objects.Text( {
-        text: "Game Over!",
-        font: "25pt Arial",
-        fillStyle: "#FFFFFF",
-        strokeStyle: "#000000",
-        position: { x: 0.35, y: 0.3 },
+    endText = MyGame.objects.Text({
+      text: "Game Over!",
+      font: "25pt Arial",
+      fillStyle: "#FFFFFF",
+      strokeStyle: "#000000",
+      position: { x: 0.35, y: 0.3 },
+      player: false,
     }),
-    buttonText = MyGame.objects.Text( {
-        text: "Next",
-        font: "25pt Arial",
-        fillStyle: "#FFFFFF",
-        strokeStyle: "#000000",
-        position: { x: 0.45, y: 0.67 },
+    playerName = MyGame.objects.Text({
+      text: "Player Name",
+      font: "10pt Arial",
+      fillStyle: "#FFFFFF",
+      strokeStyle: "#FFFFFF",
+      position: { x: 0.5, y: 0.45 },
+      player: true,
     }),
-    endButton = MyGame.objects.Button( {
-        imageSrc: "assets/green_button.png",
-        size: { width: .2, height: .12 },
-        center: { x: .51, y: .7 },
-        canvas: canvas,
+    buttonText = MyGame.objects.Text({
+      text: "Next",
+      font: "25pt Arial",
+      fillStyle: "#FFFFFF",
+      strokeStyle: "#000000",
+      position: { x: 0.45, y: 0.67 },
+    }),
+    endButton = MyGame.objects.Button({
+      imageSrc: "assets/green_button.png",
+      size: { width: 0.2, height: 0.12 },
+      center: { x: 0.51, y: 0.7 },
+      canvas: canvas,
     }),
     food = {
-        model: components.Food(),
-        texture: [ 
-            MyGame.assets["food0"], 
-            MyGame.assets["food1"], 
-            MyGame.assets["food2"], 
-            MyGame.assets["food3"], 
-            MyGame.assets["food4"], 
-            MyGame.assets["food5"] 
-        ],
-        bigTexture: [
-            MyGame.assets["food0Big"], 
-            MyGame.assets["food1Big"], 
-            MyGame.assets["food2Big"], 
-            MyGame.assets["food3Big"], 
-            MyGame.assets["food4Big"], 
-            MyGame.assets["food5Big"] 
-        ]
+      model: components.Food(),
+      texture: [
+        MyGame.assets["food0"],
+        MyGame.assets["food1"],
+        MyGame.assets["food2"],
+        MyGame.assets["food3"],
+        MyGame.assets["food4"],
+        MyGame.assets["food5"],
+      ],
+      bigTexture: [
+        MyGame.assets["food0Big"],
+        MyGame.assets["food1Big"],
+        MyGame.assets["food2Big"],
+        MyGame.assets["food3Big"],
+        MyGame.assets["food4Big"],
+        MyGame.assets["food5Big"],
+      ],
     },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
     socket = io();
-    
+
   //------------------------------------------------------------------
   //
   // Handler for when the server ack's the socket connection.  We receive
-  // the state of the newly connected player model.
+  // the state of the newly connected player
   //
   //------------------------------------------------------------------
   socket.on("connect-ack", function (data) {
@@ -91,7 +101,7 @@ MyGame.screens["game-play"] = (function (
     playerSelf.model.rotateRate = data.rotateRate;
   });
 
-  socket.on("game-over", function() {
+  socket.on("game-over", function () {
     game_over = true;
     endButton.makeActive();
   });
@@ -218,7 +228,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   socket.on("food-update", function (data) {
     // for (let i = 0; i < data.eaten.length; i++) {
-        food.model.update(data);
+    food.model.update(data);
     // }
   });
 
@@ -268,13 +278,30 @@ MyGame.screens["game-play"] = (function (
     );
     renderer.Walls.render(
       playerSelf.model.position,
-      { length: .5, width: .1},
+      { length: 0.5, width: 0.1 },
       WORLD_SIZE,
       MyGame.assets["wall"]
-    )
+    );
+
     renderer.Player.render(playerSelf.model, playerSelf.texture);
+    if (!game_over) {
+      renderer.Text.render(playerName);
+    }
+
     for (let id in playerOthers) {
       let otherPlayer = playerOthers[id];
+      otherPlayerName = MyGame.objects.Text({
+        text: otherPlayer.model.name,
+        font: "10pt Arial",
+        fillStyle: "#FFFFFF",
+        strokeStyle: "#FFFFFF",
+        position: {
+          x: otherPlayer.model.goal.position.x,
+          y: otherPlayer.model.goal.position.y - 0.1,
+        },
+        player: true,
+      });
+      // renderer.Text.render(otherPlayerName);
       renderer.PlayerRemote.render(
         otherPlayer.model,
         MyGame.assets["player-other"],
@@ -282,13 +309,12 @@ MyGame.screens["game-play"] = (function (
       );
     }
     renderer.Food.render(
-        food.model, 
-        food.texture, 
-        food.bigTexture,
-        playerSelf.model.position,
-        WORLD_SIZE
+      food.model,
+      food.texture,
+      food.bigTexture,
+      playerSelf.model.position,
+      WORLD_SIZE
     );
-
     if (game_over) {
         graphics.drawImage(MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
         renderer.Text.render(endText);
@@ -325,22 +351,22 @@ MyGame.screens["game-play"] = (function (
   }
 
   function updateFood() {
-    food.texture = [ 
-        MyGame.assets["food0"], 
-        MyGame.assets["food1"], 
-        MyGame.assets["food2"], 
-        MyGame.assets["food3"], 
-        MyGame.assets["food4"], 
-        MyGame.assets["food5"] 
+    food.texture = [
+      MyGame.assets["food0"],
+      MyGame.assets["food1"],
+      MyGame.assets["food2"],
+      MyGame.assets["food3"],
+      MyGame.assets["food4"],
+      MyGame.assets["food5"],
     ];
     food.bigTexture = [
-        MyGame.assets["food0Big"],
-        MyGame.assets["food1Big"], 
-        MyGame.assets["food2Big"], 
-        MyGame.assets["food3Big"], 
-        MyGame.assets["food4Big"], 
-        MyGame.assets["food5Big"] 
-    ]
+      MyGame.assets["food0Big"],
+      MyGame.assets["food1Big"],
+      MyGame.assets["food2Big"],
+      MyGame.assets["food3Big"],
+      MyGame.assets["food4Big"],
+      MyGame.assets["food5Big"],
+    ];
   }
 
   //----------------------------------------------------------------
@@ -441,7 +467,12 @@ MyGame.screens["game-play"] = (function (
   }
 
   function run() {
-    console.log("running run()");
+    if (persistence.getPlayerName() == "") {
+      playerName.updateText("Player");
+    } else {
+      playerName.updateText(persistence.getPlayerName());
+    }
+
     registerKeys();
     lastTimeStamp = performance.now();
     cancelNextRequest = false;
