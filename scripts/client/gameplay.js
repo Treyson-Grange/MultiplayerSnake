@@ -19,7 +19,8 @@ MyGame.screens["game-play"] = (function (
   console.log(components.Food());
 
   const WORLD_SIZE = 4; // Both x and y
-  let GAME_OVER = false;
+  let game_over = false;
+  let canvas = document.getElementById("canvas-main");
 
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
@@ -47,6 +48,7 @@ MyGame.screens["game-play"] = (function (
         imageSrc: "assets/green_button.png",
         size: { width: .2, height: .12 },
         center: { x: .51, y: .7 },
+        canvas: canvas,
     }),
     food = {
         model: components.Food(),
@@ -70,7 +72,7 @@ MyGame.screens["game-play"] = (function (
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
     socket = io();
-
+    
   //------------------------------------------------------------------
   //
   // Handler for when the server ack's the socket connection.  We receive
@@ -90,7 +92,8 @@ MyGame.screens["game-play"] = (function (
   });
 
   socket.on("game-over", function() {
-    GAME_OVER = true;
+    game_over = true;
+    endButton.makeActive();
   });
 
   //------------------------------------------------------------------
@@ -269,7 +272,6 @@ MyGame.screens["game-play"] = (function (
       WORLD_SIZE,
       MyGame.assets["wall"]
     )
-    // console.log("playerSelf.model, playerSelf.texture: ", playerSelf.model, playerSelf.texture);
     renderer.Player.render(playerSelf.model, playerSelf.texture);
     for (let id in playerOthers) {
       let otherPlayer = playerOthers[id];
@@ -287,12 +289,14 @@ MyGame.screens["game-play"] = (function (
         WORLD_SIZE
     );
 
-    if (GAME_OVER) {
+    if (game_over) {
         graphics.drawImage(MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
         renderer.Text.render(endText);
         renderer.Button.render(endButton);
-        // graphics.drawImage(MyGame.assets["greenButton"], { x: .51, y: .7 }, { width: .2, height: .12 });
         renderer.Text.render(buttonText);
+        if (endButton.clicked) {
+            game.showScreen('main-menu'); // TODO: GAME IS FREEZING ON THIS SCREEN; FIX THAT!
+        }
     }
   }
 

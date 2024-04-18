@@ -14,7 +14,6 @@ MyGame.renderer.Button = (function(graphics) {
     //
     // ------------------------------------------------------------------
     that.render = function(spec) {
-        console.log("spec: ", spec);
         graphics.drawImage(spec.image, spec.center, spec.size);
     };
 
