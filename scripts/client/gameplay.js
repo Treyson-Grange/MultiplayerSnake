@@ -29,31 +29,40 @@ MyGame.screens["game-play"] = (function (
       texture: MyGame.assets["player-self"],
     },
     playerOthers = {},
-    endText = MyGame.objects.Text( {
-        text: "Game Over!",
-        font: "25pt Arial",
-        fillStyle: "#FFFFFF",
-        strokeStyle: "#000000",
-        position: { x: 0.35, y: 0.3 },
+    endText = MyGame.objects.Text({
+      text: "Game Over!",
+      font: "25pt Arial",
+      fillStyle: "#FFFFFF",
+      strokeStyle: "#000000",
+      position: { x: 0.35, y: 0.3 },
+      player: false,
+    }),
+    playerName = MyGame.objects.Text({
+      text: "Player Name",
+      font: "10pt Arial",
+      fillStyle: "#FFFFFF",
+      strokeStyle: "#FFFFFF",
+      position: { x: 0.5, y: 0.45 },
+      player: true,
     }),
     food = {
-        model: components.Food(),
-        texture: [ 
-            MyGame.assets["food0"], 
-            MyGame.assets["food1"], 
-            MyGame.assets["food2"], 
-            MyGame.assets["food3"], 
-            MyGame.assets["food4"], 
-            MyGame.assets["food5"] 
-        ], // THIS IS HOW MANY FOOD ASSETS THERE ARE, WOULD BE BETTER TO INFER THIS NUMBER SOMEHOW
-        bigTexture: [
-            MyGame.assets["food0Big"], 
-            MyGame.assets["food1Big"], 
-            MyGame.assets["food2Big"], 
-            MyGame.assets["food3Big"], 
-            MyGame.assets["food4Big"], 
-            MyGame.assets["food5Big"] 
-        ]
+      model: components.Food(),
+      texture: [
+        MyGame.assets["food0"],
+        MyGame.assets["food1"],
+        MyGame.assets["food2"],
+        MyGame.assets["food3"],
+        MyGame.assets["food4"],
+        MyGame.assets["food5"],
+      ], // THIS IS HOW MANY FOOD ASSETS THERE ARE, WOULD BE BETTER TO INFER THIS NUMBER SOMEHOW
+      bigTexture: [
+        MyGame.assets["food0Big"],
+        MyGame.assets["food1Big"],
+        MyGame.assets["food2Big"],
+        MyGame.assets["food3Big"],
+        MyGame.assets["food4Big"],
+        MyGame.assets["food5Big"],
+      ],
     },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
@@ -77,7 +86,7 @@ MyGame.screens["game-play"] = (function (
     playerSelf.model.rotateRate = data.rotateRate;
   });
 
-  socket.on("game-over", function() {
+  socket.on("game-over", function () {
     GAME_OVER = true;
   });
 
@@ -203,7 +212,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   socket.on("food-update", function (data) {
     // for (let i = 0; i < data.eaten.length; i++) {
-        food.model.update(data);
+    food.model.update(data);
     // }
   });
 
@@ -253,12 +262,16 @@ MyGame.screens["game-play"] = (function (
     );
     renderer.Walls.render(
       playerSelf.model.position,
-      { length: .5, width: .1},
+      { length: 0.5, width: 0.1 },
       WORLD_SIZE,
       MyGame.assets["wall"]
-    )
+    );
     // console.log("playerSelf.model, playerSelf.texture: ", playerSelf.model, playerSelf.texture);
     renderer.Player.render(playerSelf.model, playerSelf.texture);
+    if (!GAME_OVER) {
+      renderer.Text.render(playerName);
+    }
+
     for (let id in playerOthers) {
       let otherPlayer = playerOthers[id];
       renderer.PlayerRemote.render(
@@ -268,17 +281,20 @@ MyGame.screens["game-play"] = (function (
       ); // player.texture is 'undefined' here :( should prolly fix that!
     }
     renderer.Food.render(
-        food.model, 
-        food.texture, 
-        food.bigTexture,
-        playerSelf.model.position,
-        WORLD_SIZE
+      food.model,
+      food.texture,
+      food.bigTexture,
+      playerSelf.model.position,
+      WORLD_SIZE
     );
 
     if (GAME_OVER) {
-        graphics.drawImage(
-            MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
-        renderer.Text.render(endText);
+      graphics.drawImage(
+        MyGame.assets["panelDark"],
+        { x: 0.5, y: 0.5 },
+        { width: 1, height: 0.5 }
+      );
+      renderer.Text.render(endText);
     }
   }
 
@@ -305,22 +321,22 @@ MyGame.screens["game-play"] = (function (
   }
 
   function updateFood() {
-    food.texture = [ 
-        MyGame.assets["food0"], 
-        MyGame.assets["food1"], 
-        MyGame.assets["food2"], 
-        MyGame.assets["food3"], 
-        MyGame.assets["food4"], 
-        MyGame.assets["food5"] 
+    food.texture = [
+      MyGame.assets["food0"],
+      MyGame.assets["food1"],
+      MyGame.assets["food2"],
+      MyGame.assets["food3"],
+      MyGame.assets["food4"],
+      MyGame.assets["food5"],
     ];
     food.bigTexture = [
-        MyGame.assets["food0Big"],
-        MyGame.assets["food1Big"], 
-        MyGame.assets["food2Big"], 
-        MyGame.assets["food3Big"], 
-        MyGame.assets["food4Big"], 
-        MyGame.assets["food5Big"] 
-    ]
+      MyGame.assets["food0Big"],
+      MyGame.assets["food1Big"],
+      MyGame.assets["food2Big"],
+      MyGame.assets["food3Big"],
+      MyGame.assets["food4Big"],
+      MyGame.assets["food5Big"],
+    ];
   }
 
   //----------------------------------------------------------------
@@ -446,6 +462,12 @@ MyGame.screens["game-play"] = (function (
   }
 
   function run() {
+    if (persistence.getPlayerName() == "") {
+      playerName.updateText("Player");
+    } else {
+      playerName.updateText(persistence.getPlayerName());
+    }
+
     registerKeys();
     lastTimeStamp = performance.now();
     cancelNextRequest = false;

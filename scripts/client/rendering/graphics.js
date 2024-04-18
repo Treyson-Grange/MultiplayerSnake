@@ -84,52 +84,75 @@ MyGame.graphics = (function () {
     );
   }
 
-  	//------------------------------------------------------------------
-	//
-	// Provides rendering support for a sprite animated from a sprite sheet.
-	//
-	//------------------------------------------------------------------
-    function drawSprite(texture, position, size, spriteIndex) {
-        let localCenter = {
-            x: position.x * canvas.width,
-            y: position.y * canvas.width,
-            };
-        let localSize = {
-            width: size.width * canvas.width,
-            height: size.height * canvas.height,
-            };
-    
-        //
-        // Pick the selected sprite from the sprite sheet to render
-        context.drawImage(
-            texture,
-            localSize.width * spriteIndex, 0,	// Which sprite to pick out
-            localSize.width, localSize.height,		// The size of the sprite
-            localCenter.x - localSize.width/2,	// Where to draw the sprite
-            localCenter.y - localSize.height/2,
-            localSize.width, localSize.height);
-        }
-          
+  //------------------------------------------------------------------
+  //
+  // Provides rendering support for a sprite animated from a sprite sheet.
+  //
+  //------------------------------------------------------------------
+  function drawSprite(texture, position, size, spriteIndex) {
+    let localCenter = {
+      x: position.x * canvas.width,
+      y: position.y * canvas.width,
+    };
+    let localSize = {
+      width: size.width * canvas.width,
+      height: size.height * canvas.height,
+    };
 
-    function drawText(spec) {
-        context.save();
+    //
+    // Pick the selected sprite from the sprite sheet to render
+    context.drawImage(
+      texture,
+      localSize.width * spriteIndex,
+      0, // Which sprite to pick out
+      localSize.width,
+      localSize.height, // The size of the sprite
+      localCenter.x - localSize.width / 2, // Where to draw the sprite
+      localCenter.y - localSize.height / 2,
+      localSize.width,
+      localSize.height
+    );
+  }
 
-        let localCenter = {
-            x: spec.position.x * canvas.width,
-            y: spec.position.y * canvas.width,
-            };
+  function drawText(spec) {
+    context.save();
 
-        context.font = spec.font;
-        context.fillStyle = spec.fillStyle;
-        context.strokeStyle = spec.strokeStyle;
-        context.textBaseline = 'top';
+    let localCenter = {
+      x: spec.position.x * canvas.width,
+      y: spec.position.y * canvas.width,
+    };
 
-        context.fillText(spec.text, localCenter.x, localCenter.y);
-        context.strokeText(spec.text, localCenter.x, localCenter.y);
+    context.font = spec.font;
+    context.fillStyle = spec.fillStyle;
+    context.strokeStyle = spec.strokeStyle;
+    context.textBaseline = "top";
 
-        context.restore();
-    }
-    
+    context.fillText(spec.text, localCenter.x, localCenter.y);
+    context.strokeText(spec.text, localCenter.x, localCenter.y);
+
+    context.restore();
+  }
+  function drawTextPlayerName(spec) {
+    context.save();
+
+    let textWidth = context.measureText(spec.text).width; // Measure the width of the text
+    let textHeight = parseInt(spec.font); // Assuming the font size is given as a string like "20px", parse it to get the numeric value
+
+    let localCenter = {
+      x: spec.position.x * canvas.width - textWidth / 2, // Subtract half of the text width to center horizontally
+      y: spec.position.y * canvas.height - textHeight / 2, // Subtract half of the text height to center vertically
+    };
+
+    context.font = spec.font;
+    context.fillStyle = spec.fillStyle;
+    context.strokeStyle = spec.strokeStyle;
+    context.textBaseline = "middle"; // Align vertically to the middle
+
+    context.fillText(spec.text, localCenter.x, localCenter.y);
+    context.strokeText(spec.text, localCenter.x, localCenter.y);
+
+    context.restore();
+  }
 
   return {
     clear: clear,
@@ -139,5 +162,6 @@ MyGame.graphics = (function () {
     drawImage: drawImage,
     drawSprite: drawSprite,
     drawText: drawText,
+    drawTextPlayerName: drawTextPlayerName,
   };
 })();
