@@ -36,6 +36,13 @@ MyGame.screens["game-play"] = (function (
         strokeStyle: "#000000",
         position: { x: 0.35, y: 0.3 },
     }),
+    buttonText = MyGame.objects.Text( {
+        text: "Next",
+        font: "25pt Arial",
+        fillStyle: "#FFFFFF",
+        strokeStyle: "#000000",
+        position: { x: 0.45, y: 0.67 },
+    }),
     food = {
         model: components.Food(),
         texture: [ 
@@ -45,7 +52,7 @@ MyGame.screens["game-play"] = (function (
             MyGame.assets["food3"], 
             MyGame.assets["food4"], 
             MyGame.assets["food5"] 
-        ], // THIS IS HOW MANY FOOD ASSETS THERE ARE, WOULD BE BETTER TO INFER THIS NUMBER SOMEHOW
+        ],
         bigTexture: [
             MyGame.assets["food0Big"], 
             MyGame.assets["food1Big"], 
@@ -276,9 +283,10 @@ MyGame.screens["game-play"] = (function (
     );
 
     if (GAME_OVER) {
-        graphics.drawImage(
-            MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
+        graphics.drawImage(MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
         renderer.Text.render(endText);
+        renderer.Text.render(buttonText);
+        buttonText.onClick(function() => )
     }
   }
 
