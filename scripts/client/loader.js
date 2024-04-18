@@ -71,6 +71,10 @@ MyGame.loader = (function () {
         source: "assets/panelDark1.png",
       },
       {
+        key: "greenButton",
+        source: "assets/green_button.png",
+      },
+      {
         key: "food0",
         source: "assets/food/BlueBlue/ToxicFrogBlueBlue_Idle.png",
       },

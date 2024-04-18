@@ -285,8 +285,8 @@ MyGame.screens["game-play"] = (function (
     if (GAME_OVER) {
         graphics.drawImage(MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
         renderer.Text.render(endText);
+        graphics.drawImage(MyGame.assets["greenButton"], { x: .51, y: .7 }, { width: .2, height: .12 });
         renderer.Text.render(buttonText);
-        buttonText.onClick(function() => )
     }
   }
 
