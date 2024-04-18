@@ -19,9 +19,10 @@ MyGame.screens["game-play"] = (function (
   console.log(components.Food());
 
   const WORLD_SIZE = 4; // Both x and y
+
   let game_over = false;
   let canvas = document.getElementById("canvas-main");
-
+  let otherPlayerName;
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
     myKeyboard = input.Keyboard(),
@@ -30,12 +31,21 @@ MyGame.screens["game-play"] = (function (
       texture: MyGame.assets["player-self"],
     },
     playerOthers = {},
-    endText = MyGame.objects.Text( {
-        text: "Game Over!",
-        font: "25pt Arial",
-        fillStyle: "#FFFFFF",
-        strokeStyle: "#000000",
-        position: { x: 0.35, y: 0.3 },
+    endText = MyGame.objects.Text({
+      text: "Game Over!",
+      font: "25pt Arial",
+      fillStyle: "#FFFFFF",
+      strokeStyle: "#000000",
+      position: { x: 0.35, y: 0.3 },
+      player: false,
+    }),
+    playerName = MyGame.objects.Text({
+      text: "Player Name",
+      font: "10pt Arial",
+      fillStyle: "#FFFFFF",
+      strokeStyle: "#FFFFFF",
+      position: { x: 0.5, y: 0.45 },
+      player: true,
     }),
     buttonText = MyGame.objects.Text( {
         text: "Next",
@@ -68,6 +78,7 @@ MyGame.screens["game-play"] = (function (
             MyGame.assets["food4Big"], 
             MyGame.assets["food5Big"] 
         ]
+
     },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
@@ -76,7 +87,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   //
   // Handler for when the server ack's the socket connection.  We receive
-  // the state of the newly connected player model.
+  // the state of the newly connected player
   //
   //------------------------------------------------------------------
   socket.on("connect-ack", function (data) {
@@ -218,7 +229,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   socket.on("food-update", function (data) {
     // for (let i = 0; i < data.eaten.length; i++) {
-        food.model.update(data);
+    food.model.update(data);
     // }
   });
 
@@ -268,13 +279,31 @@ MyGame.screens["game-play"] = (function (
     );
     renderer.Walls.render(
       playerSelf.model.position,
-      { length: .5, width: .1},
+      { length: 0.5, width: 0.1 },
       WORLD_SIZE,
       MyGame.assets["wall"]
-    )
+    );
+
     renderer.Player.render(playerSelf.model, playerSelf.texture);
+    if (!GAME_OVER) {
+      renderer.Text.render(playerName);
+    }
+
     for (let id in playerOthers) {
       let otherPlayer = playerOthers[id];
+      console.log(otherPlayer.model);
+      otherPlayerName = MyGame.objects.Text({
+        text: otherPlayer.model.name,
+        font: "10pt Arial",
+        fillStyle: "#FFFFFF",
+        strokeStyle: "#FFFFFF",
+        position: {
+          x: otherPlayer.model.goal.position.x,
+          y: otherPlayer.model.goal.position.y - 0.1,
+        },
+        player: true,
+      });
+      // renderer.Text.render(otherPlayerName);
       renderer.PlayerRemote.render(
         otherPlayer.model,
         MyGame.assets["player-other"],
@@ -282,13 +311,12 @@ MyGame.screens["game-play"] = (function (
       ); // player.texture is 'undefined' here :( should prolly fix that!
     }
     renderer.Food.render(
-        food.model, 
-        food.texture, 
-        food.bigTexture,
-        playerSelf.model.position,
-        WORLD_SIZE
+      food.model,
+      food.texture,
+      food.bigTexture,
+      playerSelf.model.position,
+      WORLD_SIZE
     );
-
     if (game_over) {
         graphics.drawImage(MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
         renderer.Text.render(endText);
@@ -323,22 +351,22 @@ MyGame.screens["game-play"] = (function (
   }
 
   function updateFood() {
-    food.texture = [ 
-        MyGame.assets["food0"], 
-        MyGame.assets["food1"], 
-        MyGame.assets["food2"], 
-        MyGame.assets["food3"], 
-        MyGame.assets["food4"], 
-        MyGame.assets["food5"] 
+    food.texture = [
+      MyGame.assets["food0"],
+      MyGame.assets["food1"],
+      MyGame.assets["food2"],
+      MyGame.assets["food3"],
+      MyGame.assets["food4"],
+      MyGame.assets["food5"],
     ];
     food.bigTexture = [
-        MyGame.assets["food0Big"],
-        MyGame.assets["food1Big"], 
-        MyGame.assets["food2Big"], 
-        MyGame.assets["food3Big"], 
-        MyGame.assets["food4Big"], 
-        MyGame.assets["food5Big"] 
-    ]
+      MyGame.assets["food0Big"],
+      MyGame.assets["food1Big"],
+      MyGame.assets["food2Big"],
+      MyGame.assets["food3Big"],
+      MyGame.assets["food4Big"],
+      MyGame.assets["food5Big"],
+    ];
   }
 
   //----------------------------------------------------------------
@@ -464,6 +492,12 @@ MyGame.screens["game-play"] = (function (
   }
 
   function run() {
+    if (persistence.getPlayerName() == "") {
+      playerName.updateText("Player");
+    } else {
+      playerName.updateText(persistence.getPlayerName());
+    }
+
     registerKeys();
     lastTimeStamp = performance.now();
     cancelNextRequest = false;

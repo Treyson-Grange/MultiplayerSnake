@@ -11,24 +11,39 @@
 // }
 //
 // --------------------------------------------------------------
-MyGame.objects.Text = function(spec) {
-    'use strict';
+MyGame.objects.Text = function (spec) {
+  "use strict";
 
-    let rotation = 0;
+  let rotation = 0;
 
-    function updateText(text) {
-        spec.text = text;
-    }
+  function updateText(text) {
+    spec.text = text;
+  }
 
-    let api = {
-        updateText: updateText,
-        get rotation() { return rotation; },
-        get position() { return spec.position; },
-        get text() { return spec.text; },
-        get font() { return spec.font; },
-        get fillStyle() { return spec.fillStyle; },
-        get strokeStyle() { return spec.strokeStyle; }
-    };
+  let api = {
+    updateText: updateText,
+    get rotation() {
+      return rotation;
+    },
+    get position() {
+      return spec.position;
+    },
+    get text() {
+      return spec.text;
+    },
+    get font() {
+      return spec.font;
+    },
+    get fillStyle() {
+      return spec.fillStyle;
+    },
+    get strokeStyle() {
+      return spec.strokeStyle;
+    },
+    get player() {
+      return spec.player;
+    },
+  };
 
-    return api;
-}
+  return api;
+};
