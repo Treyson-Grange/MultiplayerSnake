@@ -47,43 +47,42 @@ MyGame.screens["game-play"] = (function (
       position: { x: 0.5, y: 0.45 },
       player: true,
     }),
-    buttonText = MyGame.objects.Text( {
-        text: "Next",
-        font: "25pt Arial",
-        fillStyle: "#FFFFFF",
-        strokeStyle: "#000000",
-        position: { x: 0.45, y: 0.67 },
+    buttonText = MyGame.objects.Text({
+      text: "Next",
+      font: "25pt Arial",
+      fillStyle: "#FFFFFF",
+      strokeStyle: "#000000",
+      position: { x: 0.45, y: 0.67 },
     }),
-    endButton = MyGame.objects.Button( {
-        imageSrc: "assets/green_button.png",
-        size: { width: .2, height: .12 },
-        center: { x: .51, y: .7 },
-        canvas: canvas,
+    endButton = MyGame.objects.Button({
+      imageSrc: "assets/green_button.png",
+      size: { width: 0.2, height: 0.12 },
+      center: { x: 0.51, y: 0.7 },
+      canvas: canvas,
     }),
     food = {
-        model: components.Food(),
-        texture: [ 
-            MyGame.assets["food0"], 
-            MyGame.assets["food1"], 
-            MyGame.assets["food2"], 
-            MyGame.assets["food3"], 
-            MyGame.assets["food4"], 
-            MyGame.assets["food5"] 
-        ],
-        bigTexture: [
-            MyGame.assets["food0Big"], 
-            MyGame.assets["food1Big"], 
-            MyGame.assets["food2Big"], 
-            MyGame.assets["food3Big"], 
-            MyGame.assets["food4Big"], 
-            MyGame.assets["food5Big"] 
-        ]
-
+      model: components.Food(),
+      texture: [
+        MyGame.assets["food0"],
+        MyGame.assets["food1"],
+        MyGame.assets["food2"],
+        MyGame.assets["food3"],
+        MyGame.assets["food4"],
+        MyGame.assets["food5"],
+      ],
+      bigTexture: [
+        MyGame.assets["food0Big"],
+        MyGame.assets["food1Big"],
+        MyGame.assets["food2Big"],
+        MyGame.assets["food3Big"],
+        MyGame.assets["food4Big"],
+        MyGame.assets["food5Big"],
+      ],
     },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
     socket = io();
-    
+
   //------------------------------------------------------------------
   //
   // Handler for when the server ack's the socket connection.  We receive
@@ -102,7 +101,7 @@ MyGame.screens["game-play"] = (function (
     playerSelf.model.rotateRate = data.rotateRate;
   });
 
-  socket.on("game-over", function() {
+  socket.on("game-over", function () {
     game_over = true;
     endButton.makeActive();
   });
@@ -285,13 +284,12 @@ MyGame.screens["game-play"] = (function (
     );
 
     renderer.Player.render(playerSelf.model, playerSelf.texture);
-    if (!GAME_OVER) {
+    if (!game_over) {
       renderer.Text.render(playerName);
     }
 
     for (let id in playerOthers) {
       let otherPlayer = playerOthers[id];
-      console.log(otherPlayer.model);
       otherPlayerName = MyGame.objects.Text({
         text: otherPlayer.model.name,
         font: "10pt Arial",
@@ -318,13 +316,17 @@ MyGame.screens["game-play"] = (function (
       WORLD_SIZE
     );
     if (game_over) {
-        graphics.drawImage(MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
-        renderer.Text.render(endText);
-        renderer.Button.render(endButton);
-        renderer.Text.render(buttonText);
-        if (endButton.clicked) {
-            game.showScreen('main-menu'); // TODO: GAME IS FREEZING ON THIS SCREEN; FIX THAT!
-        }
+      graphics.drawImage(
+        MyGame.assets["panelDark"],
+        { x: 0.5, y: 0.5 },
+        { width: 1, height: 0.5 }
+      );
+      renderer.Text.render(endText);
+      renderer.Button.render(endButton);
+      renderer.Text.render(buttonText);
+      if (endButton.clicked) {
+        game.showScreen("main-menu"); // TODO: GAME IS FREEZING ON THIS SCREEN; FIX THAT!
+      }
     }
   }
 
