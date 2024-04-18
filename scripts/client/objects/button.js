@@ -67,29 +67,18 @@ MyGame.objects.Button = function(spec) {
         }
     });
 
-    
-    // // Check if click is inside the rectangle
-    // function isInsideRectangle(mouseX, mouseY, rectX, rectY, rectWidth, rectHeight) {
-    //     return mouseX >= rectX && mouseX <= rectX + rectWidth && mouseY >= rectY && mouseY <= rectY + rectHeight;
-    // }
-
-    // // Handle click event
-    // canvas.addEventListener("click", function(event) {
-    //     var mouseX = event.clientX - canvas.getBoundingClientRect().left;
-    //     var mouseY = event.clientY - canvas.getBoundingClientRect().top;
-
-    //     // Check if the click is inside the rectangle
-    //     if (isInsideRectangle(mouseX, mouseY, 50, 50, 100, 100)) {
-    //         console.log("yay!");
-    //     }
-    // });
-
     function makeActive() {
         active = true;
     }
 
+    function refresh() {
+        active = false;
+        clicked = false;
+    }
+
     let api = {
         makeActive: makeActive,
+        refresh: refresh,
         get size() { return spec.size; },
         get center() { return spec.center; },
         get imageReady() { return imageReady; },
