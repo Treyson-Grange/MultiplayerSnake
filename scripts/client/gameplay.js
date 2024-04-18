@@ -19,7 +19,9 @@ MyGame.screens["game-play"] = (function (
   console.log(components.Food());
 
   const WORLD_SIZE = 4; // Both x and y
-  let GAME_OVER = false;
+
+  let game_over = false;
+  let canvas = document.getElementById("canvas-main");
   let otherPlayerName;
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
@@ -45,29 +47,43 @@ MyGame.screens["game-play"] = (function (
       position: { x: 0.5, y: 0.45 },
       player: true,
     }),
+    buttonText = MyGame.objects.Text( {
+        text: "Next",
+        font: "25pt Arial",
+        fillStyle: "#FFFFFF",
+        strokeStyle: "#000000",
+        position: { x: 0.45, y: 0.67 },
+    }),
+    endButton = MyGame.objects.Button( {
+        imageSrc: "assets/green_button.png",
+        size: { width: .2, height: .12 },
+        center: { x: .51, y: .7 },
+        canvas: canvas,
+    }),
     food = {
-      model: components.Food(),
-      texture: [
-        MyGame.assets["food0"],
-        MyGame.assets["food1"],
-        MyGame.assets["food2"],
-        MyGame.assets["food3"],
-        MyGame.assets["food4"],
-        MyGame.assets["food5"],
-      ], // THIS IS HOW MANY FOOD ASSETS THERE ARE, WOULD BE BETTER TO INFER THIS NUMBER SOMEHOW
-      bigTexture: [
-        MyGame.assets["food0Big"],
-        MyGame.assets["food1Big"],
-        MyGame.assets["food2Big"],
-        MyGame.assets["food3Big"],
-        MyGame.assets["food4Big"],
-        MyGame.assets["food5Big"],
-      ],
+        model: components.Food(),
+        texture: [ 
+            MyGame.assets["food0"], 
+            MyGame.assets["food1"], 
+            MyGame.assets["food2"], 
+            MyGame.assets["food3"], 
+            MyGame.assets["food4"], 
+            MyGame.assets["food5"] 
+        ],
+        bigTexture: [
+            MyGame.assets["food0Big"], 
+            MyGame.assets["food1Big"], 
+            MyGame.assets["food2Big"], 
+            MyGame.assets["food3Big"], 
+            MyGame.assets["food4Big"], 
+            MyGame.assets["food5Big"] 
+        ]
+
     },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
     socket = io();
-
+    
   //------------------------------------------------------------------
   //
   // Handler for when the server ack's the socket connection.  We receive
@@ -86,8 +102,9 @@ MyGame.screens["game-play"] = (function (
     playerSelf.model.rotateRate = data.rotateRate;
   });
 
-  socket.on("game-over", function () {
-    GAME_OVER = true;
+  socket.on("game-over", function() {
+    game_over = true;
+    endButton.makeActive();
   });
 
   //------------------------------------------------------------------
@@ -266,7 +283,7 @@ MyGame.screens["game-play"] = (function (
       WORLD_SIZE,
       MyGame.assets["wall"]
     );
-    // console.log("playerSelf.model, playerSelf.texture: ", playerSelf.model, playerSelf.texture);
+
     renderer.Player.render(playerSelf.model, playerSelf.texture);
     if (!GAME_OVER) {
       renderer.Text.render(playerName);
@@ -300,14 +317,14 @@ MyGame.screens["game-play"] = (function (
       playerSelf.model.position,
       WORLD_SIZE
     );
-
-    if (GAME_OVER) {
-      graphics.drawImage(
-        MyGame.assets["panelDark"],
-        { x: 0.5, y: 0.5 },
-        { width: 1, height: 0.5 }
-      );
-      renderer.Text.render(endText);
+    if (game_over) {
+        graphics.drawImage(MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
+        renderer.Text.render(endText);
+        renderer.Button.render(endButton);
+        renderer.Text.render(buttonText);
+        if (endButton.clicked) {
+            game.showScreen('main-menu'); // TODO: GAME IS FREEZING ON THIS SCREEN; FIX THAT!
+        }
     }
   }
 
