@@ -43,6 +43,11 @@ MyGame.screens["game-play"] = (function (
         strokeStyle: "#000000",
         position: { x: 0.45, y: 0.67 },
     }),
+    endButton = MyGame.objects.Button( {
+        imageSrc: "assets/green_button.png",
+        size: { width: .2, height: .12 },
+        center: { x: .51, y: .7 },
+    }),
     food = {
         model: components.Food(),
         texture: [ 
@@ -285,7 +290,8 @@ MyGame.screens["game-play"] = (function (
     if (GAME_OVER) {
         graphics.drawImage(MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
         renderer.Text.render(endText);
-        graphics.drawImage(MyGame.assets["greenButton"], { x: .51, y: .7 }, { width: .2, height: .12 });
+        renderer.Button.render(endButton);
+        // graphics.drawImage(MyGame.assets["greenButton"], { x: .51, y: .7 }, { width: .2, height: .12 });
         renderer.Text.render(buttonText);
     }
   }
