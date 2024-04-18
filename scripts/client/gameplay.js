@@ -306,7 +306,7 @@ MyGame.screens["game-play"] = (function (
         otherPlayer.model,
         MyGame.assets["player-other"],
         playerSelf.model.position
-      ); // player.texture is 'undefined' here :( should prolly fix that!
+      );
     }
     renderer.Food.render(
       food.model,
@@ -316,17 +316,15 @@ MyGame.screens["game-play"] = (function (
       WORLD_SIZE
     );
     if (game_over) {
-      graphics.drawImage(
-        MyGame.assets["panelDark"],
-        { x: 0.5, y: 0.5 },
-        { width: 1, height: 0.5 }
-      );
-      renderer.Text.render(endText);
-      renderer.Button.render(endButton);
-      renderer.Text.render(buttonText);
-      if (endButton.clicked) {
-        game.showScreen("main-menu"); // TODO: GAME IS FREEZING ON THIS SCREEN; FIX THAT!
-      }
+        graphics.drawImage(MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
+        renderer.Text.render(endText);
+        renderer.Button.render(endButton);
+        renderer.Text.render(buttonText);
+        if (endButton.clicked) {
+            game_over = false;
+            cancelNextRequest = true;
+            game.showScreen('main-menu');
+        }
     }
   }
 
@@ -377,19 +375,6 @@ MyGame.screens["game-play"] = (function (
   //
   //----------------------------------------------------------------
   function registerKeys() {
-    //     myKeyboard.register(persistence.getMoveUp(), myLander.moveUp);
-    //     myKeyboard.register(persistence.getMoveUp(), particleManager.toggleShowThrust);
-    //     myKeyboard.register(persistence.getTurnLeft(), myLander.turnLeft);
-    //     myKeyboard.register(persistence.getTurnRight(), myLander.turnRight);
-    //     myKeyboard.register('Escape', function() {
-    //         //
-    //         // Stop the game loop by canceling the request for the next animation frame
-    //         cancelNextRequest = true;
-    //         //
-    //         // Then, return to the main menu
-    //         game.showScreen('main-menu');
-    //     });
-    //
     // Create the keyboard input handler and register the keyboard commands
     myKeyboard.registerHandler(
       (elapsedTime) => {
@@ -462,18 +447,6 @@ MyGame.screens["game-play"] = (function (
       persistence.getMoveDown(),
       true
     );
-
-    //   myKeyboard.registerHandler(elapsedTime => {
-    //     let message = {
-    //         id: messageId++,
-    //         elapsedTime: elapsedTime,
-    //         type: 'move'
-    //     };
-    //     socket.emit('input', message);
-    //     messageHistory.enqueue(message);
-    //     playerSelf.model.move(elapsedTime);
-    // },
-    // 'w', true);
   }
 
   //------------------------------------------------------------------
@@ -503,6 +476,8 @@ MyGame.screens["game-play"] = (function (
     registerKeys();
     lastTimeStamp = performance.now();
     cancelNextRequest = false;
+    // TODO: REFRESH THE PLAYER'S POSITION, LENGTH, ETC.
+    endButton.refresh();
     requestAnimationFrame(gameLoop);
   }
 
