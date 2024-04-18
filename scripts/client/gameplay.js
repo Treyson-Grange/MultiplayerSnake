@@ -20,7 +20,7 @@ MyGame.screens["game-play"] = (function (
 
   const WORLD_SIZE = 4; // Both x and y
   let GAME_OVER = false;
-
+  let otherPlayerName;
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
     myKeyboard = input.Keyboard(),
@@ -71,7 +71,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   //
   // Handler for when the server ack's the socket connection.  We receive
-  // the state of the newly connected player model.
+  // the state of the newly connected player
   //
   //------------------------------------------------------------------
   socket.on("connect-ack", function (data) {
@@ -274,6 +274,19 @@ MyGame.screens["game-play"] = (function (
 
     for (let id in playerOthers) {
       let otherPlayer = playerOthers[id];
+      console.log(otherPlayer.model);
+      otherPlayerName = MyGame.objects.Text({
+        text: otherPlayer.model.name,
+        font: "10pt Arial",
+        fillStyle: "#FFFFFF",
+        strokeStyle: "#FFFFFF",
+        position: {
+          x: otherPlayer.model.goal.position.x,
+          y: otherPlayer.model.goal.position.y - 0.1,
+        },
+        player: true,
+      });
+      // renderer.Text.render(otherPlayerName);
       renderer.PlayerRemote.render(
         otherPlayer.model,
         MyGame.assets["player-other"],

@@ -31,7 +31,7 @@ function createPlayer() {
   let reportUpdate = false; // Indicates if this model was updated during the last update
   let preferedDirection = 0;
   let threshold = 2;
-
+  let name = "Player101";
   Object.defineProperty(that, "direction", {
     get: () => direction,
   });
@@ -55,6 +55,10 @@ function createPlayer() {
   Object.defineProperty(that, "reportUpdate", {
     get: () => reportUpdate,
     set: (value) => (reportUpdate = value),
+  });
+
+  Object.defineProperty(that, "name", {
+    get: () => name,
   });
 
   //------------------------------------------------------------------
