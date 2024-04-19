@@ -244,13 +244,12 @@ MyGame.screens["game-play"] = (function (
     segments = playerSelf.model.getSegments();
     // console.log(segments);
     for (let id in segments) {
-      // console.log("asdf" + id);
-      // segments[id].render(segments[id].model, segments[id].texture);
       renderer.Body.render(
         segments[id].model,
         segments[id].texture,
-        segments[id].model.state
-      );
+        segments[id].model.state,
+    );
+    //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
     }
     renderer.Food.render(food.model, food.texture, playerSelf.model.position);
   }

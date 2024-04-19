@@ -68,6 +68,40 @@ function createPlayer() {
     segments.push(newSnakePart);
   };
 
+  
+//   // public function to find the location for a newly added segment
+//   that.newSegmentPosition = function (elapsedTime) {
+//     let lastLocation = segments[segments.length - 1];
+    
+//     let vectorX = Math.cos(direction);
+//     let vectorY = Math.sin(direction);
+
+//     let newLocation = {
+//         x: lastLocation.x,
+//         y: lastLocation.y,
+//     };
+
+//     newLocation.x += vectorX * elapsedTime * speed;
+//     newLocation.y += vectorY * elapsedTime * speed;
+
+//     return newLocation;
+//   };
+
+
+//   //------------------------------------------------------------------
+//   //
+//   // Public function that adds body parts
+//   //
+//   //------------------------------------------------------------------
+//   that.addBodyPart = function (elapsedTime) {
+//     // calculate location for new body parttttt
+//     let newLocation = this.newSegmentPosition(elapsedTime);
+
+//     let newSnakePart = MyGame.components.Body(newLocation);
+//     segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
+//     console.log(turnPoints);
+//   };
+
   //------------------------------------------------------------------
   //
   // Moves the player forward based on how long it has been since the

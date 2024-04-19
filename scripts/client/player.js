@@ -54,13 +54,46 @@ MyGame.components.Player = function () {
   Object.defineProperty(that, "turnPoints", {
     get: () => turnPoints,
   });
+
+  // public function to find the location for a newly added segment
+  that.newSegmentPosition = function (elapsedTime) {
+    console.log("segments: ", segments);
+    
+    let lastLocation = { x: 0, y: 0 };
+    
+    if (segments.length > 0) {
+        console.log("segments[segments.length - 1].model.position: ", segments[segments.length - 1].model.position);
+        lastLocation = segments[segments.length - 1].model.position;
+    }
+    console.log("lastLocation! ", lastLocation);
+    
+    let vectorX = Math.cos(direction);
+    let vectorY = Math.sin(direction);
+
+    let newLocation = {
+        x: lastLocation.x,
+        y: lastLocation.y,
+    };
+
+    newLocation.x += vectorX * elapsedTime * speed;
+    newLocation.y += vectorY * elapsedTime * speed;
+
+    return newLocation;
+  };
+
+
   //------------------------------------------------------------------
   //
   // Public function that adds body parts
   //
   //------------------------------------------------------------------
   that.addBodyPart = function (elapsedTime) {
-    let newSnakePart = MyGame.components.Body();
+    // calculate location for new body parttttt
+    // TODO: REIMPLEMENT THIS VVVV !!
+    // let newLocation = this.newSegmentPosition(elapsedTime);
+    let newLocation = { x: .5, y: .5 };
+
+    let newSnakePart = MyGame.components.Body(newLocation, position);
     segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
     console.log(turnPoints);
   };
