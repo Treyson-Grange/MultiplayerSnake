@@ -29,8 +29,12 @@ function createPlayer() {
   let rotateRate = Math.PI / 1000; // radians per millisecond
   let speed = 0.0002; // unit distance per millisecond
   let reportUpdate = false; // Indicates if this model was updated during the last update
+
   let segments = [];
   let turnPoints = [{ x: position.x, y: position.y }];
+  let preferedDirection = 0;
+  let threshold = 2;
+  let name = "Player101";
 
   Object.defineProperty(that, "direction", {
     get: () => direction,
@@ -101,6 +105,10 @@ function createPlayer() {
 //     segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
 //     console.log(turnPoints);
 //   };
+
+  Object.defineProperty(that, "name", {
+    get: () => name,
+  });
 
   //------------------------------------------------------------------
   //

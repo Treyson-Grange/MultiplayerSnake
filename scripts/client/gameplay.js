@@ -9,7 +9,8 @@ MyGame.screens["game-play"] = (function (
   renderer,
   graphics,
   input,
-  persistence
+  persistence,
+  objects
 ) {
   "use strict";
 
@@ -17,6 +18,11 @@ MyGame.screens["game-play"] = (function (
   console.log(components.Player());
   console.log(components.Food());
 
+  const WORLD_SIZE = 4; // Both x and y
+
+  let game_over = false;
+  let canvas = document.getElementById("canvas-main");
+  let otherPlayerName;
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
     myKeyboard = input.Keyboard(),
@@ -25,6 +31,35 @@ MyGame.screens["game-play"] = (function (
       texture: MyGame.assets["player-self"],
     },
     playerOthers = {},
+    endText = MyGame.objects.Text({
+      text: "Game Over!",
+      font: "25pt Arial",
+      fillStyle: "#FFFFFF",
+      strokeStyle: "#000000",
+      position: { x: 0.35, y: 0.3 },
+      player: false,
+    }),
+    playerName = MyGame.objects.Text({
+      text: "Player Name",
+      font: "10pt Arial",
+      fillStyle: "#FFFFFF",
+      strokeStyle: "#FFFFFF",
+      position: { x: 0.5, y: 0.45 },
+      player: true,
+    }),
+    buttonText = MyGame.objects.Text({
+      text: "Next",
+      font: "25pt Arial",
+      fillStyle: "#FFFFFF",
+      strokeStyle: "#000000",
+      position: { x: 0.45, y: 0.67 },
+    }),
+    endButton = MyGame.objects.Button({
+      imageSrc: "assets/green_button.png",
+      size: { width: 0.2, height: 0.12 },
+      center: { x: 0.51, y: 0.7 },
+      canvas: canvas,
+    }),
     food = {
       model: components.Food(),
       texture: [
@@ -34,7 +69,17 @@ MyGame.screens["game-play"] = (function (
         MyGame.assets["food3"],
         MyGame.assets["food4"],
         MyGame.assets["food5"],
-      ], // THIS IS HOW MANY FOOD ASSETS THERE ARE, WOULD BE BETTER TO INFER THIS NUMBER SOMEHOW
+
+      ],
+      bigTexture: [
+        MyGame.assets["food0Big"],
+        MyGame.assets["food1Big"],
+        MyGame.assets["food2Big"],
+        MyGame.assets["food3Big"],
+        MyGame.assets["food4Big"],
+        MyGame.assets["food5Big"],
+      ],
+
     },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
@@ -43,7 +88,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   //
   // Handler for when the server ack's the socket connection.  We receive
-  // the state of the newly connected player model.
+  // the state of the newly connected player
   //
   //------------------------------------------------------------------
   socket.on("connect-ack", function (data) {
@@ -56,6 +101,11 @@ MyGame.screens["game-play"] = (function (
     playerSelf.model.direction = data.direction;
     playerSelf.model.speed = data.speed;
     playerSelf.model.rotateRate = data.rotateRate;
+  });
+
+  socket.on("game-over", function () {
+    game_over = true;
+    endButton.makeActive();
   });
 
   //------------------------------------------------------------------
@@ -226,21 +276,63 @@ MyGame.screens["game-play"] = (function (
   let segments = [];
   function render() {
     graphics.clear();
+
     renderer.Background.render(
       playerSelf.model.position,
       { height: 0.75, width: 0.75 },
       MyGame.assets["tile"]
     );
-    // console.log("playerSelf.model, playerSelf.texture: ", playerSelf.model, playerSelf.texture);
+    renderer.Walls.render(
+      playerSelf.model.position,
+      { length: 0.5, width: 0.1 },
+      WORLD_SIZE,
+      MyGame.assets["wall"]
+    );
+
     renderer.Player.render(playerSelf.model, playerSelf.texture);
+    if (!game_over) {
+      renderer.Text.render(playerName);
+    }
+
     for (let id in playerOthers) {
       let otherPlayer = playerOthers[id];
+      otherPlayerName = MyGame.objects.Text({
+        text: otherPlayer.model.name,
+        font: "10pt Arial",
+        fillStyle: "#FFFFFF",
+        strokeStyle: "#FFFFFF",
+        position: {
+          x: otherPlayer.model.goal.position.x,
+          y: otherPlayer.model.goal.position.y - 0.1,
+        },
+        player: true,
+      });
+      // renderer.Text.render(otherPlayerName);
       renderer.PlayerRemote.render(
         otherPlayer.model,
         MyGame.assets["player-other"],
         playerSelf.model.position
-      ); // player.texture is 'undefined' here :( should prolly fix that!
+      );
     }
+    renderer.Food.render(
+      food.model,
+      food.texture,
+      food.bigTexture,
+      playerSelf.model.position,
+      WORLD_SIZE
+    );
+    if (game_over) {
+        graphics.drawImage(MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
+        renderer.Text.render(endText);
+        renderer.Button.render(endButton);
+        renderer.Text.render(buttonText);
+        if (endButton.clicked) {
+            game_over = false;
+            cancelNextRequest = true;
+            game.showScreen('main-menu');
+        }
+    }
+
     segments = playerSelf.model.getSegments();
     // console.log(segments);
     for (let id in segments) {
@@ -252,6 +344,7 @@ MyGame.screens["game-play"] = (function (
     //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
     }
     renderer.Food.render(food.model, food.texture, playerSelf.model.position);
+
   }
 
   //------------------------------------------------------------------
@@ -284,6 +377,15 @@ MyGame.screens["game-play"] = (function (
       MyGame.assets["food3"],
       MyGame.assets["food4"],
       MyGame.assets["food5"],
+
+    ];
+    food.bigTexture = [
+      MyGame.assets["food0Big"],
+      MyGame.assets["food1Big"],
+      MyGame.assets["food2Big"],
+      MyGame.assets["food3Big"],
+      MyGame.assets["food4Big"],
+      MyGame.assets["food5Big"],
     ];
   }
 
@@ -293,19 +395,6 @@ MyGame.screens["game-play"] = (function (
   //
   //----------------------------------------------------------------
   function registerKeys() {
-    //     myKeyboard.register(persistence.getMoveUp(), myLander.moveUp);
-    //     myKeyboard.register(persistence.getMoveUp(), particleManager.toggleShowThrust);
-    //     myKeyboard.register(persistence.getTurnLeft(), myLander.turnLeft);
-    //     myKeyboard.register(persistence.getTurnRight(), myLander.turnRight);
-    //     myKeyboard.register('Escape', function() {
-    //         //
-    //         // Stop the game loop by canceling the request for the next animation frame
-    //         cancelNextRequest = true;
-    //         //
-    //         // Then, return to the main menu
-    //         game.showScreen('main-menu');
-    //     });
-    //
     // Create the keyboard input handler and register the keyboard commands
     myKeyboard.registerHandler(
       (elapsedTime) => {
@@ -379,6 +468,7 @@ MyGame.screens["game-play"] = (function (
       true
     );
 
+
     myKeyboard.registerHandler(
       (elapsedTime) => {
         let message = {
@@ -413,9 +503,17 @@ MyGame.screens["game-play"] = (function (
   }
 
   function run() {
+    if (persistence.getPlayerName() == "") {
+      playerName.updateText("Player");
+    } else {
+      playerName.updateText(persistence.getPlayerName());
+    }
+
     registerKeys();
     lastTimeStamp = performance.now();
     cancelNextRequest = false;
+    // TODO: REFRESH THE PLAYER'S POSITION, LENGTH, ETC.
+    endButton.refresh();
     requestAnimationFrame(gameLoop);
   }
 
@@ -431,5 +529,6 @@ MyGame.screens["game-play"] = (function (
   MyGame.renderer,
   MyGame.graphics,
   MyGame.input,
-  MyGame.persistence
+  MyGame.persistence,
+  MyGame.objects
 );

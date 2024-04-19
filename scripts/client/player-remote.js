@@ -17,6 +17,7 @@ MyGame.components.PlayerRemote = function () {
       y: 0,
     },
   };
+  let name = "Player101";
   let goal = {
     direction: 0,
     position: {
@@ -38,6 +39,10 @@ MyGame.components.PlayerRemote = function () {
     get: () => size,
   });
 
+  Object.defineProperty(that, "name", {
+    get: () => name,
+  });
+
   //------------------------------------------------------------------
   //
   // Update of the remote player is a simple linear progression/interpolation
@@ -47,7 +52,6 @@ MyGame.components.PlayerRemote = function () {
   that.update = function (elapsedTime) {
     // Protect agains divide by 0 before the first update from the server has been given
     if (goal.updateWindow === 0) return;
-    console.log("ah");
     let updateFraction = elapsedTime / goal.updateWindow;
     if (updateFraction > 0) {
       //

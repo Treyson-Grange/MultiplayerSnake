@@ -20,7 +20,8 @@ function createFood(howMany) {
     let positionsX = new Array(howMany);
     let positionsY = new Array(howMany);
     let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
-    
+    let bigFood = new Array(howMany).fill(true);
+
     let spriteSheetIndices = new Array(howMany);
     let spriteCount = 8;
     let spriteTime = [200, 200, 200, 200, 200, 200, 200, 200]; // milliseconds per sprite animation frame
@@ -33,6 +34,11 @@ function createFood(howMany) {
     let size = {
         width: 0.08,
         height: 0.08,
+    };
+
+    let bigSize = {
+        width: 0.11,
+        height: 0.11,
     };
 
   Object.defineProperty(that, "positionsX", {
@@ -49,6 +55,10 @@ function createFood(howMany) {
     get: () => size,
   });
 
+  Object.defineProperty(that, "bigSize", {
+    get: () => bigSize,
+  });
+
   Object.defineProperty(that, "count", {
     get: () => count,
   });
@@ -56,6 +66,11 @@ function createFood(howMany) {
   Object.defineProperty(that, "reportUpdates", {
     get: () => reportUpdates,
     set: (index, value) => (reportUpdates[index] = value),
+  });
+
+  Object.defineProperty(that, "bigFood", {
+    get: () => bigFood,
+    set: (index, value) => bigFood[index] = value,
   });
 
   Object.defineProperty(that, "spriteSheetIndices", {
@@ -78,6 +93,10 @@ function createFood(howMany) {
   Object.defineProperty(that, "moveRate", {
     get: () => moveRate,
   });
+
+  Object.defineProperty(that, "relocateFood", {
+    get: () => relocateFood,
+    });
 
 //------------------------------------------------------------------
   //
@@ -110,7 +129,7 @@ function createFood(howMany) {
 
     that.updateSprites = function (data) {
         spriteSheetIndices = data.spriteSheetIndices;
-        renderFrame = data.renderFrame;
+        bigFood = data.bigFood;
     };
 
     that.updateRenderFrames = function (elapsedTime) {

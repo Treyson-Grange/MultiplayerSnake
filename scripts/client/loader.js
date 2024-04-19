@@ -39,11 +39,8 @@ MyGame.loader = (function () {
         onComplete: null,
       },
       {
-        scripts: [
-          "rendering/player",
-          "rendering/player-remote",
-          "rendering/background",
-        ],
+
+        scripts: ["rendering/player", "rendering/player-remote", "rendering/background", "rendering/walls"],
         message: "Renderers loaded",
         onComplete: null,
       },
@@ -67,12 +64,24 @@ MyGame.loader = (function () {
         source: "assets/dirt.png",
       },
       {
+        key: "wall",
+        source: "assets/stick.png",
+      },
+      {
+        key: "panelDark",
+        source: "assets/panelDark1.png",
+      },
+      {
+        key: "greenButton",
+        source: "assets/green_button.png",
+      },
+      {
         key: "food0",
         source: "assets/food/BlueBlue/ToxicFrogBlueBlue_Idle.png",
       },
       {
         key: "food1",
-        source: "assets/food/BlueBrown/ToxicFrogBlueBrown_Idle.png",
+        source: "assets/food/BlueBlue/ToxicFrogBlueBlue_Idle.png", 
       },
       {
         key: "food2",
@@ -91,8 +100,29 @@ MyGame.loader = (function () {
         source: "assets/food/PurpleWhite/ToxicFrogPurpleWhite_Idle.png",
       },
       {
-        key: "greenBody",
-        source: "assets/greenBody.png",
+        key: "food0Big",
+        source: "assets/food/BlueBlue/ToxicFrogBlueBlue_Idle_Big.png",
+      },
+      {
+        key: "food1Big",
+        source: "assets/food/BlueBlue/ToxicFrogBlueBlue_Idle_Big.png",
+      },
+      {
+        key: "food2Big",
+        source: "assets/food/GreenBlue/ToxicFrogGreenBlue_Idle_Big.png", 
+      },
+      {
+        key: "food3Big",
+        source: "assets/food/GreenBrown/ToxicFrogGreenBrown_Idle_Big.png", 
+      },
+      {
+        key: "food4Big",
+        source: "assets/food/PurpleBlue/ToxicFrogPurpleBlue_Idle_Big.png", 
+      },
+      {
+        key: "food5Big",
+        source: "assets/food/PurpleWhite/ToxicFrogPurpleWhite_Idle_Big.png",
+
       },
     ];
 
