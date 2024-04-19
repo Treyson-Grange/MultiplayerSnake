@@ -6,7 +6,7 @@
 "use strict";
 
 let random = require("./random");
-
+let Body = require("./body");
 //------------------------------------------------------------------
 //
 // Public function used to initially create a newly connected player
@@ -29,9 +29,13 @@ function createPlayer() {
   let rotateRate = Math.PI / 1000; // radians per millisecond
   let speed = 0.0002; // unit distance per millisecond
   let reportUpdate = false; // Indicates if this model was updated during the last update
+
+  let segments = [];
+  let turnPoints = [{ x: position.x, y: position.y }];
   let preferedDirection = 0;
   let threshold = 2;
   let name = "Player101";
+
   Object.defineProperty(that, "direction", {
     get: () => direction,
   });
@@ -56,6 +60,51 @@ function createPlayer() {
     get: () => reportUpdate,
     set: (value) => (reportUpdate = value),
   });
+  Object.defineProperty(that, "segments", {
+    get: () => segments,
+  });
+  Object.defineProperty(that, "turnPoints", {
+    get: () => turnPoints,
+  });
+  that.addBodyPart = function (elapsedTime) {
+    reportUpdate = true;
+    let newSnakePart = Body.createBody();
+    segments.push(newSnakePart);
+  };
+
+  
+//   // public function to find the location for a newly added segment
+//   that.newSegmentPosition = function (elapsedTime) {
+//     let lastLocation = segments[segments.length - 1];
+    
+//     let vectorX = Math.cos(direction);
+//     let vectorY = Math.sin(direction);
+
+//     let newLocation = {
+//         x: lastLocation.x,
+//         y: lastLocation.y,
+//     };
+
+//     newLocation.x += vectorX * elapsedTime * speed;
+//     newLocation.y += vectorY * elapsedTime * speed;
+
+//     return newLocation;
+//   };
+
+
+//   //------------------------------------------------------------------
+//   //
+//   // Public function that adds body parts
+//   //
+//   //------------------------------------------------------------------
+//   that.addBodyPart = function (elapsedTime) {
+//     // calculate location for new body parttttt
+//     let newLocation = this.newSegmentPosition(elapsedTime);
+
+//     let newSnakePart = MyGame.components.Body(newLocation);
+//     segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
+//     console.log(turnPoints);
+//   };
 
   Object.defineProperty(that, "name", {
     get: () => name,
@@ -74,6 +123,13 @@ function createPlayer() {
 
     position.x += vectorX * elapsedTime * speed;
     position.y += vectorY * elapsedTime * speed;
+    for (let i = 1; i < segments.length; i++) {
+      segments[i].follow(
+        elapsedTime,
+        segments[i - 1].position,
+        segments[i - 1].direction
+      );
+    }
   };
 
   //------------------------------------------------------------------
@@ -109,28 +165,28 @@ function createPlayer() {
   //
   //------------------------------------------------------------------
   that.goUp = function (elapsedTime) {
-    if (direction == Math.PI / 2) {
+    if (direction == Math.PI / 2 || direction == -Math.PI / 2) {
       return;
     }
     reportUpdate = true;
     direction = -Math.PI / 2;
   };
   that.goDown = function (elapsedTime) {
-    if (direction == -Math.PI / 2) {
+    if (direction == -Math.PI / 2 || direction == Math.PI / 2) {
       return;
     }
     reportUpdate = true;
     direction = Math.PI / 2;
   };
   that.goRight = function (elapsedTime) {
-    if (direction == Math.PI) {
+    if (direction == Math.PI || direction == 0) {
       return;
     }
     reportUpdate = true;
     direction = 0;
   };
   that.goLeft = function (elapsedTime) {
-    if (direction == 0) {
+    if (direction == 0 || direction == Math.PI) {
       return;
     }
     reportUpdate = true;
@@ -143,7 +199,12 @@ function createPlayer() {
   //
   //------------------------------------------------------------------
   let updateRotateRate = 5000000;
-  that.update = function (when) {};
+  that.update = function (when) {
+    //This is getting called by the update function in server/game.js
+  };
+  // k so i cant move them in update, we need to send message
+  //maybe the server should be the one to update the player
+  //maybe idk time for class
 
   return that;
 }

@@ -69,6 +69,7 @@ MyGame.screens["game-play"] = (function (
         MyGame.assets["food3"],
         MyGame.assets["food4"],
         MyGame.assets["food5"],
+
       ],
       bigTexture: [
         MyGame.assets["food0Big"],
@@ -78,6 +79,7 @@ MyGame.screens["game-play"] = (function (
         MyGame.assets["food4Big"],
         MyGame.assets["food5Big"],
       ],
+
     },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
@@ -260,6 +262,9 @@ MyGame.screens["game-play"] = (function (
     for (let id in playerOthers) {
       playerOthers[id].model.update(elapsedTime);
     }
+    for (let id in segments) {
+      segments[id].model.update(elapsedTime, playerSelf.model.turnPoints);
+    }
     food.model.updateRenderFrames(elapsedTime); // increment the render frame on each sprite so it's animated
   }
 
@@ -268,6 +273,7 @@ MyGame.screens["game-play"] = (function (
   // Render the current state of the game simulation
   //
   //------------------------------------------------------------------
+  let segments = [];
   function render() {
     graphics.clear();
 
@@ -326,6 +332,19 @@ MyGame.screens["game-play"] = (function (
             game.showScreen('main-menu');
         }
     }
+
+    segments = playerSelf.model.getSegments();
+    // console.log(segments);
+    for (let id in segments) {
+      renderer.Body.render(
+        segments[id].model,
+        segments[id].texture,
+        segments[id].model.state,
+    );
+    //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
+    }
+    renderer.Food.render(food.model, food.texture, playerSelf.model.position);
+
   }
 
   //------------------------------------------------------------------
@@ -358,6 +377,7 @@ MyGame.screens["game-play"] = (function (
       MyGame.assets["food3"],
       MyGame.assets["food4"],
       MyGame.assets["food5"],
+
     ];
     food.bigTexture = [
       MyGame.assets["food0Big"],
@@ -445,6 +465,22 @@ MyGame.screens["game-play"] = (function (
         playerSelf.model.goDown(elapsedTime, messageHistory, socket);
       },
       persistence.getMoveDown(),
+      true
+    );
+
+
+    myKeyboard.registerHandler(
+      (elapsedTime) => {
+        let message = {
+          id: messageId++,
+          elapsedTime: elapsedTime,
+          type: "addBodyPart",
+        };
+        socket.emit("input", message);
+        messageHistory.enqueue(message);
+        playerSelf.model.addBodyPart(elapsedTime);
+      },
+      "q",
       true
     );
   }

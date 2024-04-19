@@ -214,6 +214,9 @@ function processInput() {
       case "test":
         client.player.goRight(input.message.elapsedTime);
         break;
+      case "addBodyPart":
+        client.player.addBodyPart(input.message.elapsedTime);
+        break;
     }
   }
 }
@@ -225,7 +228,7 @@ function processInput() {
 //------------------------------------------------------------------
 function update(elapsedTime, currentTime) {
   for (let clientId in activeClients) {
-    activeClients[clientId].player.update(currentTime);
+    activeClients[clientId].player.update(currentTime); //This doesn't do anything
   }
   checkAllCollisions();
 }
