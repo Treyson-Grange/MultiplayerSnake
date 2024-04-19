@@ -343,8 +343,6 @@ MyGame.screens["game-play"] = (function (
     );
     //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
     }
-    renderer.Food.render(food.model, food.texture, playerSelf.model.position);
-
   }
 
   //------------------------------------------------------------------
