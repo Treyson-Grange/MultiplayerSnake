@@ -163,7 +163,6 @@ MyGame.components.Player = function () {
     }
     direction = -Math.PI / 2;
     turnPoints.push({ x: position.x, y: position.y, direction: direction });
-    console.log(turnPoints);
   };
   that.goDown = function (elapsedTime) {
     if (direction == -Math.PI / 2 || direction == Math.PI / 2) {
@@ -175,7 +174,6 @@ MyGame.components.Player = function () {
       y: position.y,
       direction: direction,
     });
-    console.log(turnPoints);
   };
   that.goRight = function (elapsedTime) {
     if (direction == Math.PI || direction == 0) {
@@ -184,7 +182,6 @@ MyGame.components.Player = function () {
 
     direction = 0;
     turnPoints.push({ x: position.x, y: position.y, direction: direction });
-    console.log(turnPoints);
   };
   that.goLeft = function (elapsedTime) {
     if (direction == 0 || direction == Math.PI) {
@@ -192,7 +189,6 @@ MyGame.components.Player = function () {
     }
     direction = Math.PI;
     turnPoints.push({ x: position.x, y: position.y, direction: direction });
-    console.log(turnPoints);
   };
 
   that.update = function (when) {};

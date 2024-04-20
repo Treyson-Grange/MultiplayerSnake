@@ -144,8 +144,6 @@ function checkAllCollisions() {
 
         // tell the food to re-locate
         foodSOA.relocateFood(i, newPosX, newPosY);
-
-        // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
         client.socket.emit("update-points", player.points);
       }
     }
@@ -174,6 +172,24 @@ function checkAllCollisions() {
         // TODO: check for collisions between player and segments/head/tail of all other snakes :)
       }
     }
+  }
+}
+//------------------------------------------------------------------
+//
+//    Update the scoreboard for all connected clients
+//
+//------------------------------------------------------------------
+function updateScoreBoard() {
+  let scores = [];
+  for (let clientId in activeClients) {
+    scores.push({
+      clientId: clientId,
+      points: activeClients[clientId].player.points,
+    });
+  }
+  scores.sort((a, b) => b.points - a.points);
+  for (let clientId in activeClients) {
+    activeClients[clientId].socket.emit("update-scores", scores);
   }
 }
 
@@ -234,6 +250,7 @@ function update(elapsedTime, currentTime) {
     activeClients[clientId].player.update(currentTime); //This doesn't do anything
   }
   checkAllCollisions();
+  updateScoreBoard();
 }
 
 //------------------------------------------------------------------

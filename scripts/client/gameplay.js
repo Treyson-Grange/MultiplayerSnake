@@ -19,7 +19,7 @@ MyGame.screens["game-play"] = (function (
   console.log(components.Food());
 
   const WORLD_SIZE = 4; // Both x and y
-
+  let arrScores = [];
   let game_over = false;
   let score_added = false;
   let canvas = document.getElementById("canvas-main");
@@ -194,6 +194,10 @@ MyGame.screens["game-play"] = (function (
     messageHistory = memory;
   });
 
+  socket.on("update-scores", function (data) {
+    arrScores = data;
+  });
+
   //------------------------------------------------------------------
   //
   // Handler for receiving state updates about other players.
@@ -234,7 +238,6 @@ MyGame.screens["game-play"] = (function (
   });
 
   socket.on("update-points", function (data) {
-    console.log(data);
     playerSelf.model.points = data;
   });
 
@@ -347,7 +350,6 @@ MyGame.screens["game-play"] = (function (
     }
 
     segments = playerSelf.model.getSegments();
-    // console.log(segments);
     for (let id in segments) {
       renderer.Body.render(
         segments[id].model,
@@ -355,6 +357,31 @@ MyGame.screens["game-play"] = (function (
         segments[id].model.state
       );
       //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
+    }
+    graphics.drawImage(
+      MyGame.assets["panelLight"],
+      { x: 0.9, y: 0.1 },
+      { width: 0.3, height: 0.4 }
+    );
+    let yPos = -0.02;
+    for (let i = 0; i < arrScores.length; i++) {
+      if (i == 5) {
+        return;
+      }
+      if (arrScores[i]["name"] == 0) {
+        continue;
+      } else {
+        yPos += 0.05;
+      }
+      renderer.Text.render(
+        MyGame.objects.Text({
+          text: arrScores[i]["points"],
+          font: "20pt Arial",
+          fillStyle: "#FFFFFF",
+          strokeStyle: "#FFFFFF",
+          position: { x: 0.95, y: yPos },
+        })
+      );
     }
   }
 

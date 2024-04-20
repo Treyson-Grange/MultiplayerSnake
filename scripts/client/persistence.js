@@ -32,19 +32,10 @@ MyGame.persistence = (function () {
   // High scores functions
   function addScore(value) {
     console.log("Adding score: " + value);
-    // Retrieve existing high scores from localStorage
     highScores = JSON.parse(localStorage.getItem("MyGame.highScores")) || [];
-
-    // Add the new score
     highScores.push(value);
-
-    // Sort the high scores in descending order
     highScores.sort((a, b) => b - a);
-
-    // Keep only the top 5 scores
     highScores = highScores.slice(0, 5);
-
-    // Save updated high scores to localStorage
     localStorage.setItem("MyGame.highScores", JSON.stringify(highScores));
   }
 
@@ -58,11 +49,9 @@ MyGame.persistence = (function () {
 
     htmlNode.innerHTML = "";
     for (let key in highScores) {
-      // htmlNode.innerHTML += ('Key: ' + key + ' Value: ' + highScores[key] + '<br/>');
       htmlNode.innerHTML += highScores[key] + "<br/>";
     }
 
-    // Add CSS style to make the scrollbar appear
     htmlNode.style.overflow = "scroll";
 
     htmlNode.scrollTop = htmlNode.scrollHeight;
@@ -86,17 +75,14 @@ MyGame.persistence = (function () {
   // Custom keys functions
 
   function getMoveLeft() {
-    // console.log(customControls['left']);
     return customControls["left"];
   }
 
   function getMoveRight() {
-    // console.log(customControls['right']);
     return customControls["right"];
   }
 
   function getMoveUp() {
-    // console.log(customControls['up']);
     return customControls["up"];
   }
 
@@ -109,7 +95,6 @@ MyGame.persistence = (function () {
     console.log(customControls);
     localStorage["MyGame.customControls"] = JSON.stringify(customControls);
 
-    // location.reload();
     reportCustomControls();
   }
 
