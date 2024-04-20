@@ -21,7 +21,6 @@ MyGame.input.Keyboard = function () {
     // If no repeat rate was passed in, use a value of 0 so that no delay between
     // repeated keydown events occurs.
     if (rate === undefined) {
-      console.log("asdf");
       rate = 0;
     }
 

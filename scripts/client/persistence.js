@@ -4,7 +4,50 @@ MyGame.persistence = (function () {
   // High scores
   let highScores = {};
 
-  let previousScores = localStorage.getItem("MyGame.highScores");
+
+    let previousScores = localStorage.getItem("MyGame.highScores");
+    if (previousScores !== null) {
+        highScores = JSON.parse(previousScores);
+    }
+
+    // Player name
+    let playerName = "Anon";
+
+    let previousPlayerName = localStorage.getItem('MyGame.playerName');
+
+    if (previousPlayerName !== null) {
+        playerName = JSON.parse(previousPlayerName);
+    }
+
+    // Controls
+    let customControls = {left: 'a', right: 'd', up: 'w', down: 's'};
+
+    let previousControls = localStorage.getItem('MyGame.customControls');
+
+    if (previousControls !== null) {
+        customControls = JSON.parse(previousControls);
+    }
+
+    // High scores functions
+    function addScore(key, value) {
+        highScores[key] = value;
+        localStorage['MyGame.highScores'] = JSON.stringify(highScores);
+    }
+
+    function removeScore(key) {
+        delete highScores[key];
+        localStorage['MyGame.highScores'] = JSON.stringify(highScores);
+    }
+
+    function reportScores() {
+        let htmlNode = document.getElementById('high-scores-list');
+        
+        htmlNode.innerHTML = '';
+        for (let key in highScores) {
+            // htmlNode.innerHTML += ('Key: ' + key + ' Value: ' + highScores[key] + '<br/>'); 
+            htmlNode.innerHTML += (highScores[key] + '<br/>'); 
+        }
+    }
 
   if (previousScores !== null) {
     highScores = JSON.parse(previousScores);

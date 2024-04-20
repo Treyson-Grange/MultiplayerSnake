@@ -155,6 +155,47 @@ MyGame.graphics = (function () {
     context.restore();
   }
 
+      // --------------------------------------------------------------
+    //
+    // Draws a texture to the canvas with the following specification:
+    //    image: Image
+    //    center: {x: , y: }
+    //    size: { width: , height: }
+    //
+    // --------------------------------------------------------------
+    function drawTexture(image, center, rotation, size) {
+        context.save();
+
+        console.log("drawTexture center: ", center);
+
+        // let localCenter = {
+        //     x: center.x * canvas.width,
+        //     y: center.y * canvas.width,
+        //   };
+        //   let localSize = {
+        //     width: size.x * canvas.width,
+        //     height: size.y * canvas.height,
+        //   };
+
+        let localCenter = center;
+        let localSize = size;
+
+        console.log("center, size, localCenter, localSize: ", center, size, localCenter, localSize);
+
+        context.translate(localCenter.x, localCenter.y);
+        context.rotate(rotation);
+        context.translate(-localCenter.x, -localCenter.y);
+
+        context.drawImage(
+            image,
+            localCenter.x - localSize.x / 2,
+            localCenter.y - localSize.y / 2,
+            localSize.x, localSize.y);
+
+        context.restore();
+    }
+
+
   return {
     clear: clear,
     saveContext: saveContext,
@@ -164,5 +205,6 @@ MyGame.graphics = (function () {
     drawSprite: drawSprite,
     drawText: drawText,
     drawTextPlayerName: drawTextPlayerName,
+    drawTexture: drawTexture,
   };
 })();
