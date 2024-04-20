@@ -46,9 +46,15 @@ function createPlayer() {
   let preferedDirection = 0;
   let threshold = 2;
   let name = "Player101";
+  let points = 0;
 
   Object.defineProperty(that, "direction", {
     get: () => direction,
+  });
+
+  Object.defineProperty(that, "points", {
+    get: () => points,
+    set: (value) => (points = value),
   });
 
   Object.defineProperty(that, "position", {
@@ -83,39 +89,37 @@ function createPlayer() {
     segments.push(newSnakePart);
   };
 
-  
-//   // public function to find the location for a newly added segment
-//   that.newSegmentPosition = function (elapsedTime) {
-//     let lastLocation = segments[segments.length - 1];
-    
-//     let vectorX = Math.cos(direction);
-//     let vectorY = Math.sin(direction);
+  //   // public function to find the location for a newly added segment
+  //   that.newSegmentPosition = function (elapsedTime) {
+  //     let lastLocation = segments[segments.length - 1];
 
-//     let newLocation = {
-//         x: lastLocation.x,
-//         y: lastLocation.y,
-//     };
+  //     let vectorX = Math.cos(direction);
+  //     let vectorY = Math.sin(direction);
 
-//     newLocation.x += vectorX * elapsedTime * speed;
-//     newLocation.y += vectorY * elapsedTime * speed;
+  //     let newLocation = {
+  //         x: lastLocation.x,
+  //         y: lastLocation.y,
+  //     };
 
-//     return newLocation;
-//   };
+  //     newLocation.x += vectorX * elapsedTime * speed;
+  //     newLocation.y += vectorY * elapsedTime * speed;
 
+  //     return newLocation;
+  //   };
 
-//   //------------------------------------------------------------------
-//   //
-//   // Public function that adds body parts
-//   //
-//   //------------------------------------------------------------------
-//   that.addBodyPart = function (elapsedTime) {
-//     // calculate location for new body parttttt
-//     let newLocation = this.newSegmentPosition(elapsedTime);
+  //   //------------------------------------------------------------------
+  //   //
+  //   // Public function that adds body parts
+  //   //
+  //   //------------------------------------------------------------------
+  //   that.addBodyPart = function (elapsedTime) {
+  //     // calculate location for new body parttttt
+  //     let newLocation = this.newSegmentPosition(elapsedTime);
 
-//     let newSnakePart = MyGame.components.Body(newLocation);
-//     segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
-//     console.log(turnPoints);
-//   };
+  //     let newSnakePart = MyGame.components.Body(newLocation);
+  //     segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
+  //     console.log(turnPoints);
+  //   };
 
   Object.defineProperty(that, "name", {
     get: () => name,
@@ -147,17 +151,17 @@ function createPlayer() {
     position.x += vectorX * elapsedTime * speed;
     position.y += vectorY * elapsedTime * speed;
     // Segment positions
-    let space = .04;  // Get this from somewhere else
+    let space = 0.04; // Get this from somewhere else
     for (let i = 0; i < segments.length; i++) {
-      let segSpace = space * (i+1); 
-      for (let j = turnPoints.length - 1; j >= 0; j--){
+      let segSpace = space * (i + 1);
+      for (let j = turnPoints.length - 1; j >= 0; j--) {
         // console.log(segSpace, distFrom(j, j + 1));
         segSpace = segSpace - distFrom(j, j + 1);
         if (segSpace <= 0) {
           segments[i].position = {
-            x: turnPoints[j].x + (Math.cos(turnPoints[j].direction) * -segSpace),
-            y: turnPoints[j].y + (Math.sin(turnPoints[j].direction) * -segSpace)
-          }
+            x: turnPoints[j].x + Math.cos(turnPoints[j].direction) * -segSpace,
+            y: turnPoints[j].y + Math.sin(turnPoints[j].direction) * -segSpace,
+          };
           segments[i].direction = turnPoints[j].direction;
           break;
         }
