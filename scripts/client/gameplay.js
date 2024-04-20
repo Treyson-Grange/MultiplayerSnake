@@ -334,9 +334,8 @@ MyGame.screens["game-play"] = (function (
     }
 
     segments = playerSelf.model.getSegments();
-    // console.log(segments);
     for (let id in segments) {
-      renderer.Body.render(
+        renderer.Body.render(
         segments[id].model,
         segments[id].texture,
         segments[id].model.state,
