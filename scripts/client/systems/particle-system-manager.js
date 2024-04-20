@@ -12,7 +12,7 @@ MyGame.systems.ParticleSystemManager = (function(systems, renderer, graphics, as
     function ateFood(xFood, yFood, texture) {
         particlesFood = systems.ParticleSystem({
             center: { x: xFood, y: yFood },
-            size: { mean: 10, stdev: 4 },
+            size: { mean: .01, stdev: .001 },
             speed: { mean: 100, stdev: 25 },
             lifetime: { mean: 2.5, stdev: 1 },
             systemLifetime: 1,
