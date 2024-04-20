@@ -10,7 +10,7 @@ MyGame.screens["game-play"] = (function (
   graphics,
   input,
   persistence,
-  objects
+  systems
 ) {
   "use strict";
 
@@ -79,8 +79,8 @@ MyGame.screens["game-play"] = (function (
         MyGame.assets["food4Big"],
         MyGame.assets["food5Big"],
       ],
-
     },
+    particleManager = systems.ParticleSystemManager, // TODO: tell gameplay when a food is hit so that this fires particles at that spot
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
     socket = io();
@@ -163,7 +163,6 @@ MyGame.screens["game-play"] = (function (
       if (messageHistory.front.id === data.lastMessageId) {
         done = true;
       }
-      //console.log('dumping: ', messageHistory.front.id);
       messageHistory.dequeue();
     }
 
@@ -236,6 +235,18 @@ MyGame.screens["game-play"] = (function (
 
   //------------------------------------------------------------------
   //
+  // Handler for when player hits a piece of food.
+  //
+  //------------------------------------------------------------------
+  socket.on("hitFood", function (hitFoodData) {
+    console.log("hitFood");
+    particleManager.ateFood(hitFoodData.center.x, hitFoodData.center.y);
+  });
+
+
+
+  //------------------------------------------------------------------
+  //
   // Process the registered input handlers here.
   //
   //------------------------------------------------------------------
@@ -266,7 +277,8 @@ MyGame.screens["game-play"] = (function (
       segments[id].model.update(elapsedTime, playerSelf.model.turnPoints);
     }
     food.model.updateRenderFrames(elapsedTime); // increment the render frame on each sprite so it's animated
-  }
+    particleManager.update(playerSelf.model, elapsedTime);
+}
 
   //------------------------------------------------------------------
   //
@@ -342,6 +354,7 @@ MyGame.screens["game-play"] = (function (
     );
     //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
     }
+    particleManager.render(playerSelf.position);
   }
 
   //------------------------------------------------------------------
@@ -527,5 +540,5 @@ MyGame.screens["game-play"] = (function (
   MyGame.graphics,
   MyGame.input,
   MyGame.persistence,
-  MyGame.objects
+  MyGame.systems
 );

@@ -143,6 +143,11 @@ function checkAllCollisions() {
         foodSOA.relocateFood(i, newPosX, newPosY);
 
         // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
+        let hitFoodData = {
+            // foodSize: foodSize,
+            center: { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] },
+        };
+        client.socket.emit("hitFood", hitFoodData);
       }
     }
 

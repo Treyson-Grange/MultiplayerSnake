@@ -18,9 +18,6 @@ MyGame.renderer.PlayerRemote = (function (graphics) {
     graphics.saveContext();
 
     // render snake if in render dist
-    // console.log(model.state.position);
-    // console.log(screenPos);
-    // console.log(screenPos.x < model.state.position.x + (model.size.width / 2));
     if (
       screenPos.x < model.state.position.x + model.size.width / 2 &&
       model.state.position.x - model.size.width / 2 < screenPos.x + SCREEN_WIDTH
@@ -45,7 +42,7 @@ MyGame.renderer.PlayerRemote = (function (graphics) {
         graphics.drawImage(texture, position, model.size);
         graphics.restoreContext();
 
-        asdf(model.name, namePosition, "10px Arial", "#FFFFFF", "#FFFFFF");
+        renderOtherTitle(model.name, namePosition, "10px Arial", "#FFFFFF", "#FFFFFF");
       }
     }
 
@@ -53,7 +50,7 @@ MyGame.renderer.PlayerRemote = (function (graphics) {
     graphics.restoreContext();
   };
 
-  function asdf(name, position, font, fillStyle, strokeStyle) {
+  function renderOtherTitle(name, position, font, fillStyle, strokeStyle) {
     let spec = {
       text: name,
       position: position,

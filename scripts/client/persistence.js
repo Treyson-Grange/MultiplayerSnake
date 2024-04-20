@@ -23,7 +23,6 @@ MyGame.persistence = (function () {
     let customControls = {left: 'a', right: 'd', up: 'w', down: 's'};
 
     let previousControls = localStorage.getItem('MyGame.customControls');
-    // console.log(previousControls);
 
     if (previousControls !== null) {
         customControls = JSON.parse(previousControls);
