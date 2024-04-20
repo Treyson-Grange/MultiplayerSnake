@@ -354,7 +354,7 @@ MyGame.screens["game-play"] = (function (
     );
     //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
     }
-    particleManager.render(playerSelf.position);
+    particleManager.render(playerSelf.model.position);
   }
 
   //------------------------------------------------------------------

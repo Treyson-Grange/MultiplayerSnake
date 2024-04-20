@@ -18,7 +18,7 @@ MyGame.systems.ParticleSystemManager = (function(systems, renderer, graphics) {
             systemLifetime: 1,
             direction: { max: 2 * Math.PI, min: 0 } ,
             generateNew: true,
-            texture: spec.texture,
+            texture: texture,
             isThrust: false // TODO: REMOVE THIS!!
         },
         graphics);
