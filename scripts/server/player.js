@@ -15,21 +15,10 @@ let Body = require("./body");
 //------------------------------------------------------------------
 function createPlayer() {
   let that = {};
-  let X = random.nextDouble() * 4;
-  if (X < 0.5) {
-    X += 0.5;
-  } else if (X > 3.5) {
-    X -= 0.5;
-  }
-  let Y = random.nextDouble() * 4;
-  if (Y < 0.5) {
-    Y += 0.5;
-  } else if (Y > 3.5) {
-    Y -= 0.5;
-  }
+
   let position = {
-    x: X,
-    y: Y,
+    x: random.nextDouble(),
+    y: random.nextDouble(),
   };
 
   let size = {
@@ -46,7 +35,6 @@ function createPlayer() {
   let preferedDirection = 0;
   let threshold = 2;
   let name = "Player101";
-  let points = 0;
 
   Object.defineProperty(that, "direction", {
     get: () => direction,
@@ -78,49 +66,45 @@ function createPlayer() {
   Object.defineProperty(that, "turnPoints", {
     get: () => turnPoints,
   });
-  Object.defineProperty(that, "points", {
-    get: () => points,
-    set: (value) => (points = value),
-  });
-
   that.addBodyPart = function (elapsedTime) {
     reportUpdate = true;
-    console.log("adding body part");
     let newSnakePart = Body.createBody();
     segments.push(newSnakePart);
   };
 
-  //   // public function to find the location for a newly added segment
-  //   that.newSegmentPosition = function (elapsedTime) {
-  //     let lastLocation = segments[segments.length - 1];
+  
+//   // public function to find the location for a newly added segment
+//   that.newSegmentPosition = function (elapsedTime) {
+//     let lastLocation = segments[segments.length - 1];
+    
+//     let vectorX = Math.cos(direction);
+//     let vectorY = Math.sin(direction);
 
-  //     let vectorX = Math.cos(direction);
-  //     let vectorY = Math.sin(direction);
+//     let newLocation = {
+//         x: lastLocation.x,
+//         y: lastLocation.y,
+//     };
 
-  //     let newLocation = {
-  //         x: lastLocation.x,
-  //         y: lastLocation.y,
-  //     };
+//     newLocation.x += vectorX * elapsedTime * speed;
+//     newLocation.y += vectorY * elapsedTime * speed;
 
-  //     newLocation.x += vectorX * elapsedTime * speed;
-  //     newLocation.y += vectorY * elapsedTime * speed;
+//     return newLocation;
+//   };
 
-  //     return newLocation;
-  //   };
 
-  //   //------------------------------------------------------------------
-  //   //
-  //   // Public function that adds body parts
-  //   //
-  //   //------------------------------------------------------------------
-  //   that.addBodyPart = function (elapsedTime) {
-  //     // calculate location for new body parttttt
-  //     let newLocation = this.newSegmentPosition(elapsedTime);
+//   //------------------------------------------------------------------
+//   //
+//   // Public function that adds body parts
+//   //
+//   //------------------------------------------------------------------
+//   that.addBodyPart = function (elapsedTime) {
+//     // calculate location for new body parttttt
+//     let newLocation = this.newSegmentPosition(elapsedTime);
 
-  //     let newSnakePart = MyGame.components.Body(newLocation);
-  //     segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
-  //     console.log(turnPoints);
-  //   };
+//     let newSnakePart = MyGame.components.Body(newLocation);
+//     segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
+//     console.log(turnPoints);
+//   };
 
   Object.defineProperty(that, "name", {
     get: () => name,
@@ -132,6 +116,18 @@ function createPlayer() {
   // last move took place.
   //
   //------------------------------------------------------------------
+  function distFrom(fromIndex, toIndex) {
+    let xDist;
+    let yDist;
+    if (toIndex == turnPoints.length) {
+      xDist = Math.abs(turnPoints[fromIndex].x - position.x);
+      yDist = Math.abs(turnPoints[fromIndex].y - position.y);
+    } else {
+      xDist = Math.abs(turnPoints[fromIndex].x - turnPoints[toIndex].x);
+      yDist = Math.abs(turnPoints[fromIndex].y - turnPoints[toIndex].y);
+    }
+    return xDist + yDist; //Because x or y dist will always be 0
+  }
   that.move = function (elapsedTime) {
     reportUpdate = true;
     let vectorX = Math.cos(direction);
@@ -139,12 +135,22 @@ function createPlayer() {
 
     position.x += vectorX * elapsedTime * speed;
     position.y += vectorY * elapsedTime * speed;
-    for (let i = 1; i < segments.length; i++) {
-      segments[i].follow(
-        elapsedTime,
-        segments[i - 1].position,
-        segments[i - 1].direction
-      );
+    // Segment positions
+    let space = .04;  // Get this from somewhere else
+    for (let i = 0; i < segments.length; i++) {
+      let segSpace = space * (i+1); 
+      for (let j = turnPoints.length - 1; j >= 0; j--){
+        // console.log(segSpace, distFrom(j, j + 1));
+        segSpace = segSpace - distFrom(j, j + 1);
+        if (segSpace <= 0) {
+          segments[i].position = {
+            x: turnPoints[j].x + (Math.cos(turnPoints[j].direction) * -segSpace),
+            y: turnPoints[j].y + (Math.sin(turnPoints[j].direction) * -segSpace)
+          }
+          segments[i].direction = turnPoints[j].direction;
+          break;
+        }
+      }
     }
   };
 
@@ -186,6 +192,7 @@ function createPlayer() {
     }
     reportUpdate = true;
     direction = -Math.PI / 2;
+    turnPoints.push({ x: position.x, y: position.y, direction: direction });
   };
   that.goDown = function (elapsedTime) {
     if (direction == -Math.PI / 2 || direction == Math.PI / 2) {
@@ -193,6 +200,7 @@ function createPlayer() {
     }
     reportUpdate = true;
     direction = Math.PI / 2;
+    turnPoints.push({ x: position.x, y: position.y, direction: direction });
   };
   that.goRight = function (elapsedTime) {
     if (direction == Math.PI || direction == 0) {
@@ -200,6 +208,7 @@ function createPlayer() {
     }
     reportUpdate = true;
     direction = 0;
+    turnPoints.push({ x: position.x, y: position.y, direction: direction });
   };
   that.goLeft = function (elapsedTime) {
     if (direction == 0 || direction == Math.PI) {
@@ -207,6 +216,7 @@ function createPlayer() {
     }
     reportUpdate = true;
     direction = Math.PI;
+    turnPoints.push({ x: position.x, y: position.y, direction: direction });
   };
 
   //------------------------------------------------------------------
