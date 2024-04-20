@@ -137,7 +137,6 @@ function checkAllCollisions() {
         console.log("a food collision!");
         player.points += 1;
         console.log(player.points);
-
         // "eat" food by relocating it somewhere else in the map
         let newPosX = random.nextDouble() * 4;
         let newPosY = random.nextDouble() * 4;
@@ -150,7 +149,6 @@ function checkAllCollisions() {
 
     // check for player v wall collisions
     if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
-      console.log("hit a wall!");
       client.socket.emit("game-over");
     }
 
