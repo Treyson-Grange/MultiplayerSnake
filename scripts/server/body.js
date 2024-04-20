@@ -12,10 +12,14 @@ function createBody() {
 
   Object.defineProperty(that, "direction", {
     get: () => direction,
+    set: (value) => {
+      direction = value;
+    },
   });
 
   Object.defineProperty(that, "position", {
     get: () => position,
+    set: (setPosition) => { position = setPosition},
   });
 
   Object.defineProperty(that, "size", {
