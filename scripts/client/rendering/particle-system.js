@@ -31,9 +31,6 @@ MyGame.renderer.ParticleSystem = (function (graphics) {
                     y: particle.center.y - screenPos.y,
                 };
 
-                console.log("particle.center, position: ", particle.center, position);
-                console.log("texture, position, particle.size: ", texture, position, particle.size);
-
                 graphics.rotateCanvas(position, particle.rotation);
                 graphics.drawImage(texture, position, particle.size);
                 graphics.restoreContext();

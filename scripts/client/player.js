@@ -156,7 +156,6 @@ MyGame.components.Player = function () {
     }
     direction = -Math.PI / 2;
     turnPoints.push({ x: position.x, y: position.y, direction: direction });
-    console.log(turnPoints);
   };
   that.goDown = function (elapsedTime) {
     if (direction == -Math.PI / 2 || direction == Math.PI / 2) {

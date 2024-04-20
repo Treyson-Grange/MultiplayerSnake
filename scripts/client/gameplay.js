@@ -238,9 +238,9 @@ MyGame.screens["game-play"] = (function (
   // Handler for when player hits a piece of food.
   //
   //------------------------------------------------------------------
-  socket.on("hitFood", function (hitFoodData) {
-    console.log("hitFood");
-    particleManager.ateFood(hitFoodData.center.x, hitFoodData.center.y);
+  socket.on("hit-food", function (data) {
+    console.log("hit-food ", data.x, data.y);
+    particleManager.ateFood(data.x, data.y);
   });
 
 

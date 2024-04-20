@@ -134,6 +134,8 @@ function checkAllCollisions() {
 
       // check for collision
       if (playerFoodCollided(playerSpec, foodPiece)) {
+        // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
+        client.socket.emit("hit-food", { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] });
 
         // "eat" food by relocating it somewhere else in the map
         let newPosX = random.nextDouble() * 4;
@@ -141,13 +143,6 @@ function checkAllCollisions() {
 
         // tell the food to re-locate
         foodSOA.relocateFood(i, newPosX, newPosY);
-
-        // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
-        let hitFoodData = {
-            // foodSize: foodSize,
-            center: { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] },
-        };
-        client.socket.emit("hitFood", hitFoodData);
       }
     }
 

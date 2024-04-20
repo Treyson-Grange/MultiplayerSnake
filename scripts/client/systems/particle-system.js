@@ -68,9 +68,8 @@ MyGame.systems.ParticleSystem = function(spec) {
             // Update its center
             particle.center.x += (elapsedTime * particle.speed * particle.direction.x) / canvasSize.width;
             particle.center.y += (elapsedTime * particle.speed * particle.direction.y) / canvasSize.height;
-            // particle.center.x += (elapsedTime * particle.direction.x;
-            // particle.center.y += .1;
 
+            console.log("center: ", particle.center);
 
             //
             // Rotate proportional to its speed
