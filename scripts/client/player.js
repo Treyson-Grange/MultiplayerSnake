@@ -127,7 +127,7 @@ MyGame.components.Player = function () {
     position.y += vectorY * elapsedTime * speed;
 
     // Segment positions
-    let space = .1;  // Get this from somewhere else
+    let space = .04;  // Get this from somewhere else
     for (let i = 0; i < segments.length; i++) {
       let segSpace = space * (i+1); 
       for (let j = turnPoints.length - 1; j >= 0; j--){
@@ -135,8 +135,8 @@ MyGame.components.Player = function () {
         segSpace = segSpace - distFrom(j, j + 1);
         if (segSpace <= 0) {
           segments[i].model.position = {
-            x: turnPoints[j].x + (Math.cos(direction) * -segSpace),
-            y: turnPoints[j].y + (Math.sin(direction) * -segSpace)
+            x: turnPoints[j].x + (Math.cos(turnPoints[j].direction) * -segSpace),
+            y: turnPoints[j].y + (Math.sin(turnPoints[j].direction) * -segSpace)
           }
           segments[i].model.direction = turnPoints[j].direction;
           console.log(segments[i].model.position.x, segments[i].model.position.y)
