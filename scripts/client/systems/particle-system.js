@@ -22,7 +22,7 @@ MyGame.systems.ParticleSystem = function(spec) {
         let size = Random.nextGaussian(spec.size.mean, spec.size.stdev);
         let p = {
             center: {x: center.x, y: center.y},
-            size: { x: size, y: size },
+            size: { width: size, height: size },
             direction: Random.nextCircleVector(spec.direction.max, spec.direction.min),
             speed: Random.nextGaussian(spec.speed.mean, spec.speed.stdev), // pixels per second
             rotation: 0,
@@ -66,8 +66,10 @@ MyGame.systems.ParticleSystem = function(spec) {
 
             //
             // Update its center
-            particle.center.x += (elapsedTime * particle.speed * particle.direction.x);
-            particle.center.y += (elapsedTime * particle.speed * particle.direction.y);
+            // particle.center.x += (elapsedTime * particle.speed * particle.direction.x);
+            // particle.center.y += (elapsedTime * particle.speed * particle.direction.y);
+            particle.center.x += .01;
+            particle.center.y += .01;
 
 
             //

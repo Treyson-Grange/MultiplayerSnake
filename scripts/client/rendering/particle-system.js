@@ -23,15 +23,22 @@ MyGame.renderer.ParticleSystem = (function (graphics) {
 
             graphics.saveContext();
 
-            // render particle if in render distance
-            // if (
-            //     screenPos.x < particle.center.x + particle.size.x / 2 && 
-            //     particle.center.x - particle.size.x / 2 < screenPos.x + SCREEN_WIDTH
-            // ) {
+            // TODO: COULD MAKE PARTICLES ONLY RENDER IF ON SCREEN?
+            // That's ^^ prolly not necessary though cause we only have smol particles by our face
+
+                // TODO: GET THIS vvv WORKING AGAIN!!
+                // let position = {
+                //     x: particle.center.x - screenPos.x,
+                //     y: particle.center.y - screenPos.y,
+                // };
+
                 let position = {
-                    x: particle.center.x - screenPos.x,
-                    y: particle.center.y - screenPos.y,
-                };
+                    x: .5,
+                    y: .5
+                }
+
+                // console.log("particle.center, position: ", particle.center, position);
+                console.log("texture, position, particle.size: ", texture, position, particle.size);
 
                 graphics.rotateCanvas(position, particle.rotation);
                 graphics.drawImage(texture, position, particle.size);
