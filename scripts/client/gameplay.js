@@ -262,9 +262,6 @@ MyGame.screens["game-play"] = (function (
     for (let id in playerOthers) {
       playerOthers[id].model.update(elapsedTime);
     }
-    for (let id in segments) {
-      segments[id].model.update(elapsedTime, playerSelf.model.turnPoints);
-    }
     food.model.updateRenderFrames(elapsedTime); // increment the render frame on each sprite so it's animated
   }
 
@@ -339,7 +336,7 @@ MyGame.screens["game-play"] = (function (
       renderer.Body.render(
         segments[id].model,
         segments[id].texture,
-        segments[id].model.state,
+        playerSelf.model.position,
     );
     //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
     }

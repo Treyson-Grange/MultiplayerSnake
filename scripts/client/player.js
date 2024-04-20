@@ -93,7 +93,7 @@ MyGame.components.Player = function () {
     // calculate location for new body parttttt
     // TODO: REIMPLEMENT THIS VVVV !!
     // let newLocation = this.newSegmentPosition(elapsedTime);
-    let newLocation = { x: 0.5, y: 0.5 };
+    let newLocation = { x: 0, y: 0 };
 
     let newSnakePart = MyGame.components.Body(newLocation, position);
     segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
@@ -111,12 +111,8 @@ MyGame.components.Player = function () {
 
     position.x += vectorX * elapsedTime * speed;
     position.y += vectorY * elapsedTime * speed;
-    for (let i = 1; i < segments.length; i++) {
-      segments[i].model.follow(
-        elapsedTime,
-        segments[i - 1].position,
-        segments[i - 1].direction
-      );
+    for (let i = 0; i < segments.length; i++) {
+      segments[i].model.position = {x:1, y:.5}
     }
   };
 
