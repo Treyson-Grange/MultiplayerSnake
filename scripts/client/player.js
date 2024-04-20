@@ -18,7 +18,7 @@ MyGame.components.Player = function () {
   let rotateRate = Math.PI / 1000;
   let speed = 0.0002;
   let segments = [];
-  let turnPoints = [{ x: position.x, y: position.y }];
+  let turnPoints = [];
 
   Object.defineProperty(that, "direction", {
     get: () => direction,
@@ -95,7 +95,7 @@ MyGame.components.Player = function () {
     // let newLocation = this.newSegmentPosition(elapsedTime);
     let newLocation = { x: 0, y: 0 };
 
-    let newSnakePart = MyGame.components.Body(newLocation, position);
+    let newSnakePart = MyGame.components.Body(newLocation, direction);
     segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
     console.log(turnPoints);
   };
@@ -105,14 +105,45 @@ MyGame.components.Player = function () {
   // Public function that moves the player in the current direction.
   //
   //------------------------------------------------------------------
+  function distFrom(fromIndex, toIndex) {
+    let xDist;
+    let yDist;
+    if (toIndex == turnPoints.length) {
+      xDist = Math.abs(turnPoints[fromIndex].x - position.x);
+      yDist = Math.abs(turnPoints[fromIndex].y - position.y);
+    } else {
+      xDist = Math.abs(turnPoints[fromIndex].x - turnPoints[toIndex].x);
+      yDist = Math.abs(turnPoints[fromIndex].y - turnPoints[toIndex].y);
+    }
+    return xDist + yDist; //Because x or y dist will always be 0
+
+  }
+
   that.move = function (elapsedTime) {
     let vectorX = Math.cos(direction);
     let vectorY = Math.sin(direction);
 
     position.x += vectorX * elapsedTime * speed;
     position.y += vectorY * elapsedTime * speed;
+
+    // Segment positions
+    let space = .1;  // Get this from somewhere else
     for (let i = 0; i < segments.length; i++) {
-      segments[i].model.position = {x:1, y:.5}
+      let segSpace = space * (i+1); 
+      for (let j = turnPoints.length - 1; j >= 0; j--){
+        // console.log(segSpace, distFrom(j, j + 1));
+        segSpace = segSpace - distFrom(j, j + 1);
+        if (segSpace <= 0) {
+          segments[i].model.position = {
+            x: turnPoints[j].x + (Math.cos(direction) * -segSpace),
+            y: turnPoints[j].y + (Math.sin(direction) * -segSpace)
+          }
+          segments[i].model.direction = turnPoints[j].direction;
+          console.log(segments[i].model.position.x, segments[i].model.position.y)
+          break;
+        }
+      }
+      // segments[i].model.position = {x:1, y:.5}
     }
   };
 

@@ -27,7 +27,7 @@ MyGame.renderer.Body = (function (graphics) {
           y: model.position.y - screenPos.y,
         };
         // console.log(position);
-        graphics.rotateCanvas(position, model.direction);
+        graphics.rotateCanvas(model.position, model.direction);
 
         graphics.drawImage(texture, position, model.size);
         graphics.restoreContext();
