@@ -445,20 +445,6 @@ MyGame.screens["game-play"] = (function (
         let message = {
           id: messageId++,
           elapsedTime: elapsedTime,
-          type: "test",
-        };
-        socket.emit("input", message);
-        messageHistory.enqueue(message);
-        playerSelf.model.rotateRight(elapsedTime);
-      },
-      "t",
-      true
-    );
-    myKeyboard.registerHandler(
-      (elapsedTime) => {
-        let message = {
-          id: messageId++,
-          elapsedTime: elapsedTime,
           type: "up",
         };
         socket.emit("input", message);
