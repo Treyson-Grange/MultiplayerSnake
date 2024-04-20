@@ -3,20 +3,20 @@
 // Renders the particles in a particle system
 //
 // --------------------------------------------------------------
-MyGame.renderer.ParticleSystem = function (system, graphics, imageSrc, playerSelfPos) {
+MyGame.renderer.ParticleSystem = function (system, texture, graphics, playerSelfPos) {
     'use strict';
 
     const SCREEN_WIDTH = 1;
 
-    let image = new Image();
-    let isReady = false;  // Can't render until the texture is loaded
+    // let image = new Image();
+    // let isReady = false;  // Can't render until the texture is loaded
 
-    //
-    // Get the texture to use for the particle system loading and ready for rendering
-    image.onload = function() {
-        isReady = true;
-    }
-    image.src = imageSrc;
+    // //
+    // // Get the texture to use for the particle system loading and ready for rendering
+    // image.onload = function() {
+    //     isReady = true;
+    // }
+    // image.src = imageSrc;
 
     //------------------------------------------------------------------
     //

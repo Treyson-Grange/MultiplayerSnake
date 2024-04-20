@@ -9,7 +9,7 @@ MyGame.systems.ParticleSystemManager = (function(systems, renderer, graphics) {
     let particlesFood = null;
     let renderAteFood = null;
 
-    function ateFood(xFood, yFood) {
+    function ateFood(xFood, yFood, texture) {
         particlesFood = systems.ParticleSystem({
             center: { x: xFood, y: yFood },
             size: { mean: 10, stdev: 4 },
@@ -18,6 +18,7 @@ MyGame.systems.ParticleSystemManager = (function(systems, renderer, graphics) {
             systemLifetime: 1,
             direction: { max: 2 * Math.PI, min: 0 } ,
             generateNew: true,
+            texture: spec.texture,
             isThrust: false // TODO: REMOVE THIS!!
         },
         graphics);
@@ -38,7 +39,7 @@ MyGame.systems.ParticleSystemManager = (function(systems, renderer, graphics) {
         if (particlesFood != null) {
             // renderAteFood;
             // renderer.ParticleSystem(particlesFood, graphics, 'assets/redBody.png').render();
-            renderer.ParticleSystem(particlesFood, graphics, 'assets/redBody.png', playerSelfPos).render();
+            renderer.ParticleSystem(particlesFood, graphics, particlesFood.texture, playerSelfPos).render();
         }
     }
 

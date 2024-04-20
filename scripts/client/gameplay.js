@@ -240,7 +240,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   socket.on("hitFood", function (hitFoodData) {
     console.log("hitFood");
-    particleManager.ateFood(hitFoodData.center.x, hitFoodData.center.y);
+    particleManager.ateFood(hitFoodData.center.x, hitFoodData.center.y, MyGame.assets["particle"]);
   });
 
 
