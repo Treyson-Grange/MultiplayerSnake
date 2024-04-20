@@ -74,6 +74,7 @@ function createPlayer() {
 
   that.addBodyPart = function (elapsedTime) {
     reportUpdate = true;
+    console.log("adding body part");
     let newSnakePart = Body.createBody();
     segments.push(newSnakePart);
   };

@@ -136,7 +136,7 @@ function checkAllCollisions() {
 
       // check for collision
       if (playerFoodCollided(playerSpec, foodPiece)) {
-        console.log("a food collision!");
+        player.addBodyPart();
         player.points += 1;
         console.log(player.points);
         // "eat" food by relocating it somewhere else in the map
@@ -146,6 +146,7 @@ function checkAllCollisions() {
         // tell the food to re-locate
         foodSOA.relocateFood(i, newPosX, newPosY);
         client.socket.emit("update-points", player.points);
+        client.socket.emit("add-body-part", "");
       }
     }
 
