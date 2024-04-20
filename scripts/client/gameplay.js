@@ -328,6 +328,7 @@ MyGame.screens["game-play"] = (function (
     if (game_over) {
       if (!score_added) {
         persistence.addScore(playerSelf.model.points);
+        persistence.reportScores();
         score_added = true;
       }
       graphics.drawImage(
