@@ -26,6 +26,7 @@ MyGame.systems.ParticleSystem = function(spec) {
             direction: Random.nextCircleVector(spec.direction.max, spec.direction.min),
             speed: Random.nextGaussian(spec.speed.mean, spec.speed.stdev), // pixels per second
             rotation: 0,
+            // texture: spec.texture,
             lifetime: Random.nextGaussian(spec.lifetime.mean, spec.lifetime.stdev),    // How long the particle should live, in seconds
             alive: 0    // How long the particle has been alive, in seconds
         };
@@ -119,6 +120,7 @@ MyGame.systems.ParticleSystem = function(spec) {
         get particles() { return particles; },
         get systemLifetime() { return systemLifetime; },
         get center() { return center; },
+        // get texture() { return this.texture; },
     };
 
     return api;

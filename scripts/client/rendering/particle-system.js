@@ -3,27 +3,18 @@
 // Renders the particles in a particle system
 //
 // --------------------------------------------------------------
-MyGame.renderer.ParticleSystem = function (system, texture, graphics, playerSelfPos) {
+MyGame.renderer.ParticleSystem = (function (graphics) {
     'use strict';
 
+    let that = {};
     const SCREEN_WIDTH = 1;
-
-    // let image = new Image();
-    // let isReady = false;  // Can't render until the texture is loaded
-
-    // //
-    // // Get the texture to use for the particle system loading and ready for rendering
-    // image.onload = function() {
-    //     isReady = true;
-    // }
-    // image.src = imageSrc;
 
     //------------------------------------------------------------------
     //
     // Render all particles
     //
     //------------------------------------------------------------------
-    function render() {
+    that.render = function (system, texture, playerSelfPos) {
         let screenPos = { x: playerSelfPos.x - 0.5, y: playerSelfPos.y - 0.5 }; //top-left corner of screen
 
         // for each particle
@@ -41,19 +32,16 @@ MyGame.renderer.ParticleSystem = function (system, texture, graphics, playerSelf
                     x: particle.center.x - screenPos.x,
                     y: particle.center.y - screenPos.y,
                 };
+
                 graphics.rotateCanvas(position, particle.rotation);
                 graphics.drawImage(texture, position, particle.size);
-                console.log("image, position, particle.size: ", image, position, particle.size);
                 graphics.restoreContext();
             // }
 
             // graphics.drawTexture(image, position, particle.rotation, particle.size);
         });
-    }
-
-    let api = {
-        render: render
     };
 
-    return api;
-};
+    return that;
+
+})(MyGame.graphics);

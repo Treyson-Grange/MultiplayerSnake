@@ -3,7 +3,7 @@
 // This is the particle system use by the game code
 //
 //------------------------------------------------------------------
-MyGame.systems.ParticleSystemManager = (function(systems, renderer, graphics) {
+MyGame.systems.ParticleSystemManager = (function(systems, renderer, graphics, assets) {
     'use strict';
 
     let particlesFood = null;
@@ -18,15 +18,16 @@ MyGame.systems.ParticleSystemManager = (function(systems, renderer, graphics) {
             systemLifetime: 1,
             direction: { max: 2 * Math.PI, min: 0 } ,
             generateNew: true,
-            texture: texture,
+            // texture: assets["particle"],
             isThrust: false // TODO: REMOVE THIS!!
         },
         graphics);
     }
 
-    function update(player, elapsedTime) {
+    function update(player, elapsedTime, newTexture) {
         if (particlesFood != null) {
             particlesFood.update({ 
+                texture: newTexture,
                 rotate: true, 
                 systemLifetime: null, 
                 direction: { max: 2 * Math.PI, min: 0 } 
@@ -39,7 +40,7 @@ MyGame.systems.ParticleSystemManager = (function(systems, renderer, graphics) {
         if (particlesFood != null) {
             // renderAteFood;
             // renderer.ParticleSystem(particlesFood, graphics, 'assets/redBody.png').render();
-            renderer.ParticleSystem(particlesFood, graphics, particlesFood.texture, playerSelfPos).render();
+            renderer.ParticleSystem.render(particlesFood, MyGame.assets["particle"], playerSelfPos);
         }
     }
 
@@ -57,4 +58,4 @@ MyGame.systems.ParticleSystemManager = (function(systems, renderer, graphics) {
     };
 
     return api;
-}(MyGame.systems, MyGame.renderer, MyGame.graphics));
+}(MyGame.systems, MyGame.renderer, MyGame.graphics, MyGame.assets));
