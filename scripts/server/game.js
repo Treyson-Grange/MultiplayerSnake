@@ -24,11 +24,23 @@ let foodCount = 100;
 
 let foodSOA = Food.create(foodCount);
 for (let i = 0; i < foodCount; i++) {
-  foodSOA.positionsX[i] = random.nextDouble() * 4; // 4 becauase the map size is 4
+  let X = random.nextDouble() * WORLD_SIZE; // 4 becauase the map size is 4
+  if (X < 0.2) {
+    X += 0.2;
+  } else if (X > 3.8) {
+    X -= 0.2;
+  }
+  foodSOA.positionsX[i] = X;
 }
 
 for (let i = 0; i < foodCount; i++) {
-  foodSOA.positionsY[i] = random.nextDouble() * 4;
+  let Y = random.nextDouble() * WORLD_SIZE;
+  if (Y < 0.2) {
+    Y += 0.2;
+  } else if (Y > 3.8) {
+    Y -= 0.2;
+  }
+  foodSOA.positionsY[i] = Y;
 }
 
 let bigFood = new Array(foodCount).fill(false);
