@@ -21,6 +21,7 @@ MyGame.screens["game-play"] = (function (
   const WORLD_SIZE = 4; // Both x and y
 
   let game_over = false;
+  let score_added = false;
   let canvas = document.getElementById("canvas-main");
   let otherPlayerName;
   let lastTimeStamp = performance.now(),
@@ -69,7 +70,6 @@ MyGame.screens["game-play"] = (function (
         MyGame.assets["food3"],
         MyGame.assets["food4"],
         MyGame.assets["food5"],
-
       ],
       bigTexture: [
         MyGame.assets["food0Big"],
@@ -79,7 +79,6 @@ MyGame.screens["game-play"] = (function (
         MyGame.assets["food4Big"],
         MyGame.assets["food5Big"],
       ],
-
     },
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
@@ -234,6 +233,11 @@ MyGame.screens["game-play"] = (function (
     // }
   });
 
+  socket.on("update-points", function (data) {
+    console.log(data);
+    playerSelf.model.points = data;
+  });
+
   //------------------------------------------------------------------
   //
   // Process the registered input handlers here.
@@ -322,15 +326,23 @@ MyGame.screens["game-play"] = (function (
       WORLD_SIZE
     );
     if (game_over) {
-        graphics.drawImage(MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
-        renderer.Text.render(endText);
-        renderer.Button.render(endButton);
-        renderer.Text.render(buttonText);
-        if (endButton.clicked) {
-            game_over = false;
-            cancelNextRequest = true;
-            game.showScreen('main-menu');
-        }
+      if (!score_added) {
+        persistence.addScore(playerSelf.model.points);
+        score_added = true;
+      }
+      graphics.drawImage(
+        MyGame.assets["panelDark"],
+        { x: 0.5, y: 0.5 },
+        { width: 1, height: 0.5 }
+      );
+      renderer.Text.render(endText);
+      renderer.Button.render(endButton);
+      renderer.Text.render(buttonText);
+      if (endButton.clicked) {
+        game_over = false;
+        cancelNextRequest = true;
+        game.showScreen("main-menu");
+      }
     }
 
     segments = playerSelf.model.getSegments();
@@ -339,9 +351,9 @@ MyGame.screens["game-play"] = (function (
       renderer.Body.render(
         segments[id].model,
         segments[id].texture,
-        segments[id].model.state,
-    );
-    //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
+        segments[id].model.state
+      );
+      //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
     }
   }
 
@@ -375,7 +387,6 @@ MyGame.screens["game-play"] = (function (
       MyGame.assets["food3"],
       MyGame.assets["food4"],
       MyGame.assets["food5"],
-
     ];
     food.bigTexture = [
       MyGame.assets["food0Big"],
@@ -466,7 +477,6 @@ MyGame.screens["game-play"] = (function (
       true
     );
 
-
     myKeyboard.registerHandler(
       (elapsedTime) => {
         let message = {
@@ -512,6 +522,7 @@ MyGame.screens["game-play"] = (function (
     cancelNextRequest = false;
     // TODO: REFRESH THE PLAYER'S POSITION, LENGTH, ETC.
     endButton.refresh();
+    score_added = false;
     requestAnimationFrame(gameLoop);
   }
 

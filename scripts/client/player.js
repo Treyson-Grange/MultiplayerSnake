@@ -18,7 +18,8 @@ MyGame.components.Player = function () {
   let rotateRate = Math.PI / 1000;
   let speed = 0.0002;
   let segments = [];
-  let turnPoints = [{ x: position.x, y: position.y }];
+  let turnPoints = [{ x: position.x, y: position.y, direction: direction }];
+  let points = 0;
 
   Object.defineProperty(that, "direction", {
     get: () => direction,
@@ -53,6 +54,12 @@ MyGame.components.Player = function () {
   });
   Object.defineProperty(that, "turnPoints", {
     get: () => turnPoints,
+  });
+  Object.defineProperty(that, "points", {
+    get: () => points,
+    set: (value) => {
+      points = value;
+    },
   });
 
   // public function to find the location for a newly added segment
@@ -187,7 +194,6 @@ MyGame.components.Player = function () {
     turnPoints.push({ x: position.x, y: position.y, direction: direction });
     console.log(turnPoints);
   };
-  let updateRotateRate = 5000000;
 
   that.update = function (when) {};
 
@@ -195,6 +201,10 @@ MyGame.components.Player = function () {
     position.x = prevPosition.x - Math.cos(prevDirection) * size.width;
     position.y = prevPosition.y - Math.sin(prevDirection) * size.height;
     direction = prevDirection;
+  };
+
+  that.points = function () {
+    return points;
   };
 
   return that;
