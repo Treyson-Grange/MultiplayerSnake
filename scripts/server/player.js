@@ -15,10 +15,21 @@ let Body = require("./body");
 //------------------------------------------------------------------
 function createPlayer() {
   let that = {};
-
+  let X = random.nextDouble() * 4;
+  if (X < 0.5) {
+    X += 0.5;
+  } else if (X > 3.5) {
+    X -= 0.5;
+  }
+  let Y = random.nextDouble() * 4;
+  if (Y < 0.5) {
+    Y += 0.5;
+  } else if (Y > 3.5) {
+    Y -= 0.5;
+  }
   let position = {
-    x: random.nextDouble(),
-    y: random.nextDouble(),
+    x: X,
+    y: Y,
   };
 
   let size = {
@@ -74,6 +85,7 @@ function createPlayer() {
 
   that.addBodyPart = function (elapsedTime) {
     reportUpdate = true;
+    console.log("adding body part");
     let newSnakePart = Body.createBody();
     segments.push(newSnakePart);
   };

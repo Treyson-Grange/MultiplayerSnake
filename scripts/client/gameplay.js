@@ -109,6 +109,10 @@ MyGame.screens["game-play"] = (function (
     allPlayerNames = playerNames;
   });
 
+  socket.on("add-body-part", function (data) {
+    playerSelf.model.addBodyPart();
+  });
+
   socket.on("game-over", function () {
     game_over = true;
     endButton.makeActive();
@@ -264,16 +268,18 @@ MyGame.screens["game-play"] = (function (
   //
   //------------------------------------------------------------------
   function update(elapsedTime) {
-    let message = {
-      //makes it automatically move
-      id: messageId++,
-      elapsedTime: elapsedTime,
-      type: "move",
-    };
-    socket.emit("input", message);
-    messageHistory.enqueue(message);
-    playerSelf.model.move(elapsedTime);
-    playerSelf.model.update(elapsedTime);
+    if (!game_over) {
+      let message = {
+        //makes it automatically move
+        id: messageId++,
+        elapsedTime: elapsedTime,
+        type: "move",
+      };
+      socket.emit("input", message);
+      messageHistory.enqueue(message);
+      playerSelf.model.move(elapsedTime);
+      playerSelf.model.update(elapsedTime);
+    }
     for (let id in playerOthers) {
       playerOthers[id].model.update(elapsedTime);
     }
@@ -352,7 +358,7 @@ MyGame.screens["game-play"] = (function (
       renderer.Body.render(
         segments[id].model,
         segments[id].texture,
-        playerSelf.model.position,
+        playerSelf.model.position
       );
       //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
     }
