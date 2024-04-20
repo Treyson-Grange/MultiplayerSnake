@@ -268,16 +268,18 @@ MyGame.screens["game-play"] = (function (
   //
   //------------------------------------------------------------------
   function update(elapsedTime) {
-    let message = {
-      //makes it automatically move
-      id: messageId++,
-      elapsedTime: elapsedTime,
-      type: "move",
-    };
-    socket.emit("input", message);
-    messageHistory.enqueue(message);
-    playerSelf.model.move(elapsedTime);
-    playerSelf.model.update(elapsedTime);
+    if (!game_over) {
+      let message = {
+        //makes it automatically move
+        id: messageId++,
+        elapsedTime: elapsedTime,
+        type: "move",
+      };
+      socket.emit("input", message);
+      messageHistory.enqueue(message);
+      playerSelf.model.move(elapsedTime);
+      playerSelf.model.update(elapsedTime);
+    }
     for (let id in playerOthers) {
       playerOthers[id].model.update(elapsedTime);
     }
