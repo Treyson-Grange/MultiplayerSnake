@@ -58,21 +58,24 @@ MyGame.components.Player = function () {
   // public function to find the location for a newly added segment
   that.newSegmentPosition = function (elapsedTime) {
     console.log("segments: ", segments);
-    
+
     let lastLocation = { x: 0, y: 0 };
-    
+
     if (segments.length > 0) {
-        console.log("segments[segments.length - 1].model.position: ", segments[segments.length - 1].model.position);
-        lastLocation = segments[segments.length - 1].model.position;
+      console.log(
+        "segments[segments.length - 1].model.position: ",
+        segments[segments.length - 1].model.position
+      );
+      lastLocation = segments[segments.length - 1].model.position;
     }
     console.log("lastLocation! ", lastLocation);
-    
+
     let vectorX = Math.cos(direction);
     let vectorY = Math.sin(direction);
 
     let newLocation = {
-        x: lastLocation.x,
-        y: lastLocation.y,
+      x: lastLocation.x,
+      y: lastLocation.y,
     };
 
     newLocation.x += vectorX * elapsedTime * speed;
@@ -80,7 +83,6 @@ MyGame.components.Player = function () {
 
     return newLocation;
   };
-
 
   //------------------------------------------------------------------
   //
@@ -91,7 +93,7 @@ MyGame.components.Player = function () {
     // calculate location for new body parttttt
     // TODO: REIMPLEMENT THIS VVVV !!
     // let newLocation = this.newSegmentPosition(elapsedTime);
-    let newLocation = { x: .5, y: .5 };
+    let newLocation = { x: 0.5, y: 0.5 };
 
     let newSnakePart = MyGame.components.Body(newLocation, position);
     segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
@@ -153,14 +155,20 @@ MyGame.components.Player = function () {
       return;
     }
     direction = -Math.PI / 2;
-    turnPoints.push({ x: position.x, y: position.y });
+    turnPoints.push({ x: position.x, y: position.y, direction: direction });
+    console.log(turnPoints);
   };
   that.goDown = function (elapsedTime) {
     if (direction == -Math.PI / 2 || direction == Math.PI / 2) {
       return;
     }
     direction = Math.PI / 2;
-    turnPoints.push({ x: position.x, y: position.y });
+    turnPoints.push({
+      x: position.x,
+      y: position.y,
+      direction: direction,
+    });
+    console.log(turnPoints);
   };
   that.goRight = function (elapsedTime) {
     if (direction == Math.PI || direction == 0) {
@@ -168,14 +176,16 @@ MyGame.components.Player = function () {
     }
 
     direction = 0;
-    turnPoints.push({ x: position.x, y: position.y });
+    turnPoints.push({ x: position.x, y: position.y, direction: direction });
+    console.log(turnPoints);
   };
   that.goLeft = function (elapsedTime) {
     if (direction == 0 || direction == Math.PI) {
       return;
     }
     direction = Math.PI;
-    turnPoints.push({ x: position.x, y: position.y });
+    turnPoints.push({ x: position.x, y: position.y, direction: direction });
+    console.log(turnPoints);
   };
   let updateRotateRate = 5000000;
 

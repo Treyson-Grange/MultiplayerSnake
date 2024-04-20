@@ -39,8 +39,12 @@ MyGame.loader = (function () {
         onComplete: null,
       },
       {
-
-        scripts: ["rendering/player", "rendering/player-remote", "rendering/background", "rendering/walls"],
+        scripts: [
+          "rendering/player",
+          "rendering/player-remote",
+          "rendering/background",
+          "rendering/walls",
+        ],
         message: "Renderers loaded",
         onComplete: null,
       },
@@ -81,7 +85,7 @@ MyGame.loader = (function () {
       },
       {
         key: "food1",
-        source: "assets/food/BlueBlue/ToxicFrogBlueBlue_Idle.png", 
+        source: "assets/food/BlueBlue/ToxicFrogBlueBlue_Idle.png",
       },
       {
         key: "food2",
@@ -109,20 +113,23 @@ MyGame.loader = (function () {
       },
       {
         key: "food2Big",
-        source: "assets/food/GreenBlue/ToxicFrogGreenBlue_Idle_Big.png", 
+        source: "assets/food/GreenBlue/ToxicFrogGreenBlue_Idle_Big.png",
       },
       {
         key: "food3Big",
-        source: "assets/food/GreenBrown/ToxicFrogGreenBrown_Idle_Big.png", 
+        source: "assets/food/GreenBrown/ToxicFrogGreenBrown_Idle_Big.png",
       },
       {
         key: "food4Big",
-        source: "assets/food/PurpleBlue/ToxicFrogPurpleBlue_Idle_Big.png", 
+        source: "assets/food/PurpleBlue/ToxicFrogPurpleBlue_Idle_Big.png",
       },
       {
         key: "food5Big",
         source: "assets/food/PurpleWhite/ToxicFrogPurpleWhite_Idle_Big.png",
-
+      },
+      {
+        key: "greenBody",
+        source: "assets/greenBody.png",
       },
     ];
 
