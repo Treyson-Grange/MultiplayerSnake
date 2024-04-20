@@ -277,7 +277,7 @@ MyGame.screens["game-play"] = (function (
       segments[id].model.update(elapsedTime, playerSelf.model.turnPoints);
     }
     food.model.updateRenderFrames(elapsedTime); // increment the render frame on each sprite so it's animated
-    particleManager.update(playerSelf.model, elapsedTime);
+    particleManager.update(elapsedTime, { width: canvas.width, height: canvas.height });
 }
 
   //------------------------------------------------------------------

@@ -48,7 +48,7 @@ MyGame.systems.ParticleSystem = function(spec) {
     // Update the state of all particles.  This includes removing any that have exceeded their lifetime.
     //
     //------------------------------------------------------------------
-    function update(updateSpec, elapsedTime) {
+    function update(updateSpec, elapsedTime, canvasSize) {
         spec.direction.max = updateSpec.direction.max;
         spec.direction.min = updateSpec.direction.min;
 
@@ -66,10 +66,10 @@ MyGame.systems.ParticleSystem = function(spec) {
 
             //
             // Update its center
-            // particle.center.x += (elapsedTime * particle.speed * particle.direction.x);
-            // particle.center.y += (elapsedTime * particle.speed * particle.direction.y);
-            particle.center.x += .01;
-            particle.center.y += .01;
+            particle.center.x += (elapsedTime * particle.speed * particle.direction.x) / canvasSize.width;
+            particle.center.y += (elapsedTime * particle.speed * particle.direction.y) / canvasSize.height;
+            // particle.center.x += (elapsedTime * particle.direction.x;
+            // particle.center.y += .1;
 
 
             //
