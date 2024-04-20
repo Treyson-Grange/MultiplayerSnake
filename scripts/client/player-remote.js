@@ -26,6 +26,8 @@ MyGame.components.PlayerRemote = function () {
     },
     updateWindow: 0, // Server reported time elapsed since last update
   };
+  let turnPoints = [];
+  let segments = [];
 
   Object.defineProperty(that, "state", {
     get: () => state,
@@ -39,10 +41,43 @@ MyGame.components.PlayerRemote = function () {
     get: () => size,
   });
 
+  Object.defineProperty(that, "turnPoints", {
+    get: () => turnPoints,
+  });
+
+  Object.defineProperty(that, "segments", {
+    get: () => segments,
+  });
+
   Object.defineProperty(that, "name", {
     get: () => name,
   });
 
+
+  that.addBodyPart = function (elapsedTime) {
+    // calculate location for new body parttttt
+    // TODO: REIMPLEMENT THIS VVVV !!
+    // let newLocation = this.newSegmentPosition(elapsedTime);
+    let newLocation = { x: 0, y: 0 };
+
+    let newSnakePart = MyGame.components.Body(newLocation, direction);
+    segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
+    console.log(turnPoints);
+  };
+
+  function distFrom(fromIndex, toIndex) {
+    let xDist;
+    let yDist;
+    if (toIndex == turnPoints.length) {
+      xDist = Math.abs(turnPoints[fromIndex].x - position.x);
+      yDist = Math.abs(turnPoints[fromIndex].y - position.y);
+    } else {
+      xDist = Math.abs(turnPoints[fromIndex].x - turnPoints[toIndex].x);
+      yDist = Math.abs(turnPoints[fromIndex].y - turnPoints[toIndex].y);
+    }
+    return xDist + yDist; //Because x or y dist will always be 0
+
+  }
   //------------------------------------------------------------------
   //
   // Update of the remote player is a simple linear progression/interpolation
