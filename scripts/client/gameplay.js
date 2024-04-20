@@ -20,8 +20,10 @@ MyGame.screens["game-play"] = (function (
 
   const WORLD_SIZE = 4; // Both x and y
   let arrScores = [];
+  let allPlayerNames = {};
   let game_over = false;
   let score_added = false;
+  let strPlayerName = "";
   let canvas = document.getElementById("canvas-main");
   let otherPlayerName;
   let lastTimeStamp = performance.now(),
@@ -102,6 +104,11 @@ MyGame.screens["game-play"] = (function (
     playerSelf.model.rotateRate = data.rotateRate;
   });
 
+  socket.on("updatePlayerNames", function (playerNames) {
+    console.log("playerNames: ", playerNames);
+    allPlayerNames = playerNames;
+  });
+
   socket.on("game-over", function () {
     game_over = true;
     endButton.makeActive();
@@ -142,6 +149,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   socket.on("disconnect-other", function (data) {
     delete playerOthers[data.clientId];
+    delete allPlayerNames[data.clientId];
   });
 
   //------------------------------------------------------------------
@@ -303,22 +311,15 @@ MyGame.screens["game-play"] = (function (
 
     for (let id in playerOthers) {
       let otherPlayer = playerOthers[id];
-      otherPlayerName = MyGame.objects.Text({
-        text: otherPlayer.model.name,
-        font: "10pt Arial",
-        fillStyle: "#FFFFFF",
-        strokeStyle: "#FFFFFF",
-        position: {
-          x: otherPlayer.model.goal.position.x,
-          y: otherPlayer.model.goal.position.y - 0.1,
-        },
-        player: true,
-      });
-      // renderer.Text.render(otherPlayerName);
+      //console.log(id);//this is the clientID
+      if (allPlayerNames[id] === undefined) {
+        continue;
+      }
       renderer.PlayerRemote.render(
         otherPlayer.model,
         MyGame.assets["player-other"],
-        playerSelf.model.position
+        playerSelf.model.position,
+        allPlayerNames[id].name
       );
     }
     renderer.Food.render(
@@ -351,7 +352,7 @@ MyGame.screens["game-play"] = (function (
 
     segments = playerSelf.model.getSegments();
     for (let id in segments) {
-        renderer.Body.render(
+      renderer.Body.render(
         segments[id].model,
         segments[id].texture,
         segments[id].model.state
@@ -368,18 +369,21 @@ MyGame.screens["game-play"] = (function (
       if (i == 5) {
         return;
       }
-      if (arrScores[i]["name"] == 0) {
+
+      yPos += 0.05;
+      if (allPlayerNames[arrScores[i].clientId] === undefined) {
         continue;
-      } else {
-        yPos += 0.05;
       }
       renderer.Text.render(
         MyGame.objects.Text({
-          text: arrScores[i]["points"],
-          font: "20pt Arial",
+          text:
+            allPlayerNames[arrScores[i].clientId].name +
+            ": " +
+            arrScores[i].points,
+          font: "10pt Arial",
           fillStyle: "#FFFFFF",
           strokeStyle: "#FFFFFF",
-          position: { x: 0.95, y: yPos },
+          position: { x: 0.8, y: yPos },
         })
       );
     }
@@ -539,11 +543,15 @@ MyGame.screens["game-play"] = (function (
   }
 
   function run() {
+    console.log("game running...");
     if (persistence.getPlayerName() == "") {
+      strPlayerName = "Player";
       playerName.updateText("Player");
     } else {
-      playerName.updateText(persistence.getPlayerName());
+      strPlayerName = persistence.getPlayerName();
+      playerName.updateText(strPlayerName);
     }
+    socket.emit("playerName", { name: strPlayerName, clientID: socket.id });
 
     registerKeys();
     lastTimeStamp = performance.now();

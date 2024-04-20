@@ -18,6 +18,8 @@ let quit = false;
 let activeClients = {};
 let inputQueue = [];
 
+let playerNames = {};
+
 let foodCount = 100;
 
 let foodSOA = Food.create(foodCount);
@@ -394,6 +396,8 @@ function initializeSocketIO(httpServer) {
     // Create an entry in our list of connected clients
     let newPlayer = Player.create();
     newPlayer.clientId = socket.id;
+    playerNames[socket.id] = { name: "Player", clientId: socket.id };
+    socket.emit("updatePlayerNames", playerNames);
     activeClients[socket.id] = {
       socket: socket,
       player: newPlayer,
@@ -413,8 +417,21 @@ function initializeSocketIO(httpServer) {
       });
     });
 
+    socket.on("playerName", (data) => {
+      console.log("player name is: ", data.name, " at socket id: ", socket.id);
+      playerNames[socket.id] = { name: data.name, clientId: socket.id };
+      console.log("playerNames: ", playerNames);
+      socket.emit("updatePlayerNames", playerNames);
+      for (let clientId in activeClients) {
+        if (clientId !== socket.id) {
+          activeClients[clientId].socket.emit("updatePlayerNames", playerNames);
+        }
+      }
+    });
+
     socket.on("disconnect", function () {
       delete activeClients[socket.id];
+      delete playerNames[socket.id];
       notifyDisconnect(socket.id);
     });
 
