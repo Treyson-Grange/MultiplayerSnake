@@ -12,7 +12,7 @@ MyGame.renderer.PlayerRemote = (function (graphics) {
   // Renders a PlayerRemote model.
   //
   // ------------------------------------------------------------------
-  that.render = function (model, texture, playerSelfPos) {
+  that.render = function (model, texture, playerSelfPos, name) {
     let screenPos = { x: playerSelfPos.x - 0.5, y: playerSelfPos.y - 0.5 }; //top-left corner of screen
 
     graphics.saveContext();
@@ -41,7 +41,6 @@ MyGame.renderer.PlayerRemote = (function (graphics) {
 
         graphics.drawImage(texture, position, model.size);
         graphics.restoreContext();
-
         renderOtherTitle(model.name, namePosition, "10px Arial", "#FFFFFF", "#FFFFFF");
       }
     }
@@ -51,6 +50,9 @@ MyGame.renderer.PlayerRemote = (function (graphics) {
   };
 
   function renderOtherTitle(name, position, font, fillStyle, strokeStyle) {
+    if (name === undefined) {
+      name = "Player";
+    }
     let spec = {
       text: name,
       position: position,

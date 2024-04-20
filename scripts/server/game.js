@@ -18,15 +18,29 @@ let quit = false;
 let activeClients = {};
 let inputQueue = [];
 
+let playerNames = {};
+
 let foodCount = 100;
 
 let foodSOA = Food.create(foodCount);
 for (let i = 0; i < foodCount; i++) {
-  foodSOA.positionsX[i] = random.nextDouble() * 4; // 4 becauase the map size is 4
+  let X = random.nextDouble() * WORLD_SIZE; // 4 becauase the map size is 4
+  if (X < 0.2) {
+    X += 0.2;
+  } else if (X > 3.8) {
+    X -= 0.2;
+  }
+  foodSOA.positionsX[i] = X;
 }
 
 for (let i = 0; i < foodCount; i++) {
-  foodSOA.positionsY[i] = random.nextDouble() * 4;
+  let Y = random.nextDouble() * WORLD_SIZE;
+  if (Y < 0.2) {
+    Y += 0.2;
+  } else if (Y > 3.8) {
+    Y -= 0.2;
+  }
+  foodSOA.positionsY[i] = Y;
 }
 
 let bigFood = new Array(foodCount).fill(false);
@@ -134,15 +148,20 @@ function checkAllCollisions() {
 
       // check for collision
       if (playerFoodCollided(playerSpec, foodPiece)) {
+
         // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
         client.socket.emit("hit-food", { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] });
-
+        player.addBodyPart();
+        player.points += 1;
         // "eat" food by relocating it somewhere else in the map
         let newPosX = random.nextDouble() * 4;
         let newPosY = random.nextDouble() * 4;
 
         // tell the food to re-locate
         foodSOA.relocateFood(i, newPosX, newPosY);
+        client.socket.emit("update-points", player.points);
+        client.socket.emit("add-body-part", "");
+
       }
     }
 
@@ -169,6 +188,24 @@ function checkAllCollisions() {
         // TODO: check for collisions between player and segments/head/tail of all other snakes :)
       }
     }
+  }
+}
+//------------------------------------------------------------------
+//
+//    Update the scoreboard for all connected clients
+//
+//------------------------------------------------------------------
+function updateScoreBoard() {
+  let scores = [];
+  for (let clientId in activeClients) {
+    scores.push({
+      clientId: clientId,
+      points: activeClients[clientId].player.points,
+    });
+  }
+  scores.sort((a, b) => b.points - a.points);
+  for (let clientId in activeClients) {
+    activeClients[clientId].socket.emit("update-scores", scores);
   }
 }
 
@@ -229,6 +266,7 @@ function update(elapsedTime, currentTime) {
     activeClients[clientId].player.update(currentTime); //This doesn't do anything
   }
   checkAllCollisions();
+  updateScoreBoard();
 }
 
 //------------------------------------------------------------------
@@ -374,6 +412,8 @@ function initializeSocketIO(httpServer) {
     // Create an entry in our list of connected clients
     let newPlayer = Player.create();
     newPlayer.clientId = socket.id;
+    playerNames[socket.id] = { name: "Player", clientId: socket.id };
+    socket.emit("updatePlayerNames", playerNames);
     activeClients[socket.id] = {
       socket: socket,
       player: newPlayer,
@@ -393,8 +433,21 @@ function initializeSocketIO(httpServer) {
       });
     });
 
+    socket.on("playerName", (data) => {
+      console.log("player name is: ", data.name, " at socket id: ", socket.id);
+      playerNames[socket.id] = { name: data.name, clientId: socket.id };
+      console.log("playerNames: ", playerNames);
+      socket.emit("updatePlayerNames", playerNames);
+      for (let clientId in activeClients) {
+        if (clientId !== socket.id) {
+          activeClients[clientId].socket.emit("updatePlayerNames", playerNames);
+        }
+      }
+    });
+
     socket.on("disconnect", function () {
       delete activeClients[socket.id];
+      delete playerNames[socket.id];
       notifyDisconnect(socket.id);
     });
 

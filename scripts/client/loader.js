@@ -76,6 +76,10 @@ MyGame.loader = (function () {
         source: "assets/panelDark1.png",
       },
       {
+        key: "panelLight",
+        source: "assets/panel.png",
+      },
+      {
         key: "greenButton",
         source: "assets/green_button.png",
       },

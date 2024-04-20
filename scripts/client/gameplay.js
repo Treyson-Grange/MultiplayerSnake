@@ -19,8 +19,11 @@ MyGame.screens["game-play"] = (function (
   console.log(components.Food());
 
   const WORLD_SIZE = 4; // Both x and y
-
+  let arrScores = [];
+  let allPlayerNames = {};
   let game_over = false;
+  let score_added = false;
+  let strPlayerName = "";
   let canvas = document.getElementById("canvas-main");
   let otherPlayerName;
   let lastTimeStamp = performance.now(),
@@ -69,7 +72,6 @@ MyGame.screens["game-play"] = (function (
         MyGame.assets["food3"],
         MyGame.assets["food4"],
         MyGame.assets["food5"],
-
       ],
       bigTexture: [
         MyGame.assets["food0Big"],
@@ -101,6 +103,15 @@ MyGame.screens["game-play"] = (function (
     playerSelf.model.direction = data.direction;
     playerSelf.model.speed = data.speed;
     playerSelf.model.rotateRate = data.rotateRate;
+  });
+
+  socket.on("updatePlayerNames", function (playerNames) {
+    console.log("playerNames: ", playerNames);
+    allPlayerNames = playerNames;
+  });
+
+  socket.on("add-body-part", function (data) {
+    playerSelf.model.addBodyPart();
   });
 
   socket.on("game-over", function () {
@@ -143,6 +154,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   socket.on("disconnect-other", function (data) {
     delete playerOthers[data.clientId];
+    delete allPlayerNames[data.clientId];
   });
 
   //------------------------------------------------------------------
@@ -194,6 +206,10 @@ MyGame.screens["game-play"] = (function (
     messageHistory = memory;
   });
 
+  socket.on("update-scores", function (data) {
+    arrScores = data;
+  });
+
   //------------------------------------------------------------------
   //
   // Handler for receiving state updates about other players.
@@ -233,6 +249,10 @@ MyGame.screens["game-play"] = (function (
     // }
   });
 
+  socket.on("update-points", function (data) {
+    playerSelf.model.points = data;
+  });
+
   //------------------------------------------------------------------
   //
   // Handler for when player hits a piece of food.
@@ -259,21 +279,20 @@ MyGame.screens["game-play"] = (function (
   //
   //------------------------------------------------------------------
   function update(elapsedTime) {
-    let message = {
-      //makes it automatically move
-      id: messageId++,
-      elapsedTime: elapsedTime,
-      type: "move",
-    };
-    socket.emit("input", message);
-    messageHistory.enqueue(message);
-    playerSelf.model.move(elapsedTime);
-    playerSelf.model.update(elapsedTime);
+    if (!game_over) {
+      let message = {
+        //makes it automatically move
+        id: messageId++,
+        elapsedTime: elapsedTime,
+        type: "move",
+      };
+      socket.emit("input", message);
+      messageHistory.enqueue(message);
+      playerSelf.model.move(elapsedTime);
+      playerSelf.model.update(elapsedTime);
+    }
     for (let id in playerOthers) {
       playerOthers[id].model.update(elapsedTime);
-    }
-    for (let id in segments) {
-      segments[id].model.update(elapsedTime, playerSelf.model.turnPoints);
     }
     food.model.updateRenderFrames(elapsedTime); // increment the render frame on each sprite so it's animated
     particleManager.update(elapsedTime, { width: canvas.width, height: canvas.height });
@@ -307,22 +326,15 @@ MyGame.screens["game-play"] = (function (
 
     for (let id in playerOthers) {
       let otherPlayer = playerOthers[id];
-      otherPlayerName = MyGame.objects.Text({
-        text: otherPlayer.model.name,
-        font: "10pt Arial",
-        fillStyle: "#FFFFFF",
-        strokeStyle: "#FFFFFF",
-        position: {
-          x: otherPlayer.model.goal.position.x,
-          y: otherPlayer.model.goal.position.y - 0.1,
-        },
-        player: true,
-      });
-      // renderer.Text.render(otherPlayerName);
+      //console.log(id);//this is the clientID
+      if (allPlayerNames[id] === undefined) {
+        continue;
+      }
       renderer.PlayerRemote.render(
         otherPlayer.model,
         MyGame.assets["player-other"],
-        playerSelf.model.position
+        playerSelf.model.position,
+        allPlayerNames[id].name
       );
     }
     renderer.Food.render(
@@ -333,25 +345,62 @@ MyGame.screens["game-play"] = (function (
       WORLD_SIZE
     );
     if (game_over) {
-        graphics.drawImage(MyGame.assets["panelDark"], { x: .5, y: .5 }, { width: 1, height: 0.5 });
-        renderer.Text.render(endText);
-        renderer.Button.render(endButton);
-        renderer.Text.render(buttonText);
-        if (endButton.clicked) {
-            game_over = false;
-            cancelNextRequest = true;
-            game.showScreen('main-menu');
-        }
+      if (!score_added) {
+        persistence.addScore(playerSelf.model.points);
+        persistence.reportScores();
+        score_added = true;
+      }
+      graphics.drawImage(
+        MyGame.assets["panelDark"],
+        { x: 0.5, y: 0.5 },
+        { width: 1, height: 0.5 }
+      );
+      renderer.Text.render(endText);
+      renderer.Button.render(endButton);
+      renderer.Text.render(buttonText);
+      if (endButton.clicked) {
+        game_over = false;
+        cancelNextRequest = true;
+        game.showScreen("main-menu");
+      }
     }
 
     segments = playerSelf.model.getSegments();
     for (let id in segments) {
-        renderer.Body.render(
+      renderer.Body.render(
         segments[id].model,
         segments[id].texture,
-        segments[id].model.state,
+        playerSelf.model.position
+      );
+      //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
+    }
+    graphics.drawImage(
+      MyGame.assets["panelLight"],
+      { x: 0.9, y: 0.1 },
+      { width: 0.3, height: 0.4 }
     );
-    //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
+    let yPos = -0.02;
+    for (let i = 0; i < arrScores.length; i++) {
+      if (i == 5) {
+        return;
+      }
+
+      yPos += 0.05;
+      if (allPlayerNames[arrScores[i].clientId] === undefined) {
+        continue;
+      }
+      renderer.Text.render(
+        MyGame.objects.Text({
+          text:
+            allPlayerNames[arrScores[i].clientId].name +
+            ": " +
+            arrScores[i].points,
+          font: "10pt Arial",
+          fillStyle: "#FFFFFF",
+          strokeStyle: "#FFFFFF",
+          position: { x: 0.8, y: yPos },
+        })
+      );
     }
     particleManager.render(playerSelf.model.position);
   }
@@ -386,7 +435,6 @@ MyGame.screens["game-play"] = (function (
       MyGame.assets["food3"],
       MyGame.assets["food4"],
       MyGame.assets["food5"],
-
     ];
     food.bigTexture = [
       MyGame.assets["food0Big"],
@@ -405,20 +453,6 @@ MyGame.screens["game-play"] = (function (
   //----------------------------------------------------------------
   function registerKeys() {
     // Create the keyboard input handler and register the keyboard commands
-    myKeyboard.registerHandler(
-      (elapsedTime) => {
-        let message = {
-          id: messageId++,
-          elapsedTime: elapsedTime,
-          type: "test",
-        };
-        socket.emit("input", message);
-        messageHistory.enqueue(message);
-        playerSelf.model.rotateRight(elapsedTime);
-      },
-      "t",
-      true
-    );
     myKeyboard.registerHandler(
       (elapsedTime) => {
         let message = {
@@ -477,7 +511,6 @@ MyGame.screens["game-play"] = (function (
       true
     );
 
-
     myKeyboard.registerHandler(
       (elapsedTime) => {
         let message = {
@@ -512,17 +545,22 @@ MyGame.screens["game-play"] = (function (
   }
 
   function run() {
+    console.log("game running...");
     if (persistence.getPlayerName() == "") {
+      strPlayerName = "Player";
       playerName.updateText("Player");
     } else {
-      playerName.updateText(persistence.getPlayerName());
+      strPlayerName = persistence.getPlayerName();
+      playerName.updateText(strPlayerName);
     }
+    socket.emit("playerName", { name: strPlayerName, clientID: socket.id });
 
     registerKeys();
     lastTimeStamp = performance.now();
     cancelNextRequest = false;
     // TODO: REFRESH THE PLAYER'S POSITION, LENGTH, ETC.
     endButton.refresh();
+    score_added = false;
     requestAnimationFrame(gameLoop);
   }
 
