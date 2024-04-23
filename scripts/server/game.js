@@ -133,21 +133,21 @@ function checkAllCollisions() {
 
     // check for player v food collisions
     for (let i = 0; i < foodSOA.positionsX.length; i++) {
-      let foodSize = foodSOA.size;
+        let foodSize = foodSOA.size;
 
-      // update the size to be bigger if it's a piece of big food
-      if (foodSOA.bigFood[i]) {
+        // update the size to be bigger if it's a piece of big food
+        if (foodSOA.bigFood[i]) {
         foodSize = foodSOA.size;
-      }
+        }
 
-      // create food obj for collision detection
-      let foodPiece = {
+        // create food obj for collision detection
+        let foodPiece = {
         radius: foodSize.width / 2,
         position: { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] },
-      };
+        };
 
-      // check for collision
-      if (playerFoodCollided(playerSpec, foodPiece)) {
+        // check for collision
+        if (playerFoodCollided(playerSpec, foodPiece)) {
 
         // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
         client.socket.emit("hit-food", { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] });
@@ -162,31 +162,35 @@ function checkAllCollisions() {
         client.socket.emit("update-points", player.points);
         client.socket.emit("add-body-part", "");
 
-      }
-    }
-
-    // check for player v wall collisions
-    if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
-      client.socket.emit("game-over");
-    }
-
-    // check for player v player collisions
-    for (let otherId in activeClients) {
-      if (otherId !== clientId) {
-        let otherClient = activeClients[otherId];
-        let otherPlayer = otherClient.player;
-
-        let otherPlayerSpec = {
-          radius: otherPlayer.size.width / 2,
-          position: otherPlayer.position,
-        };
-
-        // TODO: this isn't working yet; idk what's up
-        if (playerPlayerCollided(playerSpec, otherPlayerSpec)) {
-          console.log("players knocked heads");
         }
-        // TODO: check for collisions between player and segments/head/tail of all other snakes :)
-      }
+    }    
+
+    console.log("player.isNew: ", player.isNew);
+    if (!player.isNew) {
+    
+        // check for player v wall collisions
+        if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
+            client.socket.emit("game-over");
+        }
+    
+        // check for player v player collisions
+        for (let otherId in activeClients) {
+            if (otherId !== clientId) {
+            let otherClient = activeClients[otherId];
+            let otherPlayer = otherClient.player;
+    
+            let otherPlayerSpec = {
+                radius: otherPlayer.size.width / 2,
+                position: otherPlayer.position,
+            };
+    
+            // TODO: this isn't working yet; idk what's up
+            if (playerPlayerCollided(playerSpec, otherPlayerSpec)) {
+                console.log("players knocked heads");
+            }
+            // TODO: check for collisions between player and segments/head/tail of all other snakes :)
+            }
+        }  
     }
   }
 }
@@ -265,11 +269,11 @@ function update(elapsedTime, currentTime) {
   for (let clientId in activeClients) {
     activeClients[clientId].player.update(elapsedTime); //This updates the player's invincibility if 3 seconds have passed
   }
-  for (let clientId in activeClients) {
-    if (!activeClients[clientId].player.isNew) {
+//   for (let clientId in activeClients) {
+    // if (!activeClients[clientId].player.isNew) {
         checkAllCollisions();
-    }
-  }
+    // }
+//   }
   updateScoreBoard();
 }
 

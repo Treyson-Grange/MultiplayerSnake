@@ -225,11 +225,12 @@ MyGame.components.Player = function () {
   that.update = function (elapsedTime) {
     //This is getting called by the update function in server/game.js
     totalElapsedTime += elapsedTime;
-    if (totalElapsedTime > 3000) { // no longer invincible after 3 seconds
+    console.log("totalElapsedTime: ", totalElapsedTime);
+    if (totalElapsedTime > 10000) { // no longer invincible after 3 seconds
         isNew = false;
     }
   };
-  
+
   that.follow = function (elapsedTime, prevPosition, prevDirection) {
     position.x = prevPosition.x - Math.cos(prevDirection) * size.width;
     position.y = prevPosition.y - Math.sin(prevDirection) * size.height;
