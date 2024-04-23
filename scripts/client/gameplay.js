@@ -26,7 +26,7 @@ MyGame.screens["game-play"] = (function (
   let strPlayerName = "";
   let canvas = document.getElementById("canvas-main");
   let otherPlayerName;
-//   let soundSystem = systems.SoundSystem();
+  let playedEndSound = false;
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
     myKeyboard = input.Keyboard(),
@@ -349,6 +349,10 @@ MyGame.screens["game-play"] = (function (
       WORLD_SIZE
     );
     if (game_over) {
+      if (!playedEndSound) {
+        soundSystem.playSound('end-game');
+        playedEndSound = true;
+      }
       if (!score_added) {
         persistence.addScore(playerSelf.model.points);
         persistence.reportScores();
