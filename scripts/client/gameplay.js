@@ -263,7 +263,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   socket.on("hit-food", function (data) {
     particleManager.ateFood(data.x, data.y);
-    soundSystem.playSound("treyson-gulping");
+    soundSystem.playSound("gulp");
   });
 
 

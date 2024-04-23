@@ -35,7 +35,7 @@ MyGame.systems.SoundSystem = (function(systems) {
     function loadAudio() {
         MyGame.sounds = {}
         // Reference: https://freesound.org/data/previews/156/156031_2703579-lq.mp3
-        MyGame.sounds['treyson-gulping'] = loadSound('assets/audio/treyson-gulping.m4a', 'treyson-gulping', 'id-play1');
+        MyGame.sounds['gulp'] = loadSound('assets/audio/treyson-gulping.m4a', 'treyson-gulping', 'id-play1');
         // Reference: https://freesound.org//data/previews/109/109662_945474-lq.mp3
         // MyGame.sounds['audio/sound-2'] = loadSound('audio/sound-2.mp3', 'Sound 2', 'id-play2');
         // MyGame.sounds['audio/sound-3'] = loadSound('audio/sound-3.wav', 'Sound 3', 'id-play3');
