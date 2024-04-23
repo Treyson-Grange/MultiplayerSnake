@@ -20,7 +20,12 @@ MyGame.components.Player = function () {
   let segments = [];
   let turnPoints = [];
   let points = 0;
+  let isNew = true;
+  let totalElapsedTime = 0;
 
+  Object.defineProperty(that, "isNew", {
+    get: () => isNew,
+  });
   Object.defineProperty(that, "direction", {
     get: () => direction,
     set: (value) => {
@@ -217,8 +222,14 @@ MyGame.components.Player = function () {
     turnPoints.push({ x: position.x, y: position.y, direction: direction });
   };
 
-  that.update = function (when) {};
-
+  that.update = function (elapsedTime) {
+    //This is getting called by the update function in server/game.js
+    totalElapsedTime += elapsedTime;
+    if (totalElapsedTime > 3000) { // no longer invincible after 3 seconds
+        isNew = false;
+    }
+  };
+  
   that.follow = function (elapsedTime, prevPosition, prevDirection) {
     position.x = prevPosition.x - Math.cos(prevDirection) * size.width;
     position.y = prevPosition.y - Math.sin(prevDirection) * size.height;

@@ -263,9 +263,13 @@ function processInput() {
 //------------------------------------------------------------------
 function update(elapsedTime, currentTime) {
   for (let clientId in activeClients) {
-    activeClients[clientId].player.update(currentTime); //This doesn't do anything
+    activeClients[clientId].player.update(elapsedTime); //This updates the player's invincibility if 3 seconds have passed
   }
-  checkAllCollisions();
+  for (let clientId in activeClients) {
+    if (!activeClients[clientId].player.isNew) {
+        checkAllCollisions();
+    }
+  }
   updateScoreBoard();
 }
 
