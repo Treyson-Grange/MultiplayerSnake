@@ -146,7 +146,6 @@ MyGame.components.Player = function () {
             y: turnPoints[j].y + (Math.sin(turnPoints[j].direction) * -segSpace)
           }
           segments[i].model.direction = turnPoints[j].direction;
-          console.log(segments[i].model.position.x, segments[i].model.position.y)
           break;
         }
       }

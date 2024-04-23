@@ -60,10 +60,7 @@ MyGame.objects.Button = function(spec) {
 
         // Check if the click is inside the rectangle
         if (isInsideRectangle(mouseX, mouseY, localCenter.x, localCenter.y, localSize.width, localSize.height) && active) {
-            console.log("yay!");
             clicked = true;
-        } else {
-            console.log("nay!");
         }
     });
 

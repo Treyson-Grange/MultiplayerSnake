@@ -26,6 +26,7 @@ MyGame.screens["game-play"] = (function (
   let strPlayerName = "";
   let canvas = document.getElementById("canvas-main");
   let otherPlayerName;
+//   let soundSystem = systems.SoundSystem();
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
     myKeyboard = input.Keyboard(),
@@ -83,9 +84,11 @@ MyGame.screens["game-play"] = (function (
       ],
     },
     particleManager = systems.ParticleSystemManager, // TODO: tell gameplay when a food is hit so that this fires particles at that spot
+    soundSystem = systems.SoundSystem,
     messageHistory = MyGame.utilities.Queue(),
     messageId = 1,
     socket = io();
+
 
   //------------------------------------------------------------------
   //
@@ -260,6 +263,7 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   socket.on("hit-food", function (data) {
     particleManager.ateFood(data.x, data.y);
+    soundSystem.playSound("gulp");
   });
 
 

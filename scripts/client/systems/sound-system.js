@@ -3,7 +3,7 @@
 // This function performs the one-time game initialization.
 //
 //------------------------------------------------------------------
-MyGame.systems.SoundSystem = (function(spec) {
+MyGame.systems.SoundSystem = (function(systems) {
     'use strict';
 
     function loadSound(source, label, idButton) {
@@ -35,10 +35,10 @@ MyGame.systems.SoundSystem = (function(spec) {
     function loadAudio() {
         MyGame.sounds = {}
         // Reference: https://freesound.org/data/previews/156/156031_2703579-lq.mp3
-        MyGame.sounds['audio/sound-1'] = loadSound('audio/sound-1.mp3', 'Sound 1', 'id-play1');
+        MyGame.sounds['gulp'] = loadSound('assets/audio/treyson-gulping.m4a', 'treyson-gulping', 'id-play1');
         // Reference: https://freesound.org//data/previews/109/109662_945474-lq.mp3
-        MyGame.sounds['audio/sound-2'] = loadSound('audio/sound-2.mp3', 'Sound 2', 'id-play2');
-        MyGame.sounds['audio/sound-3'] = loadSound('audio/sound-3.wav', 'Sound 3', 'id-play3');
+        // MyGame.sounds['audio/sound-2'] = loadSound('audio/sound-2.mp3', 'Sound 2', 'id-play2');
+        // MyGame.sounds['audio/sound-3'] = loadSound('audio/sound-3.wav', 'Sound 3', 'id-play3');
         // Reference: https://www.bensound.com/royalty-free-music/track/extreme-action
         // MyGame.sounds['audio/bensound-extremeaction'] = loadSound('audio/bensound-extremeaction.mp3', 'Music', 'id-play3');
     }
@@ -52,16 +52,16 @@ MyGame.systems.SoundSystem = (function(spec) {
     // Pauses the specified audio
     //
     //------------------------------------------------------------------
-    function pauseSound(whichSound, label, idButton, idStatus) {
-        MyGame.sounds[whichSound].pause();
+    // function pauseSound(whichSound, label, idButton, idStatus) {
+    //     MyGame.sounds[whichSound].pause();
 
-        let elementStatus = document.getElementById(idStatus);
-        elementStatus.innerHTML = 'paused';
+    //     let elementStatus = document.getElementById(idStatus);
+    //     elementStatus.innerHTML = 'paused';
 
-        let elementButton = document.getElementById(idButton);
-        elementButton.innerHTML = `${label} - Continue!`;
-        elementButton.onclick = function() { playSound(whichSound, label, idButton, idStatus); };
-    }
+    //     let elementButton = document.getElementById(idButton);
+    //     elementButton.innerHTML = `${label} - Continue!`;
+    //     elementButton.onclick = function() { playSound(whichSound, label, idButton, idStatus); };
+    // }
 
     //------------------------------------------------------------------
     //
@@ -69,12 +69,13 @@ MyGame.systems.SoundSystem = (function(spec) {
     //
     //------------------------------------------------------------------
     function playSound(whichSound) {
+        console.log("playing: ", whichSound);
         MyGame.sounds[whichSound].play();
     }
 
-    spec = {
+    let api = {
         playSound: playSound
-    }
+    };
 
-    return spec;
-});
+    return api;
+}(MyGame.systems));
