@@ -295,12 +295,13 @@ MyGame.screens["game-play"] = (function (
       messageHistory.enqueue(message);
       playerSelf.model.move(elapsedTime);
       playerSelf.model.update(elapsedTime);
+    }
     for (let id in playerOthers) {
       playerOthers[id].model.update(elapsedTime);
     }
     food.model.updateRenderFrames(elapsedTime); // increment the render frame on each sprite so it's animated
     particleManager.update(elapsedTime, { width: canvas.width, height: canvas.height });
-
+    // scoreText.updateText("Score: ", playerSelf.model.points);
 }
 
   //------------------------------------------------------------------
@@ -357,6 +358,7 @@ MyGame.screens["game-play"] = (function (
       if (!score_added) {
         persistence.addScore(playerSelf.model.name, playerSelf.model.points);
         persistence.reportScores();
+        scoreText.updateText("Score: " + playerSelf.model.points);
         score_added = true;
       }
       graphics.drawImage(
