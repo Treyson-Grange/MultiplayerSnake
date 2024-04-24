@@ -49,6 +49,18 @@ MyGame.screens["game-play"] = (function (
         fillStyle: "#FFFFFF",
         position: { x: 0.35, y: 0.35 },
     }),
+    killsText = MyGame.objects.Text({
+        text: "Kills: ",
+        font: "15pt Arial",
+        fillStyle: "#FFFFFF",
+        position: { x: 0.35, y: 0.40 }
+    }),
+    topPosText = MyGame.objects.Text({
+        text: "Top Position: ",
+        font: "15pt Arial",
+        fillStyle: "#FFFFFF",
+        position: { x: 0.35, y: 0.45 }
+    }),
     playerName = MyGame.objects.Text({
       text: "Player Name",
       font: "10pt Arial",
@@ -358,7 +370,9 @@ MyGame.screens["game-play"] = (function (
       if (!score_added) {
         persistence.addScore(playerSelf.model.name, playerSelf.model.points);
         persistence.reportScores();
-        scoreText.updateText("Score: " + playerSelf.model.points);
+        scoreText.updateText("Score:       " + playerSelf.model.points);
+        killsText.updateText("Kills:       " + playerSelf.model.kills);
+        topPosText.updateText("Top Position: " + 0); // TODO: GET TOP POSITION OF PLAYER ON THE LEADERBOARD
         score_added = true;
       }
       graphics.drawImage(
@@ -369,6 +383,8 @@ MyGame.screens["game-play"] = (function (
       renderer.Text.render(endText);
       renderer.Button.render(endButton);
       renderer.Text.render(scoreText);
+      renderer.Text.render(killsText);
+      renderer.Text.render(topPosText);
       renderer.Text.render(buttonText);
       if (endButton.clicked) {
         game_over = false;
