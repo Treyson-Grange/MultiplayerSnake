@@ -221,6 +221,38 @@ MyGame.components.Player = function () {
     //This is getting called by the update function in server/game.js
   };
 
+  //---------------------------------------------------------------------
+  //
+  // Function to refresh the player, gives it new location, removes body parts, resets points, etc.
+  //
+  //---------------------------------------------------------------------
+  that.refresh = function () {
+    X = random.nextDouble() * WORLD_SIZE;
+    if (X < 0.5) {
+      X += 0.5;
+    } else if (X > 3.5) {
+      X -= 0.5;
+    }
+    Y = random.nextDouble() * WORLD_SIZE;
+    if (Y < 0.5) {
+      Y += 0.5;
+    } else if (Y > 3.5) {
+      Y -= 0.5;
+    }
+
+    position = {
+      x: X,
+      y: Y,
+    };
+    
+    direction = random.nextDouble() * 2 * Math.PI; // Angle in radians
+    reportUpdate = false; // Indicates if this model was updated during the last update
+  
+    segments = [];
+    turnPoints = [{ x: position.x, y: position.y }];
+    points = 0;  
+  };
+
   that.follow = function (elapsedTime, prevPosition, prevDirection) {
     position.x = prevPosition.x - Math.cos(prevDirection) * size.width;
     position.y = prevPosition.y - Math.sin(prevDirection) * size.height;

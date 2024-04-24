@@ -364,6 +364,8 @@ MyGame.screens["game-play"] = (function (
       if (endButton.clicked) {
         game_over = false;
         cancelNextRequest = true;
+        socket.emit("reset-player");
+        segments.length = 0;
         game.showScreen("main-menu");
       }
     }

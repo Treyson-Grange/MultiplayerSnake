@@ -160,7 +160,6 @@ function checkAllCollisions() {
         foodSOA.relocateFood(i, newPosX, newPosY);
         client.socket.emit("update-points", player.points);
         client.socket.emit("add-body-part", "");
-
         }
     }    
 
@@ -458,6 +457,12 @@ function initializeSocketIO(httpServer) {
       delete activeClients[socket.id];
       delete playerNames[socket.id];
       notifyDisconnect(socket.id);
+    });
+
+    // handler for when player loses, exits game and returns to main menu
+    // "refreshes" the player so they respawn in the next game alive, in some new place
+    socket.on("reset-player", function () {
+        activeClients[socket.id].player.refresh();
     });
 
     notifyConnect(socket, newPlayer);
