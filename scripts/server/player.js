@@ -251,6 +251,31 @@ function createPlayer() {
 
   that.refresh = function () {
     console.log("refreshingggg! :D");
+
+    X = random.nextDouble() * WORLD_SIZE;
+    if (X < 0.5) {
+      X += 0.5;
+    } else if (X > 3.5) {
+      X -= 0.5;
+    }
+    Y = random.nextDouble() * WORLD_SIZE;
+    if (Y < 0.5) {
+      Y += 0.5;
+    } else if (Y > 3.5) {
+      Y -= 0.5;
+    }
+
+    position = {
+      x: X,
+      y: Y,
+    };
+    
+    direction = random.nextDouble() * 2 * Math.PI; // Angle in radians
+    reportUpdate = false; // Indicates if this model was updated during the last update
+  
+    segments = [];
+    turnPoints = [{ x: position.x, y: position.y }];
+    points = 0;  
   };
 
   return that;
