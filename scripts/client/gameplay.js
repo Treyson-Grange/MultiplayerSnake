@@ -27,6 +27,7 @@ MyGame.screens["game-play"] = (function (
   let canvas = document.getElementById("canvas-main");
   let otherPlayerName;
   let playedEndSound = false;
+  let hitHeadParticles = false;
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
     myKeyboard = input.Keyboard(),
@@ -279,6 +280,16 @@ MyGame.screens["game-play"] = (function (
     soundSystem.playSound("gulp");
   });
 
+  socket.on("hit-head", function (data) {
+    if (!hitHeadParticles) {
+        particleManager.playerDeath(data.x, data.y);
+        hitHeadParticles = true;
+    }
+    if (!playedEndSound) {
+        soundSystem.playSound('end-game');
+        playedEndSound = true;
+    }
+  });
 
 
   //------------------------------------------------------------------
@@ -363,10 +374,6 @@ MyGame.screens["game-play"] = (function (
       WORLD_SIZE
     );
     if (game_over) {
-      if (!playedEndSound) {
-        soundSystem.playSound('end-game');
-        playedEndSound = true;
-      }
       if (!score_added) {
         persistence.addScore(playerSelf.model.name, playerSelf.model.points);
         persistence.reportScores();
@@ -393,6 +400,7 @@ MyGame.screens["game-play"] = (function (
         segments.length = 0;
         score_added = false;
         playedEndSound = false;
+        hitHeadParticles = false;
         game.showScreen("main-menu");
       }
     }

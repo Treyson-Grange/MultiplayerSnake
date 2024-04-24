@@ -138,6 +138,10 @@ MyGame.loader = (function () {
       {
         key: "particle",
         source: "assets/sparkle.png",
+      },
+      {
+        key: "particleHead",
+        source: "assets/purple-spiral.png",
       }
     ];
 
