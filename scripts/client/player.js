@@ -20,7 +20,12 @@ MyGame.components.Player = function () {
   let segments = [];
   let turnPoints = [];
   let points = 0;
+  let kills = 0;
 
+  Object.defineProperty(that, "kills", {
+    get: () => kills,
+  });
+  
   Object.defineProperty(that, "direction", {
     get: () => direction,
     set: (value) => {
@@ -251,6 +256,7 @@ MyGame.components.Player = function () {
     segments = [];
     turnPoints = [{ x: position.x, y: position.y }];
     points = 0;  
+    kills = 0;
   };
 
   that.follow = function (elapsedTime, prevPosition, prevDirection) {

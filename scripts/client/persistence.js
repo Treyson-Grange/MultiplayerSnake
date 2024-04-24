@@ -19,7 +19,8 @@ MyGame.persistence = (function () {
   }
 
   // Controls
-  let customControls = { left: "a", right: "d", up: "w", down: "s" };
+  // default controls are arrow-keys
+  let customControls = { left: "ArrowLeft", right: "ArrowRight", up: "ArrowUp", down: "ArrowDown" };
 
   let previousControls = localStorage.getItem("MyGame.customControls");
 

@@ -184,6 +184,7 @@ function checkAllCollisions() {
             // TODO: this isn't working yet; idk what's up
             if (playerPlayerCollided(playerSpec, otherPlayerSpec)) {
                 console.log("players knocked heads");
+                // TODO: TELL otherPlayer THAT THEY GOT A KILL, :)))
             }
             // TODO: check for collisions between player and segments/head/tail of all other snakes :)
             }

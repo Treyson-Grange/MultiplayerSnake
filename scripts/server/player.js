@@ -38,6 +38,7 @@ function createPlayer() {
     width: 0.05,
     height: 0.05,
   };
+
   let direction = random.nextDouble() * 2 * Math.PI; // Angle in radians
   let rotateRate = Math.PI / 1000; // radians per millisecond
   let speed = 0.0002; // unit distance per millisecond
@@ -49,6 +50,11 @@ function createPlayer() {
   let threshold = 2;
   let name = "Player101";
   let points = 0;
+  let kills = 0;
+
+  Object.defineProperty(that, "kills", {
+    get: () => kills,
+  });
 
   Object.defineProperty(that, "direction", {
     get: () => direction,
@@ -280,6 +286,7 @@ function createPlayer() {
     segments = [];
     turnPoints = [{ x: position.x, y: position.y }];
     points = 0;  
+    kills = 0;
   };
 
   return that;
