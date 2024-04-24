@@ -8,6 +8,7 @@
 let random = require("./random");
 let Body = require("./body");
 const WORLD_SIZE = 4;
+
 //------------------------------------------------------------------
 //
 // Public function used to initially create a newly connected player
@@ -241,7 +242,7 @@ function createPlayer() {
   //
   //------------------------------------------------------------------
   let updateRotateRate = 5000000;
-  that.update = function (when) {
+  that.update = function (elapsedTime) {
     //This is getting called by the update function in server/game.js
   };
   // k so i cant move them in update, we need to send message

@@ -51,7 +51,6 @@ for (let i = 0; i < foodCount; i++) {
 }
 
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
-// TODO: PING THE food TO TELL it that it NEEDs TO UPDATE its INDICES!!
 for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
   foodSOA.spriteSheetIndices[i] = random.nextRange(0, 5); // amount of sprites is hardcoded
 }
@@ -133,21 +132,21 @@ function checkAllCollisions() {
 
     // check for player v food collisions
     for (let i = 0; i < foodSOA.positionsX.length; i++) {
-      let foodSize = foodSOA.size;
+        let foodSize = foodSOA.size;
 
-      // update the size to be bigger if it's a piece of big food
-      if (foodSOA.bigFood[i]) {
+        // update the size to be bigger if it's a piece of big food
+        if (foodSOA.bigFood[i]) {
         foodSize = foodSOA.size;
-      }
+        }
 
-      // create food obj for collision detection
-      let foodPiece = {
+        // create food obj for collision detection
+        let foodPiece = {
         radius: foodSize.width / 2,
         position: { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] },
-      };
+        };
 
-      // check for collision
-      if (playerFoodCollided(playerSpec, foodPiece)) {
+        // check for collision
+        if (playerFoodCollided(playerSpec, foodPiece)) {
 
         // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
         client.socket.emit("hit-food", { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] });
@@ -162,31 +161,34 @@ function checkAllCollisions() {
         client.socket.emit("update-points", player.points);
         client.socket.emit("add-body-part", "");
 
-      }
-    }
-
-    // check for player v wall collisions
-    if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
-      client.socket.emit("game-over");
-    }
-
-    // check for player v player collisions
-    for (let otherId in activeClients) {
-      if (otherId !== clientId) {
-        let otherClient = activeClients[otherId];
-        let otherPlayer = otherClient.player;
-
-        let otherPlayerSpec = {
-          radius: otherPlayer.size.width / 2,
-          position: otherPlayer.position,
-        };
-
-        // TODO: this isn't working yet; idk what's up
-        if (playerPlayerCollided(playerSpec, otherPlayerSpec)) {
-          console.log("players knocked heads");
         }
-        // TODO: check for collisions between player and segments/head/tail of all other snakes :)
-      }
+    }    
+
+    if (client.elapsedTime > 5000) { // player is invincible for the first 5 seconds
+    
+        // check for player v wall collisions
+        if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
+            client.socket.emit("game-over");
+        }
+    
+        // check for player v player collisions
+        for (let otherId in activeClients) {
+            if (otherId !== clientId) {
+            let otherClient = activeClients[otherId];
+            let otherPlayer = otherClient.player;
+    
+            let otherPlayerSpec = {
+                radius: otherPlayer.size.width / 2,
+                position: otherPlayer.position,
+            };
+    
+            // TODO: this isn't working yet; idk what's up
+            if (playerPlayerCollided(playerSpec, otherPlayerSpec)) {
+                console.log("players knocked heads");
+            }
+            // TODO: check for collisions between player and segments/head/tail of all other snakes :)
+            }
+        }  
     }
   }
 }
@@ -263,7 +265,10 @@ function processInput() {
 //------------------------------------------------------------------
 function update(elapsedTime, currentTime) {
   for (let clientId in activeClients) {
-    activeClients[clientId].player.update(currentTime); //This doesn't do anything
+    activeClients[clientId].player.update(elapsedTime); // this does nothing rn
+  }
+  for (let clientId in activeClients) {
+    activeClients[clientId].elapsedTime += elapsedTime;
   }
   checkAllCollisions();
   updateScoreBoard();
@@ -417,6 +422,7 @@ function initializeSocketIO(httpServer) {
     activeClients[socket.id] = {
       socket: socket,
       player: newPlayer,
+      elapsedTime: 0, // keep track of how long the player has been in the game
     };
     socket.emit("connect-ack", {
       direction: newPlayer.direction,
@@ -443,6 +449,9 @@ function initializeSocketIO(httpServer) {
           activeClients[clientId].socket.emit("updatePlayerNames", playerNames);
         }
       }
+      // update player's elapsedTime to be 0, so that they are invincible for the first few seconds
+    //   activeClients[socket.id].socket.emit("updatePlayerElapsedTime", 0);
+      activeClients[socket.id].elapsedTime = 0;
     });
 
     socket.on("disconnect", function () {
