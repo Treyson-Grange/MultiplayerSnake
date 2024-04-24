@@ -27,9 +27,9 @@ MyGame.systems.ParticleSystemManager = (function(systems, renderer, graphics, as
     function playerDeath(xPlayer, yPlayer) {
         particlesHead = systems.ParticleSystem({
             center: { x: xPlayer, y: yPlayer },
-            size: { mean: .04, stdev: .01 },
-            speed: { mean: 30, stdev: 5 },
-            lifetime: { mean: .3, stdev: .01 },
+            size: { mean: .02, stdev: .01 },
+            speed: { mean: 40, stdev: 5 },
+            lifetime: { mean: 1, stdev: .02 },
             systemLifetime: .1,
             direction: { max: 2 * Math.PI, min: 0 } ,
             generateNew: true,

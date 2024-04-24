@@ -27,6 +27,7 @@ MyGame.screens["game-play"] = (function (
   let canvas = document.getElementById("canvas-main");
   let otherPlayerName;
   let playedEndSound = false;
+  let hitHeadParticles = false;
   let lastTimeStamp = performance.now(),
     cancelNextRequest = true,
     myKeyboard = input.Keyboard(),
@@ -280,9 +281,14 @@ MyGame.screens["game-play"] = (function (
   });
 
   socket.on("hit-head", function (data) {
-    particleManager.playerDeath(data.x, data.y);
-    soundSystem.playSound('end-game');
-    playedEndSound = true;
+    if (!hitHeadParticles) {
+        particleManager.playerDeath(data.x, data.y);
+        hitHeadParticles = true;
+    }
+    if (!playedEndSound) {
+        soundSystem.playSound('end-game');
+        playedEndSound = true;
+    }
   });
 
 
@@ -394,6 +400,7 @@ MyGame.screens["game-play"] = (function (
         segments.length = 0;
         score_added = false;
         playedEndSound = false;
+        hitHeadParticles = false;
         game.showScreen("main-menu");
       }
     }
