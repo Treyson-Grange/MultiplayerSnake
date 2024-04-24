@@ -279,7 +279,7 @@ function createPlayer() {
   
     segments = [];
     turnPoints = [{ x: position.x, y: position.y }];
-    // points = 0;  
+    points = 0;  
   };
 
   return that;
