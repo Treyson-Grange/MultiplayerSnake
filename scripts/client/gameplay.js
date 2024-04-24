@@ -52,16 +52,16 @@ MyGame.screens["game-play"] = (function (
       player: true,
     }),
     buttonText = MyGame.objects.Text({
-      text: "Next",
+      text: "Main Menu",
       font: "25pt Arial",
       fillStyle: "#FFFFFF",
       strokeStyle: "#000000",
-      position: { x: 0.45, y: 0.67 },
+      position: { x: 0.35, y: 0.67 },
     }),
     endButton = MyGame.objects.Button({
       imageSrc: "assets/green_button.png",
-      size: { width: 0.2, height: 0.12 },
-      center: { x: 0.51, y: 0.7 },
+      size: { width: 0.35, height: 0.12 },
+      center: { x: 0.48, y: 0.7 },
       canvas: canvas,
     }),
     food = {
