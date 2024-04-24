@@ -40,8 +40,14 @@ MyGame.screens["game-play"] = (function (
       font: "25pt Arial",
       fillStyle: "#FFFFFF",
       strokeStyle: "#000000",
-      position: { x: 0.35, y: 0.3 },
+      position: { x: 0.35, y: 0.25 },
       player: false,
+    }),
+    scoreText = MyGame.objects.Text({
+        text: "Score: ",
+        font: "15pt Arial",
+        fillStyle: "#FFFFFF",
+        position: { x: 0.35, y: 0.35 },
     }),
     playerName = MyGame.objects.Text({
       text: "Player Name",
@@ -289,12 +295,12 @@ MyGame.screens["game-play"] = (function (
       messageHistory.enqueue(message);
       playerSelf.model.move(elapsedTime);
       playerSelf.model.update(elapsedTime);
-    }
     for (let id in playerOthers) {
       playerOthers[id].model.update(elapsedTime);
     }
     food.model.updateRenderFrames(elapsedTime); // increment the render frame on each sprite so it's animated
     particleManager.update(elapsedTime, { width: canvas.width, height: canvas.height });
+
 }
 
   //------------------------------------------------------------------
@@ -356,10 +362,11 @@ MyGame.screens["game-play"] = (function (
       graphics.drawImage(
         MyGame.assets["panelDark"],
         { x: 0.5, y: 0.5 },
-        { width: 1, height: 0.5 }
+        { width: 1, height: 0.6 }
       );
       renderer.Text.render(endText);
       renderer.Button.render(endButton);
+      renderer.Text.render(scoreText);
       renderer.Text.render(buttonText);
       if (endButton.clicked) {
         game_over = false;
