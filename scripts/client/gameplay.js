@@ -37,7 +37,7 @@ MyGame.screens["game-play"] = (function (
     playerOthers = {},
     endText = MyGame.objects.Text({
       text: "Game Over!",
-      font: "25pt Arial",
+      font: "30pt Arial",
       fillStyle: "#FFFFFF",
       strokeStyle: "#000000",
       position: { x: 0.35, y: 0.25 },
@@ -45,21 +45,21 @@ MyGame.screens["game-play"] = (function (
     }),
     scoreText = MyGame.objects.Text({
         text: "Score: ",
-        font: "15pt Arial",
+        font: "20pt Arial",
         fillStyle: "#FFFFFF",
         position: { x: 0.35, y: 0.35 },
     }),
     killsText = MyGame.objects.Text({
         text: "Kills: ",
-        font: "15pt Arial",
+        font: "20pt Arial",
         fillStyle: "#FFFFFF",
-        position: { x: 0.35, y: 0.40 }
+        position: { x: 0.35, y: 0.45 }
     }),
     topPosText = MyGame.objects.Text({
         text: "Top Position: ",
-        font: "15pt Arial",
+        font: "20pt Arial",
         fillStyle: "#FFFFFF",
-        position: { x: 0.35, y: 0.45 }
+        position: { x: 0.35, y: 0.55 }
     }),
     playerName = MyGame.objects.Text({
       text: "Player Name",
@@ -74,12 +74,12 @@ MyGame.screens["game-play"] = (function (
       font: "25pt Arial",
       fillStyle: "#FFFFFF",
       strokeStyle: "#000000",
-      position: { x: 0.35, y: 0.67 },
+      position: { x: 0.4, y: 0.67 },
     }),
     endButton = MyGame.objects.Button({
       imageSrc: "assets/green_button.png",
       size: { width: 0.35, height: 0.12 },
-      center: { x: 0.48, y: 0.7 },
+      center: { x: 0.54, y: 0.7 },
       canvas: canvas,
     }),
     food = {
@@ -370,9 +370,9 @@ MyGame.screens["game-play"] = (function (
       if (!score_added) {
         persistence.addScore(playerSelf.model.name, playerSelf.model.points);
         persistence.reportScores();
-        scoreText.updateText("Score:       " + playerSelf.model.points);
-        killsText.updateText("Kills:       " + playerSelf.model.kills);
-        topPosText.updateText("Top Position: " + 0); // TODO: GET TOP POSITION OF PLAYER ON THE LEADERBOARD
+        scoreText.updateText("Score:               " + playerSelf.model.points);
+        killsText.updateText("Kills:                  " + playerSelf.model.kills);
+        topPosText.updateText("Top Position:     " + 0); // TODO: GET TOP POSITION OF PLAYER ON THE LEADERBOARD
         score_added = true;
       }
       graphics.drawImage(
