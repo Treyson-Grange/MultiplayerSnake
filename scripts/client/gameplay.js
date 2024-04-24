@@ -280,7 +280,6 @@ MyGame.screens["game-play"] = (function (
   });
 
 
-
   //------------------------------------------------------------------
   //
   // Process the registered input handlers here.
