@@ -249,9 +249,13 @@ function createPlayer() {
   //maybe the server should be the one to update the player
   //maybe idk time for class
 
-  that.refresh = function () {
-    console.log("refreshingggg! :D");
 
+  //---------------------------------------------------------------------
+  //
+  // Function to refresh the player, gives it new location, removes body parts, resets points, etc.
+  //
+  //---------------------------------------------------------------------
+  that.refresh = function () {
     X = random.nextDouble() * WORLD_SIZE;
     if (X < 0.5) {
       X += 0.5;

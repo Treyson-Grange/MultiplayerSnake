@@ -221,9 +221,12 @@ MyGame.components.Player = function () {
     //This is getting called by the update function in server/game.js
   };
 
+  //---------------------------------------------------------------------
+  //
+  // Function to refresh the player, gives it new location, removes body parts, resets points, etc.
+  //
+  //---------------------------------------------------------------------
   that.refresh = function () {
-    console.log("refreshingggg! :D");
-
     X = random.nextDouble() * WORLD_SIZE;
     if (X < 0.5) {
       X += 0.5;

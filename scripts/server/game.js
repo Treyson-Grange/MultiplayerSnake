@@ -160,7 +160,6 @@ function checkAllCollisions() {
         foodSOA.relocateFood(i, newPosX, newPosY);
         client.socket.emit("update-points", player.points);
         client.socket.emit("add-body-part", "");
-
         }
     }    
 
