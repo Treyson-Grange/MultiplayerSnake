@@ -164,7 +164,7 @@ function checkAllCollisions() {
         }
     }    
 
-    if (client.elapsedTime > 10000) { // player is invincible for the first 5 seconds
+    if (client.elapsedTime > 5000) { // player is invincible for the first 5 seconds
     
         // check for player v wall collisions
         if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
