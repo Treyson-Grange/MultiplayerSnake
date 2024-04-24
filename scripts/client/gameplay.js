@@ -236,9 +236,6 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   socket.on("food-initial", function (data) {
     food.model.updateSprites(data);
-    // for (let i = 0; i < data.eaten.length; i++) {
-    //     food.model.update(i, data.eaten[i]);
-    // }
   });
 
   //------------------------------------------------------------------
@@ -247,9 +244,7 @@ MyGame.screens["game-play"] = (function (
   //
   //------------------------------------------------------------------
   socket.on("food-update", function (data) {
-    // for (let i = 0; i < data.eaten.length; i++) {
     food.model.update(data);
-    // }
   });
 
   socket.on("update-points", function (data) {

@@ -49,12 +49,7 @@ function createPlayer() {
   let threshold = 2;
   let name = "Player101";
   let points = 0;
-  let isNew = true;
-  let totalElapsedTime = 0;
 
-  Object.defineProperty(that, "isNew", {
-    get: () => isNew,
-  });
   Object.defineProperty(that, "direction", {
     get: () => direction,
   });
@@ -249,10 +244,6 @@ function createPlayer() {
   let updateRotateRate = 5000000;
   that.update = function (elapsedTime) {
     //This is getting called by the update function in server/game.js
-    totalElapsedTime += elapsedTime;
-    if (totalElapsedTime > 3000) { // no longer invincible after 3 seconds
-        isNew = false;
-    }
   };
   // k so i cant move them in update, we need to send message
   //maybe the server should be the one to update the player

@@ -51,7 +51,6 @@ for (let i = 0; i < foodCount; i++) {
 }
 
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
-// TODO: PING THE food TO TELL it that it NEEDs TO UPDATE its INDICES!!
 for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
   foodSOA.spriteSheetIndices[i] = random.nextRange(0, 5); // amount of sprites is hardcoded
 }
@@ -165,8 +164,7 @@ function checkAllCollisions() {
         }
     }    
 
-    console.log("player.isNew: ", player.isNew);
-    if (!player.isNew) {
+    if (client.elapsedTime > 10000) { // player is invincible for the first 5 seconds
     
         // check for player v wall collisions
         if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
@@ -267,13 +265,12 @@ function processInput() {
 //------------------------------------------------------------------
 function update(elapsedTime, currentTime) {
   for (let clientId in activeClients) {
-    activeClients[clientId].player.update(elapsedTime); //This updates the player's invincibility if 3 seconds have passed
+    activeClients[clientId].player.update(elapsedTime); // this does nothing rn
   }
-//   for (let clientId in activeClients) {
-    // if (!activeClients[clientId].player.isNew) {
-        checkAllCollisions();
-    // }
-//   }
+  for (let clientId in activeClients) {
+    activeClients[clientId].elapsedTime += elapsedTime;
+  }
+  checkAllCollisions();
   updateScoreBoard();
 }
 
@@ -425,6 +422,7 @@ function initializeSocketIO(httpServer) {
     activeClients[socket.id] = {
       socket: socket,
       player: newPlayer,
+      elapsedTime: 0, // keep track of how long the player has been in the game
     };
     socket.emit("connect-ack", {
       direction: newPlayer.direction,
@@ -451,6 +449,9 @@ function initializeSocketIO(httpServer) {
           activeClients[clientId].socket.emit("updatePlayerNames", playerNames);
         }
       }
+      // update player's elapsedTime to be 0, so that they are invincible for the first few seconds
+    //   activeClients[socket.id].socket.emit("updatePlayerElapsedTime", 0);
+      activeClients[socket.id].elapsedTime = 0;
     });
 
     socket.on("disconnect", function () {
