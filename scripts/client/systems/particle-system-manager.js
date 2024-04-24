@@ -7,10 +7,8 @@ MyGame.systems.ParticleSystemManager = (function(systems, renderer, graphics, as
     'use strict';
 
     let particlesFood = null;
-    let renderAteFood = null;
 
     let particlesHead = null;
-    let renderHitHead = null;
 
     function ateFood(xFood, yFood) {
         particlesFood = systems.ParticleSystem({

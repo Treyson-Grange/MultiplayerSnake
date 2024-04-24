@@ -279,6 +279,12 @@ MyGame.screens["game-play"] = (function (
     soundSystem.playSound("gulp");
   });
 
+  socket.on("hit-head", function (data) {
+    particleManager.playerDeath(data.x, data.y);
+    soundSystem.playSound('end-game');
+    playedEndSound = true;
+  });
+
 
   //------------------------------------------------------------------
   //
@@ -362,10 +368,6 @@ MyGame.screens["game-play"] = (function (
       WORLD_SIZE
     );
     if (game_over) {
-      if (!playedEndSound) {
-        soundSystem.playSound('end-game');
-        playedEndSound = true;
-      }
       if (!score_added) {
         persistence.addScore(playerSelf.model.name, playerSelf.model.points);
         persistence.reportScores();

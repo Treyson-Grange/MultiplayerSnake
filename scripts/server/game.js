@@ -167,6 +167,7 @@ function checkAllCollisions() {
     
         // check for player v wall collisions
         if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
+            client.socket.emit("hit-head", { x: player.position.x, y: player.position.y });
             client.socket.emit("game-over");
         }
     
@@ -184,6 +185,7 @@ function checkAllCollisions() {
             // TODO: this isn't working yet; idk what's up
             if (playerPlayerCollided(playerSpec, otherPlayerSpec)) {
                 console.log("players knocked heads");
+                client.socket.emit("hit-head", { x: player.position.x, y: player.position.y });
                 // TODO: TELL otherPlayer THAT THEY GOT A KILL, :)))
             }
             // TODO: check for collisions between player and segments/head/tail of all other snakes :)
