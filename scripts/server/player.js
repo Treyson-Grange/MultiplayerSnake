@@ -249,6 +249,10 @@ function createPlayer() {
   //maybe the server should be the one to update the player
   //maybe idk time for class
 
+  that.refresh = function () {
+    console.log("refreshingggg! :D");
+  };
+
   return that;
 }
 

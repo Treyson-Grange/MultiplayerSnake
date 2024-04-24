@@ -460,6 +460,12 @@ function initializeSocketIO(httpServer) {
       notifyDisconnect(socket.id);
     });
 
+    // handler for when player loses, exits game and returns to main menu
+    // "refreshes" the player so they respawn in the next game alive, in some new place
+    socket.on("reset-player", function () {
+        activeClients[socket.id].player.refresh();
+    });
+
     notifyConnect(socket, newPlayer);
     notifyNewPlayerFood(newPlayer);
   });

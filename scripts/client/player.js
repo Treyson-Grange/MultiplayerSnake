@@ -221,6 +221,10 @@ MyGame.components.Player = function () {
     //This is getting called by the update function in server/game.js
   };
 
+  that.refresh = function () {
+    console.log("refreshingggg! :D");
+  };
+
   that.follow = function (elapsedTime, prevPosition, prevDirection) {
     position.x = prevPosition.x - Math.cos(prevDirection) * size.width;
     position.y = prevPosition.y - Math.sin(prevDirection) * size.height;
