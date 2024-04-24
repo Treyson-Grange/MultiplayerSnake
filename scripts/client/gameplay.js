@@ -349,7 +349,7 @@ MyGame.screens["game-play"] = (function (
         playedEndSound = true;
       }
       if (!score_added) {
-        persistence.addScore(playerSelf.model.points);
+        persistence.addScore(playerSelf.model.name, playerSelf.model.points);
         persistence.reportScores();
         score_added = true;
       }
@@ -366,6 +366,8 @@ MyGame.screens["game-play"] = (function (
         cancelNextRequest = true;
         socket.emit("reset-player");
         segments.length = 0;
+        score_added = false;
+        playedEndSound = false;
         game.showScreen("main-menu");
       }
     }

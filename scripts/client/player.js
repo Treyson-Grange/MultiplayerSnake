@@ -250,7 +250,7 @@ MyGame.components.Player = function () {
   
     segments = [];
     turnPoints = [{ x: position.x, y: position.y }];
-    points = 0;  
+    // points = 0;  
   };
 
   that.follow = function (elapsedTime, prevPosition, prevDirection) {
