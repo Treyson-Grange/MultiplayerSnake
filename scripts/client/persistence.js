@@ -41,7 +41,7 @@ MyGame.persistence = (function () {
   function reportScores() {
     let htmlNode = document.getElementById("high-scores-list");
 
-    htmlNode.innerHTML = "";
+    // htmlNode.innerHTML = "";
     for (let key in highScores) {
       // htmlNode.innerHTML += ('Key: ' + key + ' Value: ' + highScores[key] + '<br/>');
       htmlNode.innerHTML += highScores[key] + "<br/>";
