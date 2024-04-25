@@ -19,6 +19,7 @@ MyGame.screens["game-play"] = (function (
   console.log(components.Food());
 
   const WORLD_SIZE = 4; // Both x and y
+  const DEBUG = false;
   let arrScores = [];
   let allPlayerNames = {};
   let game_over = false;
@@ -568,20 +569,22 @@ MyGame.screens["game-play"] = (function (
       true
     );
 
-    myKeyboard.registerHandler(
-      (elapsedTime) => {
-        let message = {
-          id: messageId++,
-          elapsedTime: elapsedTime,
-          type: "addBodyPart",
-        };
-        socket.emit("input", message);
-        messageHistory.enqueue(message);
-        playerSelf.model.addBodyPart(elapsedTime);
-      },
-      "q",
-      true
-    );
+    if (DEBUG == true){
+      myKeyboard.registerHandler(
+        (elapsedTime) => {
+          let message = {
+            id: messageId++,
+            elapsedTime: elapsedTime,
+            type: "addBodyPart",
+          };
+          socket.emit("input", message);
+          messageHistory.enqueue(message);
+          playerSelf.model.addBodyPart(elapsedTime);
+        },
+        "q",
+        true
+      );
+    }
   }
 
   //------------------------------------------------------------------
