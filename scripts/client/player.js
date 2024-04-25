@@ -61,6 +61,7 @@ MyGame.components.Player = function () {
   });
   Object.defineProperty(that, "segments", {
     get: () => segments,
+    set: (value) => (segments = value),
   });
   Object.defineProperty(that, "turnPoints", {
     get: () => turnPoints,
@@ -99,6 +100,15 @@ MyGame.components.Player = function () {
     newLocation.y += vectorY * elapsedTime * speed;
 
     return newLocation;
+  };
+
+  //-----------------------------------------------------------------
+  //
+  // Function that removes a segment at index i
+  //
+  //-----------------------------------------------------------------
+  that.removeSegment = function (idx) {
+    segments.splice[idx, 1];
   };
 
   //------------------------------------------------------------------
@@ -266,6 +276,7 @@ MyGame.components.Player = function () {
     turnPoints = [{ x: position.x, y: position.y }];
     points = 0;  
     kills = 0;
+    isActive = true;
   };
 
   that.follow = function (elapsedTime, prevPosition, prevDirection) {

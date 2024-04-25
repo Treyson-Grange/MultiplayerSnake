@@ -147,7 +147,12 @@ MyGame.screens["game-play"] = (function (
     game_over = true;
     endButton.makeActive();
     playerSelf.isActive = false; // tell the player they aren't alive anymore
+    // socket.emit("player-dead");
   });
+
+  socket.on("remove-segment", function(data) {
+    playerSelf.model.removeSegment(data);
+  })
 
   //------------------------------------------------------------------
   //

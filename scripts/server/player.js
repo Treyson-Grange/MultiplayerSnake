@@ -92,6 +92,7 @@ function createPlayer() {
   });
   Object.defineProperty(that, "segments", {
     get: () => segments,
+    set: (value) => (segments = value),
   });
   Object.defineProperty(that, "turnPoints", {
     get: () => turnPoints,
@@ -137,6 +138,15 @@ function createPlayer() {
   Object.defineProperty(that, "name", {
     get: () => name,
   });
+
+  //-----------------------------------------------------------------
+  //
+  // Function that removes a segment at index i
+  //
+  //-----------------------------------------------------------------
+  that.removeSegment = function (idx) {
+    segments.splice[idx, 1];
+  };
 
   //------------------------------------------------------------------
   //
@@ -292,6 +302,7 @@ function createPlayer() {
     turnPoints = [{ x: position.x, y: position.y }];
     points = 0;  
     kills = 0;
+    isActive = true;
   };
 
   return that;
