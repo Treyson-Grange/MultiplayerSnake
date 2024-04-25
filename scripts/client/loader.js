@@ -150,6 +150,14 @@ MyGame.loader = (function () {
         source: "assets/redBody.png",
       },
       {
+        key: "greenTail",
+        source: "assets/greenTail.png",
+      },
+      {
+        key: "redTail",
+        source: "assets/redTail.png",
+      },
+      {
         key: "particle",
         source: "assets/sparkle.png",
       },

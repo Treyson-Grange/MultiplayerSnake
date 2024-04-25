@@ -108,8 +108,11 @@ MyGame.components.Player = function () {
     let newLocation = { x: 0, y: 0 };
 
     let newSnakePart = MyGame.components.Body(newLocation, direction);
-    segments.push({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
-    console.log(turnPoints);
+    if (segments.length == 0){
+      segments.push({ model: newSnakePart, texture: MyGame.assets["greenTail"] });
+    } else {
+      segments.unshift({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
+    }
   };
 
   //------------------------------------------------------------------

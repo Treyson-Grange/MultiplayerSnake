@@ -61,7 +61,12 @@ MyGame.components.PlayerRemote = function () {
     let newLocation = { x: 0, y: 0 };
 
     let newSnakePart = MyGame.components.Body(newLocation, state.direction);
-    segments.push({ model: newSnakePart, texture: MyGame.assets["redBody"] });
+    if (segments.length == 0){
+      segments.push({ model: newSnakePart, texture: MyGame.assets["redTail"] });
+    } else {
+      segments.unshift({ model: newSnakePart, texture: MyGame.assets["redBody"] });
+    }
+    
     console.log("other body part added");
   };
 
