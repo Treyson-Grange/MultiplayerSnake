@@ -136,6 +136,10 @@ MyGame.loader = (function () {
         source: "assets/greenBody.png",
       },
       {
+        key: "redBody",
+        source: "assets/redBody.png",
+      },
+      {
         key: "particle",
         source: "assets/sparkle.png",
       },

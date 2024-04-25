@@ -114,7 +114,7 @@ MyGame.components.Player = function () {
 
   //------------------------------------------------------------------
   //
-  // Public function that moves the player in the current direction.
+  // Private function that determines the dist between to turn points
   //
   //------------------------------------------------------------------
   function distFrom(fromIndex, toIndex) {
@@ -130,7 +130,11 @@ MyGame.components.Player = function () {
     return xDist + yDist; //Because x or y dist will always be 0
 
   }
-
+  //------------------------------------------------------------------
+  //
+  // Public function that moves the player in the current direction.
+  //
+  //------------------------------------------------------------------
   that.move = function (elapsedTime) {
     let vectorX = Math.cos(direction);
     let vectorY = Math.sin(direction);

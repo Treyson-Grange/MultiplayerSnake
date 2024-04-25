@@ -136,7 +136,7 @@ function checkAllCollisions() {
 
         // update the size to be bigger if it's a piece of big food
         if (foodSOA.bigFood[i]) {
-        foodSize = foodSOA.size;
+          foodSize = foodSOA.size;
         }
 
         // create food obj for collision detection
@@ -148,18 +148,27 @@ function checkAllCollisions() {
         // check for collision
         if (playerFoodCollided(playerSpec, foodPiece)) {
 
-        // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
-        client.socket.emit("hit-food", { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] });
-        player.addBodyPart();
-        player.points += 1;
-        // "eat" food by relocating it somewhere else in the map
-        let newPosX = random.nextDouble() * 4;
-        let newPosY = random.nextDouble() * 4;
+          // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
+          client.socket.emit("hit-food", { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] });
+          player.addBodyPart();
+          player.points += 1;
+          // "eat" food by relocating it somewhere else in the map
+          let newPosX = random.nextDouble() * 4;
+          let newPosY = random.nextDouble() * 4;
 
-        // tell the food to re-locate
-        foodSOA.relocateFood(i, newPosX, newPosY);
-        client.socket.emit("update-points", player.points);
-        client.socket.emit("add-body-part", "");
+          // tell the food to re-locate
+          foodSOA.relocateFood(i, newPosX, newPosY);
+          client.socket.emit("update-points", player.points);
+
+          client.socket.emit("add-body-part", "");
+
+          // Notify other clients that a part should be added
+          for (let otherId in activeClients) {
+            if (otherId !== clientId) {
+              activeClients[otherId].socket.emit("add-body-other", clientId)
+            }
+          }
+        
         }
     }    
 
