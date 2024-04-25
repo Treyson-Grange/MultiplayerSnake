@@ -19,6 +19,7 @@ MyGame.screens["game-play"] = (function (
   console.log(components.Food());
 
   const WORLD_SIZE = 4; // Both x and y
+  const DEBUG = false;
   let arrScores = [];
   let allPlayerNames = {};
   let game_over = false;
@@ -359,6 +360,15 @@ MyGame.screens["game-play"] = (function (
     if (!game_over) {
       renderer.Text.render(playerName);
     }
+    segments = playerSelf.model.getSegments();
+    for (let id in segments) {
+      renderer.Body.render(
+        segments[id].model,
+        segments[id].texture,
+        playerSelf.model.position
+      );
+      //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
+    }
 
     for (let id in playerOthers) {
       let otherPlayer = playerOthers[id];
@@ -422,15 +432,6 @@ MyGame.screens["game-play"] = (function (
       }
     }
 
-    segments = playerSelf.model.getSegments();
-    for (let id in segments) {
-      renderer.Body.render(
-        segments[id].model,
-        segments[id].texture,
-        playerSelf.model.position
-      );
-      //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
-    }
     graphics.drawImage(
       MyGame.assets["panelLight"],
       { x: 0.9, y: 0.1 },
@@ -568,20 +569,22 @@ MyGame.screens["game-play"] = (function (
       true
     );
 
-    myKeyboard.registerHandler(
-      (elapsedTime) => {
-        let message = {
-          id: messageId++,
-          elapsedTime: elapsedTime,
-          type: "addBodyPart",
-        };
-        socket.emit("input", message);
-        messageHistory.enqueue(message);
-        playerSelf.model.addBodyPart(elapsedTime);
-      },
-      "q",
-      true
-    );
+    if (DEBUG == true){
+      myKeyboard.registerHandler(
+        (elapsedTime) => {
+          let message = {
+            id: messageId++,
+            elapsedTime: elapsedTime,
+            type: "addBodyPart",
+          };
+          socket.emit("input", message);
+          messageHistory.enqueue(message);
+          playerSelf.model.addBodyPart(elapsedTime);
+        },
+        "q",
+        true
+      );
+    }
   }
 
   //------------------------------------------------------------------
