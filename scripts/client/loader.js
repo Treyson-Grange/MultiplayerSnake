@@ -63,6 +63,15 @@ MyGame.loader = (function () {
         message: "Gameplay model loaded",
         onComplete: null,
       },
+      {
+        scripts: [
+          "systems/particle-system-manager",
+          "systems/particle-system",
+          "systems/sound-system"
+        ],
+        message: "Systems loaded",
+        onComplete: null,
+      },
     ],
     assetOrder = [
       {
