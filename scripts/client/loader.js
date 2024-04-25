@@ -34,6 +34,11 @@ MyGame.loader = (function () {
         onComplete: null,
       },
       {
+        scripts: ["food", "body"],
+        message: "Game components loaded",
+        onComplete: null,
+      },
+      {
         scripts: ["rendering/graphics"],
         message: "Graphics loaded",
         onComplete: null,
@@ -44,6 +49,11 @@ MyGame.loader = (function () {
           "rendering/player-remote",
           "rendering/background",
           "rendering/walls",
+          "rendering/body",
+          "rendering/particle-system",
+          "rendering/food",
+          "rendering/text",
+          "rendering/button"
         ],
         message: "Renderers loaded",
         onComplete: null,
