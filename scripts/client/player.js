@@ -21,6 +21,11 @@ MyGame.components.Player = function () {
   let turnPoints = [];
   let points = 0;
   let kills = 0;
+  let isActive = true;
+
+  Object.defineProperty(that, "isActive", {
+    get: () => isActive,
+  });
 
   Object.defineProperty(that, "kills", {
     get: () => kills,

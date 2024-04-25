@@ -146,6 +146,7 @@ MyGame.screens["game-play"] = (function (
   socket.on("game-over", function () {
     game_over = true;
     endButton.makeActive();
+    playerSelf.isActive = false; // tell the player they aren't alive anymore
   });
 
   //------------------------------------------------------------------

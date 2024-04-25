@@ -55,6 +55,23 @@ for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
   foodSOA.spriteSheetIndices[i] = random.nextRange(0, 5); // amount of sprites is hardcoded
 }
 
+// function disablePlayer(player) {
+
+// }
+
+function turnBodyIntoFood(player) {
+    for (let i = 0; i < player.segments.length; i++) {
+        let newFoodLocation = player.segments[i].position;
+        foodSOA.bigFood.push(true); // tell the foodSOA that the following food is a big food
+        foodSOA.positionsX.push(newFoodLocation.x);
+        foodSOA.positionsY.push(newFoodLocation.y);
+        foodSOA.reportUpdates.push(true);
+        player.segments.splice[i, 1]; // remove that segment from the player's body
+
+        console.log("player.segments: ", player.segments);
+    }
+}
+
 //------------------------------------------------------------------
 //
 // Utility function to perform a hit test between player and food.  The
@@ -125,81 +142,83 @@ function checkAllCollisions() {
     let client = activeClients[clientId];
     let player = client.player;
 
-    let playerSpec = {
-      radius: player.size.width / 2,
-      position: player.position,
-    };
-
-    // check for player v food collisions
-    for (let i = 0; i < foodSOA.positionsX.length; i++) {
-        let foodSize = foodSOA.size;
-
-        // update the size to be bigger if it's a piece of big food
-        if (foodSOA.bigFood[i]) {
-          foodSize = foodSOA.size;
-        }
-
-        // create food obj for collision detection
-        let foodPiece = {
-        radius: foodSize.width / 2,
-        position: { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] },
+    if (player.isActive) {  // if the player is "alive" for this round
+        let playerSpec = {
+            radius: player.size.width / 2,
+            position: player.position,
         };
 
-        // check for collision
-        if (playerFoodCollided(playerSpec, foodPiece)) {
+        // check for player v food collisions
+        for (let i = 0; i < foodSOA.positionsX.length; i++) {
+            let foodSize = foodSOA.size;
 
-          // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
-          client.socket.emit("hit-food", { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] });
-          player.addBodyPart();
-          player.points += 1;
-          // "eat" food by relocating it somewhere else in the map
-          let newPosX = random.nextDouble() * 4;
-          let newPosY = random.nextDouble() * 4;
-
-          // tell the food to re-locate
-          foodSOA.relocateFood(i, newPosX, newPosY);
-          client.socket.emit("update-points", player.points);
-
-          client.socket.emit("add-body-part", "");
-
-          // Notify other clients that a part should be added
-          for (let otherId in activeClients) {
-            if (otherId !== clientId) {
-              activeClients[otherId].socket.emit("add-body-other", clientId)
+            // update the size to be bigger if it's a piece of big food
+            if (foodSOA.bigFood[i]) {
+                foodSize = foodSOA.size;
             }
-          }
-        
-        }
-    }    
 
-    if (client.elapsedTime > 5000) { // player is invincible for the first 5 seconds
-    
-        // check for player v wall collisions
-        if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
-            client.socket.emit("hit-head", { x: player.position.x, y: player.position.y });
-            client.socket.emit("game-over");
-        }
-    
-        // check for player v player collisions
-        for (let otherId in activeClients) {
-            if (otherId !== clientId) {
-            let otherClient = activeClients[otherId];
-            let otherPlayer = otherClient.player;
-    
-            let otherPlayerSpec = {
-                radius: otherPlayer.size.width / 2,
-                position: otherPlayer.position,
+            // create food obj for collision detection
+            let foodPiece = {
+                radius: foodSize.width / 2,
+                position: { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] },
             };
-    
-            // TODO: this isn't working yet; idk what's up
-            if (playerPlayerCollided(playerSpec, otherPlayerSpec)) {
-                console.log("players knocked heads");
+
+            // check for collision
+            if (playerFoodCollided(playerSpec, foodPiece)) {
+
+                // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
+                client.socket.emit("hit-food", { x: foodSOA.positionsX[i], y: foodSOA.positionsY[i] });
+                player.addBodyPart();
+                player.points += 1;
+                // "eat" food by relocating it somewhere else in the map
+                let newPosX = random.nextDouble() * 4;
+                let newPosY = random.nextDouble() * 4;
+
+                // tell the food to re-locate
+                foodSOA.relocateFood(i, newPosX, newPosY);
+                client.socket.emit("update-points", player.points);
+
+                client.socket.emit("add-body-part", "");
+
+                // Notify other clients that a part should be added
+                for (let otherId in activeClients) {
+                    if (otherId !== clientId) {
+                        activeClients[otherId].socket.emit("add-body-other", clientId)
+                    }
+                }
+            }
+        }    
+
+        if (client.elapsedTime > 5000) { // player is invincible for the first 5 seconds
+        
+            // check for player v wall collisions
+            if (playerWallCollided({ x: player.position.x, y: player.position.y })) {
                 client.socket.emit("hit-head", { x: player.position.x, y: player.position.y });
-                // TODO: TELL otherPlayer THAT THEY GOT A KILL, :)))
+                client.socket.emit("game-over");
+                turnBodyIntoFood(player);
             }
-            // TODO: check for collisions between player and segments/head/tail of all other snakes :)
-            }
-        }  
+        
+            // check for player v player collisions
+            for (let otherId in activeClients) {
+                if (otherId !== clientId) {
+                    let otherClient = activeClients[otherId];
+                    let otherPlayer = otherClient.player;
+            
+                    let otherPlayerSpec = {
+                        radius: otherPlayer.size.width / 2,
+                        position: otherPlayer.position,
+                    };
+            
+                    // TODO: this isn't working yet; idk what's up
+                    if (playerPlayerCollided(playerSpec, otherPlayerSpec)) {
+                        console.log("players knocked heads");
+                        client.socket.emit("hit-head", { x: player.position.x, y: player.position.y });
+                        // TODO: TELL otherPlayer THAT THEY GOT A KILL, :)))
+                    }
+                    // TODO: check for collisions between player and segments/head/tail of all other snakes :)
+                }
+            }  
+        }
     }
   }
 }
