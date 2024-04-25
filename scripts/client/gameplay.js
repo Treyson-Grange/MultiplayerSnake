@@ -136,6 +136,13 @@ MyGame.screens["game-play"] = (function (
     playerSelf.model.addBodyPart();
   });
 
+  socket.on("add-body-other", function (otherId) {
+    if (playerOthers.hasOwnProperty(otherId)) {
+      let model = playerOthers[otherId].model;
+      model.addBodyPart();
+    }
+  });
+
   socket.on("game-over", function () {
     game_over = true;
     endButton.makeActive();
@@ -365,6 +372,16 @@ MyGame.screens["game-play"] = (function (
         playerSelf.model.position,
         allPlayerNames[id].name
       );
+      let otherSegments = otherPlayer.model.segments;
+      for (let id in otherSegments) {
+        renderer.Body.render(
+          otherSegments[id].model,
+          otherSegments[id].texture,
+          playerSelf.model.position
+        );
+        //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
+      }
+
     }
     renderer.Food.render(
       food.model,
