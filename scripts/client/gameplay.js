@@ -156,8 +156,16 @@ MyGame.screens["game-play"] = (function (
         let model = playerOthers[otherId].model;
         console.log("model is: ", model);
         model.removeAllSegments();
+        model.visible = false;
     }
   });
+
+  socket.on("player-visible", function (otherId) {
+    if (playerOthers.hasOwnProperty(otherId)) {
+      let model = playerOthers[otherId].model;
+      model.visible = true;
+    }
+  })
 
   socket.on("game-over", function () {
     game_over = true;
