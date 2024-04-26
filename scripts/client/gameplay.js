@@ -148,7 +148,14 @@ MyGame.screens["game-play"] = (function (
         let model = playerOthers[data.otherId].model;
         model.removeSegment(data.partIndex);
     }
-  })
+  });
+
+  socket.on("remove-full-body-other", function (otherId) {
+    if (playerOthers.hasOwnProperty(data.otherId)) {
+        let model = playerOthers[data.otherId].model;
+        model.removeAllSegments();
+    }
+  });
 
   socket.on("game-over", function () {
     game_over = true;

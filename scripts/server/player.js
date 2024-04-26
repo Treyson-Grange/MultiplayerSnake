@@ -104,6 +104,10 @@ function createPlayer() {
     segments.push(newSnakePart);
   };
 
+  that.removeAllSegments = function () {
+    segments.length = 0;
+  }
+
   //   // public function to find the location for a newly added segment
   //   that.newSegmentPosition = function (elapsedTime) {
   //     let lastLocation = segments[segments.length - 1];
