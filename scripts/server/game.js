@@ -170,19 +170,6 @@ function checkAllCollisions() {
   for (let clientId in activeClients) {
     let client = activeClients[clientId];
     let player = client.player;
-    if (player.isActive) {
-      if (player.segments.length < 3) {
-        player.addBodyPart();
-        client.socket.emit("add-body-part", "");
-
-        console.log("adding body part");
-        for (let otherId in activeClients) {
-          if (otherId !== clientId) {
-            activeClients[otherId].socket.emit("add-body-other", clientId);
-          }
-        }
-      }
-    }
 
     if (player.isActive) {
       // if the player is "alive" for this round
@@ -525,9 +512,13 @@ function initializeSocketIO(httpServer) {
     //
     // Create an entry in our list of connected clients
     let newPlayer = Player.create();
-    newPlayer.addBodyPart();
-    newPlayer.addBodyPart();
-    newPlayer.addBodyPart();
+    for (let otherId in activeClients) {
+      if (otherId !== socket.id) {
+        console.log("telling other clients about new player: ", socket.id);
+        activeClients[otherId].socket.emit("add-body-other", socket.id);
+      }
+    }
+    socket.emit("add-body-part", "");
     newPlayer.clientId = socket.id;
     playerNames[socket.id] = { name: "Player", clientId: socket.id };
     socket.emit("updatePlayerNames", playerNames);
