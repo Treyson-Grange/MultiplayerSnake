@@ -543,6 +543,20 @@ function initializeSocketIO(httpServer) {
       });
     });
 
+    socket.on("add-start-parts", (data) => {
+      let client = activeClients[socket.id];
+      let player = client.player;
+      for (let i = 0; i < 3; i++) {
+        player.addBodyPart();
+        client.socket.emit("add-body-part", "");
+        for (let otherId in activeClients) {
+          if (otherId !== socket.id) {
+            activeClients[otherId].socket.emit("add-body-other", socket.id);
+          }
+        }
+      }
+    });
+
     socket.on("playerName", (data) => {
       console.log("player name is: ", data.name, " at socket id: ", socket.id);
       playerNames[socket.id] = { name: data.name, clientId: socket.id };

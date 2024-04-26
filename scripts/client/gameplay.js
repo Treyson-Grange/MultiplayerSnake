@@ -647,9 +647,12 @@ MyGame.screens["game-play"] = (function (
     score_added = false;
 
     if (playerSelf.model.segments.length < 4) {
-      playerSelf.model.addBodyPart();
-      playerSelf.model.addBodyPart();
-      playerSelf.model.addBodyPart();
+      //      playerSelf.model.addBodyPart();
+      //    playerSelf.model.addBodyPart();
+      //  playerSelf.model.addBodyPart();
+      //tell the server we've added three body parts,
+      // so we emit the message three times
+      socket.emit("add-start-parts");
     }
 
     requestAnimationFrame(gameLoop);
