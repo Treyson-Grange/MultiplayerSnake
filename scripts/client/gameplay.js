@@ -136,10 +136,17 @@ MyGame.screens["game-play"] = (function (
     playerSelf.model.addBodyPart();
   });
 
-  socket.on("add-body-other", function (otherId) {
-    if (playerOthers.hasOwnProperty(otherId)) {
-      let model = playerOthers[otherId].model;
-      model.addBodyPart();
+  socket.on("add-body-other", function (data) {
+    if (playerOthers.hasOwnProperty(data.clientId)) {
+      let model = playerOthers[data.clientId].model;
+      if (data.hasOwnProperty("numParts")) {
+        while (model.segments.length < data.numParts) {
+          model.addBodyPart();
+        }
+      } else {
+        model.addBodyPart();
+      }
+
     }
   });
 
