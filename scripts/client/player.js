@@ -143,6 +143,14 @@ MyGame.components.Player = function () {
     }
   };
 
+  that.addTurnPoint = function () {
+    turnPoints.push({
+      x: position.x,
+      y: position.y,
+      direction: direction,
+    });
+  }
+
   //------------------------------------------------------------------
   //
   // Private function that determines the dist between to turn points

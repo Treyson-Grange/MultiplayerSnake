@@ -673,7 +673,7 @@ MyGame.screens["game-play"] = (function (
       // so we emit the message three times
       socket.emit("add-start-parts");
     }
-
+    playerSelf.model.addTurnPoint();
     requestAnimationFrame(gameLoop);
   }
 
