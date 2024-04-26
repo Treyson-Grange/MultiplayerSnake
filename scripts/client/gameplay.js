@@ -144,10 +144,30 @@ MyGame.screens["game-play"] = (function (
     }
   });
 
+  socket.on("remove-body-other", function (data) {
+    if (playerOthers.hasOwnProperty(data.otherId)) {
+        let model = playerOthers[data.otherId].model;
+        model.removeSegment(data.partIndex);
+    }
+  });
+
+  socket.on("remove-full-body-other", function (otherId) {
+    if (playerOthers.hasOwnProperty(otherId)) {
+        let model = playerOthers[otherId].model;
+        console.log("model is: ", model);
+        model.removeAllSegments();
+    }
+  });
+
   socket.on("game-over", function () {
     game_over = true;
     endButton.makeActive();
+    playerSelf.isActive = false; // tell the player they aren't alive anymore
   });
+
+  socket.on("remove-segment", function(data) {
+    playerSelf.model.removeSegment(data);
+  })
 
   //------------------------------------------------------------------
   //
@@ -356,9 +376,9 @@ MyGame.screens["game-play"] = (function (
       MyGame.assets["wall"]
     );
 
-    renderer.Player.render(playerSelf.model, playerSelf.texture);
     if (!game_over) {
-      renderer.Text.render(playerName);
+        renderer.Player.render(playerSelf.model, playerSelf.texture);
+        renderer.Text.render(playerName);
     }
     segments = playerSelf.model.getSegments();
     for (let id in segments) {

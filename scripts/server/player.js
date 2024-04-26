@@ -51,6 +51,11 @@ function createPlayer() {
   let name = "Player101";
   let points = 0;
   let kills = 0;
+  let isActive = true;
+
+  Object.defineProperty(that, "isActive", {
+    get: () => isActive,
+  });
 
   Object.defineProperty(that, "kills", {
     get: () => kills,
@@ -87,14 +92,20 @@ function createPlayer() {
   });
   Object.defineProperty(that, "segments", {
     get: () => segments,
+    set: (value) => (segments = value),
   });
   Object.defineProperty(that, "turnPoints", {
     get: () => turnPoints,
   });
+
   that.addBodyPart = function (elapsedTime) {
     reportUpdate = true;
     let newSnakePart = Body.createBody();
     segments.push(newSnakePart);
+  };
+
+  that.removeAllSegments = function () {
+    segments.length = 0;
   };
 
   //   // public function to find the location for a newly added segment
@@ -132,6 +143,15 @@ function createPlayer() {
   Object.defineProperty(that, "name", {
     get: () => name,
   });
+
+  //-----------------------------------------------------------------
+  //
+  // Function that removes a segment at index i
+  //
+  //-----------------------------------------------------------------
+  that.removeSegment = function (idx) {
+    segments.splice(idx, 1);
+  };
 
   //------------------------------------------------------------------
   //
@@ -287,6 +307,7 @@ function createPlayer() {
     turnPoints = [{ x: position.x, y: position.y }];
     points = 0;  
     kills = 0;
+    isActive = true;
   };
 
   return that;

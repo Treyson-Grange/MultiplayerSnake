@@ -21,6 +21,11 @@ MyGame.components.Player = function () {
   let turnPoints = [];
   let points = 0;
   let kills = 0;
+  let isActive = true;
+
+  Object.defineProperty(that, "isActive", {
+    get: () => isActive,
+  });
 
   Object.defineProperty(that, "kills", {
     get: () => kills,
@@ -56,6 +61,7 @@ MyGame.components.Player = function () {
   });
   Object.defineProperty(that, "segments", {
     get: () => segments,
+    set: (value) => (segments = value),
   });
   Object.defineProperty(that, "turnPoints", {
     get: () => turnPoints,
@@ -66,6 +72,10 @@ MyGame.components.Player = function () {
       points = value;
     },
   });
+
+  that.removeAllSegments = function () {
+    segments.length = 0;
+  };
 
   // public function to find the location for a newly added segment
   that.newSegmentPosition = function (elapsedTime) {
@@ -94,6 +104,15 @@ MyGame.components.Player = function () {
     newLocation.y += vectorY * elapsedTime * speed;
 
     return newLocation;
+  };
+
+  //-----------------------------------------------------------------
+  //
+  // Function that removes a segment at index i
+  //
+  //-----------------------------------------------------------------
+  that.removeSegment = function (idx) {
+    segments.splice(idx, 1);
   };
 
   //------------------------------------------------------------------
@@ -264,6 +283,7 @@ MyGame.components.Player = function () {
     turnPoints = [{ x: position.x, y: position.y }];
     points = 0;  
     kills = 0;
+    isActive = true;
   };
 
   that.follow = function (elapsedTime, prevPosition, prevDirection) {

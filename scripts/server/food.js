@@ -20,7 +20,7 @@ function createFood(howMany) {
     let positionsX = new Array(howMany);
     let positionsY = new Array(howMany);
     let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
-    let bigFood = new Array(howMany).fill(true);
+    let bigFood = new Array(howMany).fill(false);
 
     let spriteSheetIndices = new Array(howMany);
     let spriteCount = 8;
@@ -106,7 +106,7 @@ function createFood(howMany) {
 
   function relocateFood(index, positionX, positionY) {
     // need to update player score in here, too? Or build a new function for that?
-    reportUpdates[index] = true; // IS THIS EVEN RIGHT? WHAT DOES IT MEAN?
+    reportUpdates[index] = false;
     positionsX[index] = positionX;
     positionsY[index] = positionY;
   }
@@ -118,13 +118,17 @@ function createFood(howMany) {
   //------------------------------------------------------------------
 
     that.update = function (data) {
+        reportUpdates = data.reportUpdates;
+        spriteSheetIndices = data.spriteSheetIndices;
+        bigFood = data.bigFood;
+        positionsX = data.positionsX;
+        positionsY = data.positionsY;
+
         for (let i = 0; i < data.count; i++) {
             if (data.reportUpdates[i] == true) {
                 relocateFood(i, data.positionsX[i], data.positionsY[i]);
             }
         }
-        spriteSheetIndices = data.spriteSheetIndices;
-
     };
 
     that.updateSprites = function (data) {
