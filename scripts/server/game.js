@@ -310,9 +310,9 @@ function processInput() {
       case "test":
         client.player.goRight(input.message.elapsedTime);
         break;
-      case "addBodyPart":
-        client.player.addBodyPart(input.message.elapsedTime);
-        break;
+      // case "addBodyPart":         //  This is commented out because the player should not be allowed to tell the server to add parts.
+      //   client.player.addBodyPart(input.message.elapsedTime);
+      //   break;
     }
   }
 }
@@ -530,6 +530,7 @@ function initializeSocketIO(httpServer) {
     socket.on("reset-player", function () {
         activeClients[socket.id].player.refresh();
         activeClients[socket.id].isAlive = true;
+        activeClients[clientId].socket.emit("player-visible", socket.id);
 
         // notify other clients that that player's body is gone
         for (let otherId in activeClients) {
