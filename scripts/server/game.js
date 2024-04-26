@@ -527,6 +527,7 @@ function initializeSocketIO(httpServer) {
     newPlayer.clientId = socket.id;
     playerNames[socket.id] = { name: "Player", clientId: socket.id };
     socket.emit("updatePlayerNames", playerNames);
+    
     activeClients[socket.id] = {
       socket: socket,
       player: newPlayer,
@@ -579,6 +580,16 @@ function initializeSocketIO(httpServer) {
       //   activeClients[socket.id].socket.emit("updatePlayerElapsedTime", 0);
       activeClients[socket.id].elapsedTime = 0;
 
+        // Notify other clients that a part should be added
+        for (let otherId in activeClients) {
+            if (otherId !== socket.id) {
+                let data = {
+                    clientId: otherId,
+                    numParts: activeClients[otherId].player.segments.length,
+                };
+                socket.emit("add-body-other", data);
+            }
+        }
     });
 
     // socket.on("player-dead", function () {
