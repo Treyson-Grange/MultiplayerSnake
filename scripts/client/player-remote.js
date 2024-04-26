@@ -28,6 +28,7 @@ MyGame.components.PlayerRemote = function () {
   };
   let turnPoints = [];
   let segments = [];
+  let visible = true;
 
   Object.defineProperty(that, "state", {
     get: () => state,
@@ -51,6 +52,13 @@ MyGame.components.PlayerRemote = function () {
 
   Object.defineProperty(that, "name", {
     get: () => name,
+  });
+
+  Object.defineProperty(that, "visible", {
+    get: () => visible,
+    set: (value) => {
+      visible = value;
+    },
   });
 
 

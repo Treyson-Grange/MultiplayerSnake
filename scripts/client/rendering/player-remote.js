@@ -17,10 +17,11 @@ MyGame.renderer.PlayerRemote = (function (graphics) {
 
     graphics.saveContext();
 
-    // render snake if in render dist
+    // render snake if in render dist and visible is true
     if (
       screenPos.x < model.state.position.x + model.size.width / 2 &&
-      model.state.position.x - model.size.width / 2 < screenPos.x + SCREEN_WIDTH
+      model.state.position.x - model.size.width / 2 < screenPos.x + SCREEN_WIDTH &&
+      model.visible
     ) {
       console.log("x good");
       if (
