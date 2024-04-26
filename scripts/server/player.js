@@ -97,6 +97,7 @@ function createPlayer() {
   Object.defineProperty(that, "turnPoints", {
     get: () => turnPoints,
   });
+
   that.addBodyPart = function (elapsedTime) {
     reportUpdate = true;
     let newSnakePart = Body.createBody();

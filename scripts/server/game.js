@@ -54,15 +54,23 @@ for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
 
 // }
 
-function turnBodyIntoFood(player, client) {
+function turnBodyIntoFood(player, client, clientId) {
     for (let i = player.segments.length - 1; i >= 0; i--) {
         let newFoodLocation = player.segments[i].position;
         foodSOA.bigFood.push(true); // tell the foodSOA that the following food is a big food
         foodSOA.positionsX.push(newFoodLocation.x);
         foodSOA.positionsY.push(newFoodLocation.y);
-        foodSOA.spriteSheetIndices.push(foodSOA.spriteSheetIndices[0]); // rn the sprite sheet indices are all the same; could make this unique if you want
+        foodSOA.spriteSheetIndices.push(random.nextRange(0, 5)); // amount of sprites is hardcoded
         foodSOA.reportUpdates.push(true);
         client.socket.emit("remove-segment", i);  // tell the client to remove that segment
+
+        // Notify other clients that a part should be removed
+        // for (let otherId in activeClients) {
+        //     if (otherId !== clientId) {
+        //         console.log("remove-body-other, ", i);
+        //         activeClients[otherId].socket.emit("remove-body-other", {clientId: clientId, partIndex: i});
+        //     }
+        // }
     }
 }
 
@@ -205,9 +213,7 @@ function checkAllCollisions() {
                 client.socket.emit("hit-head", { x: player.position.x, y: player.position.y });
                 client.socket.emit("game-over");
                 client.isAlive = false;
-                console.log("bigFood in game before body into food: ", foodSOA.bigFood);
-                turnBodyIntoFood(player, client);
-                console.log("bigFood in game after body into food: ", foodSOA.bigFood);
+                turnBodyIntoFood(player, client, clientId);
             }
         
             // check for player v player collisions
