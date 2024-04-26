@@ -589,7 +589,6 @@ function initializeSocketIO(httpServer) {
     socket.on("reset-player", function () {
       activeClients[socket.id].player.refresh();
       activeClients[socket.id].isAlive = true;
-      activeClients[socket.id].socket.emit("player-visible", socket.id);
 
       // notify other clients that that player's body is gone
       for (let otherId in activeClients) {
@@ -598,6 +597,7 @@ function initializeSocketIO(httpServer) {
             "remove-full-body-other",
             socket.id
           );
+          activeClients[otherId].socket.emit("player-visible", socket.id);
         }
       }
     });
