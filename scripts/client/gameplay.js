@@ -375,9 +375,9 @@ MyGame.screens["game-play"] = (function (
       MyGame.assets["wall"]
     );
 
-    renderer.Player.render(playerSelf.model, playerSelf.texture);
     if (!game_over) {
-      renderer.Text.render(playerName);
+        renderer.Player.render(playerSelf.model, playerSelf.texture);
+        renderer.Text.render(playerName);
     }
 
     for (let id in playerOthers) {
