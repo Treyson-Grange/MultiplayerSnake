@@ -227,15 +227,6 @@ function checkAllCollisions() {
           client.socket.emit("add-body-part", "");
 
           // Notify other clients that a part should be added
-          for (let otherId in activeClients) {
-            if (otherId !== clientId) {
-              let data = {
-                clientId: clientId,
-                numParts: player.segments.length,
-              };
-              activeClients[otherId].socket.emit("add-body-other", data);
-            }
-          }
         }
       }
 
@@ -483,6 +474,7 @@ function initializeSocketIO(httpServer) {
           speed: client.player.speed,
           size: client.player.size,
         });
+        //We need to tell teh new player abnout all the segments too
       }
     }
   }
@@ -496,6 +488,18 @@ function initializeSocketIO(httpServer) {
       bigFood: bigFood,
     };
     client.socket.emit("food-initial", foodSpriteUpdate);
+  }
+
+  function notifyNewPlayerSegments(newPlayer) {
+    for (let otherId in activeClients) {
+      if (otherId !== newPlayer.clientId) {
+        let data = {
+          clientId: otherId,
+          numParts: activeClients[otherId].player.segments.length,
+        };
+        activeClients[newPlayer.clientId].socket.emit("add-body-other", data);
+      }
+    }
   }
 
   //------------------------------------------------------------------
@@ -617,6 +621,7 @@ function initializeSocketIO(httpServer) {
 
     notifyConnect(socket, newPlayer);
     notifyNewPlayerFood(newPlayer);
+    notifyNewPlayerSegments(newPlayer);
   });
 }
 
