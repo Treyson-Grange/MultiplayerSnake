@@ -144,11 +144,9 @@ MyGame.screens["game-play"] = (function (
   });
 
   socket.on("game-over", function () {
-    console.log("gameplay bigFood at start of gameOver: ", food.model.bigFood);
     game_over = true;
     endButton.makeActive();
     playerSelf.isActive = false; // tell the player they aren't alive anymore
-    console.log("gameplay bigFood after gameOver: ", food.model.bigFood);
   });
 
   socket.on("remove-segment", function(data) {

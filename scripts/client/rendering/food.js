@@ -22,8 +22,9 @@ MyGame.renderer.Food = (function(graphics) {
         let screenPos = {x: playerSelfPos.x - .5, y: playerSelfPos.y - .5}; //top-left corner of screen
 
         graphics.saveContext();
+
         for (let i = 0; i < model.positionsX.length; i++) {
-    
+
             // render food if in render dist
             if (screenPos.x < model.positionsX[i] + (model.bigSize.width / 2) && model.positionsX[i] - (model.bigSize.width / 2) < screenPos.x + SCREEN_WIDTH) {
                 if (screenPos.y < model.positionsY[i] + (model.bigSize.height / 2) && model.positionsY[i] - (model.bigSize.height / 2) < screenPos.y + SCREEN_WIDTH) {
@@ -33,6 +34,7 @@ MyGame.renderer.Food = (function(graphics) {
                         x: foodX,
                         y: foodY,
                     }
+
                     if (model.bigFood[i]) { // this isn't working; also we need to get bigFood values from server cause those should be the same across clients!!
                         graphics.drawSprite(bigTexture[model.spriteSheetIndices[i]], position, model.bigSize, model.renderFrame); 
                     }

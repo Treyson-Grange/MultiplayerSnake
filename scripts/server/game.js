@@ -44,12 +44,6 @@ for (let i = 0; i < foodCount; i++) {
 }
 
 let bigFood = new Array(foodCount).fill(false);
-console.log("initial bigFood: ", bigFood);
-// for (let i = 0; i < foodCount; i++) {
-//   if (i % 2 == 0) {
-//     bigFood[i] = true;
-//   }
-// }
 
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
 for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
@@ -61,16 +55,15 @@ for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
 // }
 
 function turnBodyIntoFood(player, client) {
-    console.log("foodSOA.reportUpdates: ", foodSOA.reportUpdates);
     for (let i = player.segments.length - 1; i >= 0; i--) {
         let newFoodLocation = player.segments[i].position;
         foodSOA.bigFood.push(true); // tell the foodSOA that the following food is a big food
         foodSOA.positionsX.push(newFoodLocation.x);
         foodSOA.positionsY.push(newFoodLocation.y);
+        foodSOA.spriteSheetIndices.push(foodSOA.spriteSheetIndices[0]); // rn the sprite sheet indices are all the same; could make this unique if you want
         foodSOA.reportUpdates.push(true);
         client.socket.emit("remove-segment", i);  // tell the client to remove that segment
     }
-    console.log("foodSOA.reportUpdates: ", foodSOA.reportUpdates);
 }
 
 //------------------------------------------------------------------

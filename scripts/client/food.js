@@ -113,13 +113,17 @@ MyGame.components.Food = function(howMany) {
   //------------------------------------------------------------------
 
     that.update = function (data) {
+        reportUpdates = data.reportUpdates;
+        spriteSheetIndices = data.spriteSheetIndices;
+        bigFood = data.bigFood;
+        positionsX = data.positionsX;
+        positionsY = data.positionsY;
+
         for (let i = 0; i < data.count; i++) {
             if (data.reportUpdates[i] == true) {
                 relocateFood(i, data.positionsX[i], data.positionsY[i]);
             }
         }
-        spriteSheetIndices = data.spriteSheetIndices;
-        bigFood = data.bigFood;
     };
 
     that.updateSprites = function (data) {
