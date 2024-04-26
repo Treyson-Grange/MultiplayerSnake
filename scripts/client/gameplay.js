@@ -46,22 +46,22 @@ MyGame.screens["game-play"] = (function (
       player: false,
     }),
     scoreText = MyGame.objects.Text({
-        text: "Score: ",
-        font: "20pt Arial",
-        fillStyle: "#FFFFFF",
-        position: { x: 0.35, y: 0.35 },
+      text: "Score: ",
+      font: "20pt Arial",
+      fillStyle: "#FFFFFF",
+      position: { x: 0.35, y: 0.35 },
     }),
     killsText = MyGame.objects.Text({
-        text: "Kills: ",
-        font: "20pt Arial",
-        fillStyle: "#FFFFFF",
-        position: { x: 0.35, y: 0.45 }
+      text: "Kills: ",
+      font: "20pt Arial",
+      fillStyle: "#FFFFFF",
+      position: { x: 0.35, y: 0.45 },
     }),
     topPosText = MyGame.objects.Text({
-        text: "Top Position: ",
-        font: "20pt Arial",
-        fillStyle: "#FFFFFF",
-        position: { x: 0.35, y: 0.55 }
+      text: "Top Position: ",
+      font: "20pt Arial",
+      fillStyle: "#FFFFFF",
+      position: { x: 0.35, y: 0.55 },
     }),
     playerName = MyGame.objects.Text({
       text: "Player Name",
@@ -109,7 +109,6 @@ MyGame.screens["game-play"] = (function (
     messageId = 1,
     socket = io();
 
-
   //------------------------------------------------------------------
   //
   // Handler for when the server ack's the socket connection.  We receive
@@ -146,8 +145,8 @@ MyGame.screens["game-play"] = (function (
 
   socket.on("remove-body-other", function (data) {
     if (playerOthers.hasOwnProperty(data.otherId)) {
-        let model = playerOthers[data.otherId].model;
-        model.removeSegment(data.partIndex);
+      let model = playerOthers[data.otherId].model;
+      model.removeSegment(data.partIndex);
     }
   });
 
@@ -173,9 +172,9 @@ MyGame.screens["game-play"] = (function (
     playerSelf.isActive = false; // tell the player they aren't alive anymore
   });
 
-  socket.on("remove-segment", function(data) {
+  socket.on("remove-segment", function (data) {
     playerSelf.model.removeSegment(data);
-  })
+  });
 
   //------------------------------------------------------------------
   //
@@ -318,15 +317,14 @@ MyGame.screens["game-play"] = (function (
 
   socket.on("hit-head", function (data) {
     if (!hitHeadParticles) {
-        particleManager.playerDeath(data.x, data.y);
-        hitHeadParticles = true;
+      particleManager.playerDeath(data.x, data.y);
+      hitHeadParticles = true;
     }
     if (!playedEndSound) {
-        soundSystem.playSound('end-game');
-        playedEndSound = true;
+      soundSystem.playSound("end-game");
+      playedEndSound = true;
     }
   });
-
 
   //------------------------------------------------------------------
   //
@@ -359,9 +357,12 @@ MyGame.screens["game-play"] = (function (
       playerOthers[id].model.update(elapsedTime);
     }
     food.model.updateRenderFrames(elapsedTime); // increment the render frame on each sprite so it's animated
-    particleManager.update(elapsedTime, { width: canvas.width, height: canvas.height });
+    particleManager.update(elapsedTime, {
+      width: canvas.width,
+      height: canvas.height,
+    });
     // scoreText.updateText("Score: ", playerSelf.model.points);
-}
+  }
 
   //------------------------------------------------------------------
   //
@@ -385,11 +386,13 @@ MyGame.screens["game-play"] = (function (
     );
 
     if (!game_over) {
-        renderer.Player.render(playerSelf.model, playerSelf.texture);
-        renderer.Text.render(playerName);
+      renderer.Player.render(playerSelf.model, playerSelf.texture);
+      renderer.Text.render(playerName);
     }
     segments = playerSelf.model.getSegments();
     for (let id in segments) {
+      console.log(segments[id].model);
+      console.log(segments[id].texture);
       renderer.Body.render(
         segments[id].model,
         segments[id].texture,
@@ -419,7 +422,6 @@ MyGame.screens["game-play"] = (function (
         );
         //   renderer.PlayerRemote.render(segments[id].model, segments[id].texture, playerSelf.position);
       }
-
     }
     renderer.Food.render(
       food.model,
@@ -433,7 +435,9 @@ MyGame.screens["game-play"] = (function (
         persistence.addScore(playerSelf.model.name, playerSelf.model.points);
         persistence.reportScores();
         scoreText.updateText("Score:               " + playerSelf.model.points);
-        killsText.updateText("Kills:                  " + playerSelf.model.kills);
+        killsText.updateText(
+          "Kills:                  " + playerSelf.model.kills
+        );
         topPosText.updateText("Top Position:     " + 0); // TODO: GET TOP POSITION OF PLAYER ON THE LEADERBOARD
         score_added = true;
       }
@@ -597,7 +601,7 @@ MyGame.screens["game-play"] = (function (
       true
     );
 
-    if (DEBUG == true){
+    if (DEBUG == true) {
       myKeyboard.registerHandler(
         (elapsedTime) => {
           let message = {
@@ -649,6 +653,16 @@ MyGame.screens["game-play"] = (function (
     // TODO: REFRESH THE PLAYER'S POSITION, LENGTH, ETC.
     endButton.refresh();
     score_added = false;
+
+    if (playerSelf.model.segments.length < 4) {
+      //      playerSelf.model.addBodyPart();
+      //    playerSelf.model.addBodyPart();
+      //  playerSelf.model.addBodyPart();
+      //tell the server we've added three body parts,
+      // so we emit the message three times
+      socket.emit("add-start-parts");
+    }
+
     requestAnimationFrame(gameLoop);
   }
 

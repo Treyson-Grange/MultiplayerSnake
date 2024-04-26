@@ -512,6 +512,13 @@ function initializeSocketIO(httpServer) {
     //
     // Create an entry in our list of connected clients
     let newPlayer = Player.create();
+    for (let otherId in activeClients) {
+      if (otherId !== socket.id) {
+        console.log("telling other clients about new player: ", socket.id);
+        activeClients[otherId].socket.emit("add-body-other", socket.id);
+      }
+    }
+    socket.emit("add-body-part", "");
     newPlayer.clientId = socket.id;
     playerNames[socket.id] = { name: "Player", clientId: socket.id };
     socket.emit("updatePlayerNames", playerNames);
@@ -534,6 +541,20 @@ function initializeSocketIO(httpServer) {
         clientId: socket.id,
         message: data,
       });
+    });
+
+    socket.on("add-start-parts", (data) => {
+      let client = activeClients[socket.id];
+      let player = client.player;
+      for (let i = 0; i < 3; i++) {
+        player.addBodyPart();
+        client.socket.emit("add-body-part", "");
+        for (let otherId in activeClients) {
+          if (otherId !== socket.id) {
+            activeClients[otherId].socket.emit("add-body-other", socket.id);
+          }
+        }
+      }
     });
 
     socket.on("playerName", (data) => {
