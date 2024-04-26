@@ -31,7 +31,7 @@ MyGame.systems.SoundSystem = (function (systems) {
   function loadAudio() {
     MyGame.sounds = {};
     MyGame.sounds["gulp"] = loadSound("assets/audio/treyson-gulping.mp3");
-    MyGame.sounds["end-game"] = loadSound("assets/audio/Lily-end-game.m4a");
+    MyGame.sounds["end-game"] = loadSound("assets/audio/lily-shortened.m4a");
   }
 
   console.log("initializing...");
