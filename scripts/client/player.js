@@ -108,7 +108,7 @@ MyGame.components.Player = function () {
   //
   //-----------------------------------------------------------------
   that.removeSegment = function (idx) {
-    segments.splice[idx, 1];
+    segments.splice(idx, 1);
   };
 
   //------------------------------------------------------------------

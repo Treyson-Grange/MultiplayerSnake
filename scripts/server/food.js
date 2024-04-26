@@ -106,7 +106,7 @@ function createFood(howMany) {
 
   function relocateFood(index, positionX, positionY) {
     // need to update player score in here, too? Or build a new function for that?
-    reportUpdates[index] = true; // IS THIS EVEN RIGHT? WHAT DOES IT MEAN?
+    reportUpdates[index] = false;
     positionsX[index] = positionX;
     positionsY[index] = positionY;
   }

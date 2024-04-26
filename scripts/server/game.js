@@ -60,18 +60,16 @@ for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
 // }
 
 function turnBodyIntoFood(player, client) {
-    // console.log("player.segments: ", player.segments);
-    for (let i = 0; i < player.segments.length; i++) {
+    console.log("foodSOA.reportUpdates: ", foodSOA.reportUpdates);
+    for (let i = player.segments.length - 1; i >= 0; i--) {
         let newFoodLocation = player.segments[i].position;
         foodSOA.bigFood.push(true); // tell the foodSOA that the following food is a big food
         foodSOA.positionsX.push(newFoodLocation.x);
         foodSOA.positionsY.push(newFoodLocation.y);
         foodSOA.reportUpdates.push(true);
         client.socket.emit("remove-segment", i);  // tell the client to remove that segment
-        // player.segments = player.segments.splice[i, 1]; // remove that segment from the player's body
-
-        // console.log("player.segments: ", player.segments);
     }
+    console.log("foodSOA.reportUpdates: ", foodSOA.reportUpdates);
 }
 
 //------------------------------------------------------------------
@@ -157,12 +155,11 @@ function checkAllCollisions() {
     let client = activeClients[clientId];
     let player = client.player;
 
-    // console.log("server player.isActive: ", player.isActive);
     if (player.isActive) {  // if the player is "alive" for this round
         let playerSpec = {
             radius: player.size.width / 2,
             position: player.position,
-            isActive: client.isActive,
+            isActive: client.isAlive,
         };
 
         // check for player v food collisions
