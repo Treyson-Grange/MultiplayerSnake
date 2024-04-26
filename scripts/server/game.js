@@ -189,9 +189,19 @@ function checkAllCollisions() {
                 let newPosX = random.nextDouble() * 4;
                 let newPosY = random.nextDouble() * 4;
 
-                // tell the food to re-locate
-                foodSOA.relocateFood(i, newPosX, newPosY);
-                foodSOA.reportUpdates[i] = true;
+                // if it's big food, just remove it from all the lists
+                if (foodSOA.bigFood[i]) {
+                    foodSOA.bigFood.splice(i, 1);
+                    foodSOA.positionsX.splice(i, 1);
+                    foodSOA.positionsY.splice(i, 1);
+                    foodSOA.spriteSheetIndices.splice(i, 1);
+                    foodSOA.reportUpdates.splice(i, 1);
+                } 
+                else {  // tell the food to re-locate if it's small
+                    foodSOA.relocateFood(i, newPosX, newPosY);
+                    foodSOA.reportUpdates[i] = true;
+                }
+
                 client.socket.emit("update-points", player.points);
 
                 client.socket.emit("add-body-part", "");
