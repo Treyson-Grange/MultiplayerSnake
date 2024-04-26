@@ -229,7 +229,11 @@ function checkAllCollisions() {
           // Notify other clients that a part should be added
           for (let otherId in activeClients) {
             if (otherId !== clientId) {
-              activeClients[otherId].socket.emit("add-body-other", clientId);
+              let data = {
+                clientId: clientId,
+                numParts: player.segments.length
+              };
+              activeClients[otherId].socket.emit("add-body-other", data);
             }
           }
         }
@@ -519,7 +523,7 @@ function initializeSocketIO(httpServer) {
     for (let otherId in activeClients) {
       if (otherId !== socket.id) {
         console.log("telling other clients about new player: ", socket.id);
-        activeClients[otherId].socket.emit("add-body-other", socket.id);
+        activeClients[otherId].socket.emit("add-body-other", {clientId: socket.id});
       }
     }
     socket.emit("add-body-part", "");
@@ -555,7 +559,7 @@ function initializeSocketIO(httpServer) {
         client.socket.emit("add-body-part", "");
         for (let otherId in activeClients) {
           if (otherId !== socket.id) {
-            activeClients[otherId].socket.emit("add-body-other", socket.id);
+            activeClients[otherId].socket.emit("add-body-other", {clientId: socket.id});
           }
         }
       }
