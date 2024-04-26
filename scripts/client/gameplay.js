@@ -151,8 +151,8 @@ MyGame.screens["game-play"] = (function (
   });
 
   socket.on("remove-full-body-other", function (otherId) {
-    if (playerOthers.hasOwnProperty(data.otherId)) {
-        let model = playerOthers[data.otherId].model;
+    if (playerOthers.hasOwnProperty(otherId)) {
+        let model = playerOthers[otherId].model;
         model.removeAllSegments();
     }
   });

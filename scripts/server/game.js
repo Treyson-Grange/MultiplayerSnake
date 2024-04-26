@@ -64,11 +64,10 @@ function turnBodyIntoFood(player, client, clientId) {
         foodSOA.reportUpdates.push(true);
         client.socket.emit("remove-segment", i);  // tell the client to remove that segment
 
-        // Notify other clients that a part should be removed
+        // Notify other clients that the player's body is gone
         for (let otherId in activeClients) {
             if (otherId !== clientId) {
-                console.log("remove-body-other, ", i);
-                activeClients[otherId].socket.emit("remove-body-other", {clientId: clientId, partIndex: i});
+                activeClients[otherId].socket.emit("remove-full-body-other", clientId);
             }
         }
     }
@@ -525,8 +524,7 @@ function initializeSocketIO(httpServer) {
         // notify other clients that that player's body is gone
         for (let otherId in activeClients) {
             if (otherId !== socket.id) {
-                console.log("remove-full-body-other, ", i);
-                activeClients[otherId].socket.emit("remove-full-body-other", clientId);
+                activeClients[otherId].socket.emit("remove-full-body-other", socket.id);
             }
         }
     });
