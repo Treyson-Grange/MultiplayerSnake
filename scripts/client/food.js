@@ -118,6 +118,8 @@ MyGame.components.Food = function(howMany) {
                 relocateFood(i, data.positionsX[i], data.positionsY[i]);
             }
         }
+        spriteSheetIndices = data.spriteSheetIndices;
+        bigFood = data.bigFood;
     };
 
     that.updateSprites = function (data) {

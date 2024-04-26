@@ -44,11 +44,12 @@ for (let i = 0; i < foodCount; i++) {
 }
 
 let bigFood = new Array(foodCount).fill(false);
-for (let i = 0; i < foodCount; i++) {
-  if (i % 2 == 0) {
-    bigFood[i] = true;
-  }
-}
+console.log("initial bigFood: ", bigFood);
+// for (let i = 0; i < foodCount; i++) {
+//   if (i % 2 == 0) {
+//     bigFood[i] = true;
+//   }
+// }
 
 // fill sprite sheet indices with random indices; so basically pick random sprite sheet to generate :)
 for (let i = 0; i < foodSOA.spriteSheetIndices.length; i++) {
@@ -211,7 +212,9 @@ function checkAllCollisions() {
                 client.socket.emit("hit-head", { x: player.position.x, y: player.position.y });
                 client.socket.emit("game-over");
                 client.isAlive = false;
+                console.log("bigFood in game before body into food: ", foodSOA.bigFood);
                 turnBodyIntoFood(player, client);
+                console.log("bigFood in game after body into food: ", foodSOA.bigFood);
             }
         
             // check for player v player collisions

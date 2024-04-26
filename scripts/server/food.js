@@ -20,7 +20,7 @@ function createFood(howMany) {
     let positionsX = new Array(howMany);
     let positionsY = new Array(howMany);
     let reportUpdates = new Array(howMany).fill(true); // Indicates if a model was updated during the last update
-    let bigFood = new Array(howMany).fill(true);
+    let bigFood = new Array(howMany).fill(false);
 
     let spriteSheetIndices = new Array(howMany);
     let spriteCount = 8;
@@ -124,6 +124,7 @@ function createFood(howMany) {
             }
         }
         spriteSheetIndices = data.spriteSheetIndices;
+        bigFood = data.bigFood;
 
     };
 
