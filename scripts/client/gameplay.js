@@ -152,10 +152,10 @@ MyGame.screens["game-play"] = (function (
 
   socket.on("remove-full-body-other", function (otherId) {
     if (playerOthers.hasOwnProperty(otherId)) {
-        let model = playerOthers[otherId].model;
-        console.log("model is: ", model);
-        model.removeAllSegments();
-        model.visible = false;
+      let model = playerOthers[otherId].model;
+      console.log("model is: ", model);
+      model.removeAllSegments();
+      model.visible = false;
     }
   });
 
@@ -164,7 +164,7 @@ MyGame.screens["game-play"] = (function (
       let model = playerOthers[otherId].model;
       model.visible = true;
     }
-  })
+  });
 
   socket.on("game-over", function () {
     game_over = true;
@@ -324,6 +324,10 @@ MyGame.screens["game-play"] = (function (
       soundSystem.playSound("end-game");
       playedEndSound = true;
     }
+  });
+
+  socket.on("add-kill", function (data) {
+    playerSelf.model.kills += 1;
   });
 
   //------------------------------------------------------------------
