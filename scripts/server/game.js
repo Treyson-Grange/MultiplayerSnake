@@ -269,14 +269,16 @@ function checkAllCollisions() {
 
             // TODO: this isn't working yet; idk what's up
             if (playerPlayerCollided(playerSpec, otherPlayerSpec)) {
+              if (otherClient.isAlive) {
+                client.socket.emit("hit-head", {
+                  x: player.position.x,
+                  y: player.position.y,
+                });
+                client.socket.emit("game-over");
+                client.isAlive = false;
+                turnBodyIntoFood(player, client, clientId);
+              }
               // console.log("players knocked heads");
-              client.socket.emit("hit-head", {
-                x: player.position.x,
-                y: player.position.y,
-              });
-              client.socket.emit("game-over");
-              client.isAlive = false;
-              turnBodyIntoFood(player, client, clientId);
 
               // TODO: TELL otherPlayer THAT THEY GOT A KILL, :)))
             }
@@ -585,10 +587,9 @@ function initializeSocketIO(httpServer) {
     // handler for when player loses, exits game and returns to main menu
     // "refreshes" the player so they respawn in the next game alive, in some new place
     socket.on("reset-player", function () {
-        activeClients[socket.id].player.refresh();
-        activeClients[socket.id].isAlive = true;
-        activeClients[clientId].socket.emit("player-visible", socket.id);
-
+      activeClients[socket.id].player.refresh();
+      activeClients[socket.id].isAlive = true;
+      activeClients[clientId].socket.emit("player-visible", socket.id);
 
       // notify other clients that that player's body is gone
       for (let otherId in activeClients) {
