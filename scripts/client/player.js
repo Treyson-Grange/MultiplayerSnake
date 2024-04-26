@@ -29,8 +29,11 @@ MyGame.components.Player = function () {
 
   Object.defineProperty(that, "kills", {
     get: () => kills,
+    set: (value) => {
+      kills = value;
+    },
   });
-  
+
   Object.defineProperty(that, "direction", {
     get: () => direction,
     set: (value) => {
@@ -127,10 +130,16 @@ MyGame.components.Player = function () {
     let newLocation = { x: 0, y: 0 };
 
     let newSnakePart = MyGame.components.Body(newLocation, direction);
-    if (segments.length == 0){
-      segments.push({ model: newSnakePart, texture: MyGame.assets["greenTail"] });
+    if (segments.length == 0) {
+      segments.push({
+        model: newSnakePart,
+        texture: MyGame.assets["greenTail"],
+      });
     } else {
-      segments.unshift({ model: newSnakePart, texture: MyGame.assets["greenBody"] });
+      segments.unshift({
+        model: newSnakePart,
+        texture: MyGame.assets["greenBody"],
+      });
     }
   };
 
@@ -150,7 +159,6 @@ MyGame.components.Player = function () {
       yDist = Math.abs(turnPoints[fromIndex].y - turnPoints[toIndex].y);
     }
     return xDist + yDist; //Because x or y dist will always be 0
-
   }
   //------------------------------------------------------------------
   //
@@ -165,17 +173,17 @@ MyGame.components.Player = function () {
     position.y += vectorY * elapsedTime * speed;
 
     // Segment positions
-    let space = .04;  // Get this from somewhere else
+    let space = 0.04; // Get this from somewhere else
     for (let i = 0; i < segments.length; i++) {
-      let segSpace = space * (i+1); 
-      for (let j = turnPoints.length - 1; j >= 0; j--){
+      let segSpace = space * (i + 1);
+      for (let j = turnPoints.length - 1; j >= 0; j--) {
         // console.log(segSpace, distFrom(j, j + 1));
         segSpace = segSpace - distFrom(j, j + 1);
         if (segSpace <= 0) {
           segments[i].model.position = {
-            x: turnPoints[j].x + (Math.cos(turnPoints[j].direction) * -segSpace),
-            y: turnPoints[j].y + (Math.sin(turnPoints[j].direction) * -segSpace)
-          }
+            x: turnPoints[j].x + Math.cos(turnPoints[j].direction) * -segSpace,
+            y: turnPoints[j].y + Math.sin(turnPoints[j].direction) * -segSpace,
+          };
           segments[i].model.direction = turnPoints[j].direction;
           break;
         }
@@ -275,13 +283,13 @@ MyGame.components.Player = function () {
       x: X,
       y: Y,
     };
-    
+
     direction = random.nextDouble() * 2 * Math.PI; // Angle in radians
     reportUpdate = false; // Indicates if this model was updated during the last update
-  
+
     segments = [];
     turnPoints = [{ x: position.x, y: position.y }];
-    points = 0;  
+    points = 0;
     kills = 0;
     isActive = true;
   };

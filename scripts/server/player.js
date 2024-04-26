@@ -59,6 +59,9 @@ function createPlayer() {
 
   Object.defineProperty(that, "kills", {
     get: () => kills,
+    set: (value) => {
+      kills = value;
+    },
   });
 
   Object.defineProperty(that, "direction", {
@@ -275,7 +278,6 @@ function createPlayer() {
   //maybe the server should be the one to update the player
   //maybe idk time for class
 
-
   //---------------------------------------------------------------------
   //
   // Function to refresh the player, gives it new location, removes body parts, resets points, etc.
@@ -299,13 +301,13 @@ function createPlayer() {
       x: X,
       y: Y,
     };
-    
+
     direction = random.nextDouble() * 2 * Math.PI; // Angle in radians
     reportUpdate = false; // Indicates if this model was updated during the last update
-  
+
     segments = [];
     turnPoints = [{ x: position.x, y: position.y }];
-    points = 0;  
+    points = 0;
     kills = 0;
     isActive = true;
   };

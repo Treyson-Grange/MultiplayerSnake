@@ -281,6 +281,8 @@ function checkAllCollisions() {
               // console.log("players knocked heads");
 
               // TODO: TELL otherPlayer THAT THEY GOT A KILL, :)))
+              otherPlayer.kills = otherPlayer.kills + 1;
+              otherClient.socket.emit("add-kill", 1);
             }
             // TODO: check for collisions between player and segments/head/tail of all other snakes :)
           }
