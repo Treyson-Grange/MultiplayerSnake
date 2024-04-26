@@ -231,7 +231,7 @@ function checkAllCollisions() {
             if (otherId !== clientId) {
               let data = {
                 clientId: clientId,
-                numParts: player.segments.length
+                numParts: player.segments.length,
               };
               activeClients[otherId].socket.emit("add-body-other", data);
             }
@@ -523,10 +523,7 @@ function initializeSocketIO(httpServer) {
     // for (let otherId in activeClients) {
     //   if (otherId !== socket.id) {
     //     console.log("telling other clients about new player: ", socket.id);
-    //     activeClients[otherId].socket.emit("add-body-other", {clientId: socket.id});
-    //   }
-    // }
-    // socket.emit("add-body-part", "");
+
     newPlayer.clientId = socket.id;
     playerNames[socket.id] = { name: "Player", clientId: socket.id };
     socket.emit("updatePlayerNames", playerNames);
@@ -560,7 +557,9 @@ function initializeSocketIO(httpServer) {
         client.socket.emit("add-body-part", "");
         for (let otherId in activeClients) {
           if (otherId !== socket.id) {
-            activeClients[otherId].socket.emit("add-body-other", {clientId: socket.id});
+            activeClients[otherId].socket.emit("add-body-other", {
+              clientId: socket.id,
+            });
           }
         }
       }
@@ -587,6 +586,11 @@ function initializeSocketIO(httpServer) {
     // });
 
     socket.on("disconnect", function () {
+      turnBodyIntoFood(
+        activeClients[socket.id].player,
+        activeClients[socket.id],
+        socket.id
+      );
       delete activeClients[socket.id];
       delete playerNames[socket.id];
       notifyDisconnect(socket.id);

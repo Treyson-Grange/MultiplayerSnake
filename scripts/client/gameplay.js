@@ -674,7 +674,7 @@ MyGame.screens["game-play"] = (function (
       socket.emit("add-start-parts");
       console.log("gameply.js add-start-parts");
     }
-
+    playerSelf.model.addTurnPoint();
     requestAnimationFrame(gameLoop);
   }
 
