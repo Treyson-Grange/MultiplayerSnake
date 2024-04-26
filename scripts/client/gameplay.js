@@ -153,6 +153,7 @@ MyGame.screens["game-play"] = (function (
   socket.on("remove-full-body-other", function (otherId) {
     if (playerOthers.hasOwnProperty(otherId)) {
         let model = playerOthers[otherId].model;
+        console.log("model is: ", model);
         model.removeAllSegments();
     }
   });

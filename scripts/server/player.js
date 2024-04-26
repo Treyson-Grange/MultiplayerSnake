@@ -106,7 +106,7 @@ function createPlayer() {
 
   that.removeAllSegments = function () {
     segments.length = 0;
-  }
+  };
 
   //   // public function to find the location for a newly added segment
   //   that.newSegmentPosition = function (elapsedTime) {

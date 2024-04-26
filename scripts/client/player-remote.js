@@ -65,6 +65,10 @@ MyGame.components.PlayerRemote = function () {
     console.log("other body part added");
   };
 
+  that.removeAllSegments = function () {
+    segments.length = 0;
+  };
+
   function distFrom(fromIndex, toIndex) {
     let xDist;
     let yDist;
