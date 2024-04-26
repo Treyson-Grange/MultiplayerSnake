@@ -523,10 +523,7 @@ function initializeSocketIO(httpServer) {
     // for (let otherId in activeClients) {
     //   if (otherId !== socket.id) {
     //     console.log("telling other clients about new player: ", socket.id);
-    //     // activeClients[otherId].socket.emit("add-body-other", {clientId: socket.id});
-    //   }
-    // }
-    // // socket.emit("add-body-part", "");
+
     newPlayer.clientId = socket.id;
     playerNames[socket.id] = { name: "Player", clientId: socket.id };
     socket.emit("updatePlayerNames", playerNames);
@@ -552,6 +549,7 @@ function initializeSocketIO(httpServer) {
     });
 
     socket.on("add-start-parts", (data) => {
+        console.log("game.js add-start-parts");
       let client = activeClients[socket.id];
       let player = client.player;
       for (let i = 0; i < 3; i++) {
@@ -580,6 +578,7 @@ function initializeSocketIO(httpServer) {
       // update player's elapsedTime to be 0, so that they are invincible for the first few seconds
       //   activeClients[socket.id].socket.emit("updatePlayerElapsedTime", 0);
       activeClients[socket.id].elapsedTime = 0;
+
     });
 
     // socket.on("player-dead", function () {

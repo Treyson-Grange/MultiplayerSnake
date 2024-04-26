@@ -128,7 +128,7 @@ MyGame.screens["game-play"] = (function (
   });
 
   socket.on("updatePlayerNames", function (playerNames) {
-    console.log("playerNames: ", playerNames);
+    // console.log("playerNames: ", playerNames);
     allPlayerNames = playerNames;
   });
 
@@ -160,7 +160,7 @@ MyGame.screens["game-play"] = (function (
   socket.on("remove-full-body-other", function (otherId) {
     if (playerOthers.hasOwnProperty(otherId)) {
       let model = playerOthers[otherId].model;
-      console.log("model is: ", model);
+    //   console.log("model is: ", model);
       model.removeAllSegments();
       model.visible = false;
     }
@@ -402,8 +402,8 @@ MyGame.screens["game-play"] = (function (
     }
     segments = playerSelf.model.getSegments();
     for (let id in segments) {
-      console.log(segments[id].model);
-      console.log(segments[id].texture);
+    //   console.log(segments[id].model);
+    //   console.log(segments[id].texture);
       renderer.Body.render(
         segments[id].model,
         segments[id].texture,
@@ -672,6 +672,7 @@ MyGame.screens["game-play"] = (function (
       //tell the server we've added three body parts,
       // so we emit the message three times
       socket.emit("add-start-parts");
+      console.log("gameply.js add-start-parts");
     }
     playerSelf.model.addTurnPoint();
     requestAnimationFrame(gameLoop);

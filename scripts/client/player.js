@@ -14,6 +14,18 @@ MyGame.components.Player = function () {
     width: 0.05,
     height: 0.05,
   };
+
+//   that.getRandomAngle = function () {
+//     // Generate a random number between 0 and 3 (inclusive)
+//     let randomIndex = Math.floor(Math.random() * 4);
+
+//     // Define an array with the desired angle values
+//     const angles = [0, (Math.PI / 2), -(Math.Pi / 2), Math.PI];
+
+//     // Return the randomly selected angle
+//     return angles[randomIndex];
+//   }
+
   let direction = 0;
   let rotateRate = Math.PI / 1000;
   let speed = 0.0002;

@@ -39,7 +39,18 @@ function createPlayer() {
     height: 0.05,
   };
 
-  let direction = random.nextDouble() * 2 * Math.PI; // Angle in radians
+  that.getRandomAngle = function () {
+    // Generate a random number between 0 and 3 (inclusive)
+    let randomIndex = Math.floor(Math.random() * 4);
+
+    // Define an array with the desired angle values
+    const angles = [0, (Math.PI / 2), -(Math.PI / 2), Math.PI];
+
+    // Return the randomly selected angle
+    return angles[randomIndex];
+  }
+
+  let direction = that.getRandomAngle();
   let rotateRate = Math.PI / 1000; // radians per millisecond
   let speed = 0.0002; // unit distance per millisecond
   let reportUpdate = false; // Indicates if this model was updated during the last update
@@ -110,6 +121,7 @@ function createPlayer() {
   that.removeAllSegments = function () {
     segments.length = 0;
   };
+
 
   //   // public function to find the location for a newly added segment
   //   that.newSegmentPosition = function (elapsedTime) {
