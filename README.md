@@ -15,8 +15,8 @@ Welcome to our SnakeJS, developed as part of our CS5410 Game Development class. 
 To get started, simply clone this repository and install the dependencies using npm:
 
 
-1. `git clone https://github.com/Treyson-Grange/5410FinalProject.git`
-2. `cd 5410FinalProject`
+1. `git clone https://github.com/Treyson-Grange/SnakeJS.git`
+2. `cd SnakeJS`
 3. `npm install`
 
 ## Usage
