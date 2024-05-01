@@ -1,6 +1,4 @@
-# Multiplayer Snake Game
-
-Welcome to our multiplayer snake game! This version is built using JavaScript and HTML5 canvas.
+# SnakeJS
 ```
  ______     __   __     ______     __  __     ______       __     ______    
 /\  ___\   /\ "-.\ \   /\  __ \   /\ \/ /    /\  ___\     /\ \   /\  ___\   
@@ -11,6 +9,7 @@ Welcome to our multiplayer snake game! This version is built using JavaScript an
 ```
 # Introduction
 
+Welcome to our SnakeJS, developed as part of our CS5410 Game Development class. With JavaScript, HTML, CSS, and Node.js as our tools, our team of three set out to create a modern rendition of this beloved classic.
 ## Installation
 
 To get started, simply clone this repository and install the dependencies using npm:
