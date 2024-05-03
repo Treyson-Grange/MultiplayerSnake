@@ -10,7 +10,7 @@ MyGame.renderer.Body = (function (graphics) {
   // ------------------------------------------------------------------
   that.render = function (model, texture, playerSelfPos) {
 
-    let screenPos = {x: playerSelfPos.x - .5, y: playerSelfPos.y - .5}; //top-left corner of screen
+    let screenPos = { x: playerSelfPos.x - .5, y: playerSelfPos.y - .5 }; //top-left corner of screen
     graphics.saveContext();
 
     if (
@@ -20,13 +20,12 @@ MyGame.renderer.Body = (function (graphics) {
       if (
         screenPos.y < model.position.y + model.size.height / 2 &&
         model.position.y - model.size.height / 2 <
-          screenPos.y + SCREEN_WIDTH
+        screenPos.y + SCREEN_WIDTH
       ) {
         let position = {
           x: model.position.x - screenPos.x,
           y: model.position.y - screenPos.y,
         };
-        // console.log(position);
         graphics.rotateCanvas(position, model.direction);
 
         graphics.drawImage(texture, position, model.size);

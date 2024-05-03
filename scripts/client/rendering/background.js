@@ -16,7 +16,6 @@ MyGame.renderer.Background = (function (graphics) {
     graphics.saveContext();
     let numRows = Math.ceil(1 / tileSize.width) + 3;
     let numCols = Math.ceil(1 / tileSize.height) + 3;
-    // console.log(numCols);
     for (let i = 0; i < numRows; i++) {
       for (let j = 0; j < numCols; j++) {
         let tileX =

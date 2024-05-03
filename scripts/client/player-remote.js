@@ -69,13 +69,12 @@ MyGame.components.PlayerRemote = function () {
     let newLocation = { x: 0, y: 0 };
 
     let newSnakePart = MyGame.components.Body(newLocation, state.direction);
-    if (segments.length == 0){
+    if (segments.length == 0) {
       segments.push({ model: newSnakePart, texture: MyGame.assets["redTail"] });
     } else {
       segments.unshift({ model: newSnakePart, texture: MyGame.assets["redBody"] });
     }
-    
-    console.log("other body part added");
+
   };
 
   that.removeAllSegments = function () {
@@ -101,13 +100,13 @@ MyGame.components.PlayerRemote = function () {
     // Segment positions
     let space = .04;  // Get this from somewhere else
     for (let i = 0; i < segments.length; i++) {
-      let startSegSpace = space * (i+1); 
+      let startSegSpace = space * (i + 1);
       let segSpace = startSegSpace
-      for (let j = turnPoints.length - 1; j >= 0; j--){
-        // console.log(segSpace, distFrom(j, j + 1));
+      for (let j = turnPoints.length - 1; j >= 0; j--) {
+        // (segSpace, distFrom(j, j + 1));
         segSpace = segSpace - distFrom(j, j + 1);
         if (segSpace <= 0) {
-          if (j == turnPoints.length -1) {
+          if (j == turnPoints.length - 1) {
             segments[i].model.position = {
               x: state.position.x + (Math.cos(state.direction) * (-startSegSpace)),
               y: state.position.y + (Math.sin(state.direction) * (-startSegSpace))

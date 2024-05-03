@@ -84,7 +84,7 @@ function playerFoodCollided(player, food) {
   if (player.isActive) {
     let distance = Math.sqrt(
       Math.pow(player.position.x - food.position.x, 2) +
-        Math.pow(player.position.y - food.position.y, 2)
+      Math.pow(player.position.y - food.position.y, 2)
     );
     let radii = player.radius + food.radius;
 
@@ -131,11 +131,10 @@ function playerWallCollided(playerPos, player) {
 //
 //------------------------------------------------------------------
 function playerPlayerCollided(player1, player2) {
-  // TODO: CHANGE THIS TO DETECT COLLISIONS BESIDES HEAD COLLIDING WITH HEAD!! :)
   if (player1.isActive && player2.isActive) {
     let distance = Math.sqrt(
       Math.pow(player1.position.x - player2.position.x, 2) +
-        Math.pow(player1.position.y - player2.position.y, 2)
+      Math.pow(player1.position.y - player2.position.y, 2)
     );
     let radii = player1.radius + player2.radius;
     if (distance <= radii) {
@@ -145,7 +144,7 @@ function playerPlayerCollided(player1, player2) {
         for (let i = 0; i < player2.segments.length; i++) {
           let distance = Math.sqrt(
             Math.pow(player1.position.x - player2.segments[i].position.x, 2) +
-              Math.pow(player1.position.y - player2.segments[i].position.y, 2)
+            Math.pow(player1.position.y - player2.segments[i].position.y, 2)
           );
           let radii = player1.radius + player2.radius;
           if (distance <= radii) {
@@ -153,7 +152,7 @@ function playerPlayerCollided(player1, player2) {
           }
         }
       } else {
-        // console.log("player2.segments is undefined");
+
       }
       return false;
     }
@@ -197,7 +196,6 @@ function checkAllCollisions() {
 
         // check for collision
         if (playerFoodCollided(playerSpec, foodPiece)) {
-          // TODO: TELL THE PLAYER THAT THEY JUST GOT POINTS/LENGTH
           client.socket.emit("hit-food", {
             x: foodSOA.positionsX[i],
             y: foodSOA.positionsY[i],
@@ -271,7 +269,6 @@ function checkAllCollisions() {
               segments: otherPlayer.segments,
             };
 
-            // TODO: this isn't working yet; idk what's up
             if (playerPlayerCollided(playerSpec, otherPlayerSpec)) {
               if (otherClient.isAlive) {
                 client.socket.emit("hit-head", {
@@ -282,13 +279,10 @@ function checkAllCollisions() {
                 client.isAlive = false;
                 turnBodyIntoFood(player, client, clientId);
               }
-              // console.log("players knocked heads");
 
-              // TODO: TELL otherPlayer THAT THEY GOT A KILL, :)))
               otherPlayer.kills = otherPlayer.kills + 1;
               otherClient.socket.emit("add-kill", 1);
             }
-            // TODO: check for collisions between player and segments/head/tail of all other snakes :)
           }
         }
       }
@@ -520,14 +514,11 @@ function initializeSocketIO(httpServer) {
     //
     // Create an entry in our list of connected clients
     let newPlayer = Player.create();
-    // for (let otherId in activeClients) {
-    //   if (otherId !== socket.id) {
-    //     console.log("telling other clients about new player: ", socket.id);
 
     newPlayer.clientId = socket.id;
     playerNames[socket.id] = { name: "Player", clientId: socket.id };
     socket.emit("updatePlayerNames", playerNames);
-    
+
     activeClients[socket.id] = {
       socket: socket,
       player: newPlayer,
@@ -550,7 +541,6 @@ function initializeSocketIO(httpServer) {
     });
 
     socket.on("add-start-parts", (data) => {
-        console.log("game.js add-start-parts");
       let client = activeClients[socket.id];
       let player = client.player;
       for (let i = 0; i < 3; i++) {
@@ -567,9 +557,7 @@ function initializeSocketIO(httpServer) {
     });
 
     socket.on("playerName", (data) => {
-      console.log("player name is: ", data.name, " at socket id: ", socket.id);
       playerNames[socket.id] = { name: data.name, clientId: socket.id };
-      console.log("playerNames: ", playerNames);
       socket.emit("updatePlayerNames", playerNames);
       for (let clientId in activeClients) {
         if (clientId !== socket.id) {
@@ -580,16 +568,16 @@ function initializeSocketIO(httpServer) {
       //   activeClients[socket.id].socket.emit("updatePlayerElapsedTime", 0);
       activeClients[socket.id].elapsedTime = 0;
 
-        // Notify other clients that a part should be added
-        for (let otherId in activeClients) {
-            if (otherId !== socket.id) {
-                let data = {
-                    clientId: otherId,
-                    numParts: activeClients[otherId].player.segments.length,
-                };
-                socket.emit("add-body-other", data);
-            }
+      // Notify other clients that a part should be added
+      for (let otherId in activeClients) {
+        if (otherId !== socket.id) {
+          let data = {
+            clientId: otherId,
+            numParts: activeClients[otherId].player.segments.length,
+          };
+          socket.emit("add-body-other", data);
         }
+      }
     });
 
     // socket.on("player-dead", function () {

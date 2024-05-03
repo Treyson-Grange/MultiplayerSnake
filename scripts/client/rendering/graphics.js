@@ -136,7 +136,6 @@ MyGame.graphics = (function () {
     context.restore();
   }
   function drawTextPlayerName(spec) {
-    // console.log(spec);
     context.save();
 
     let textWidth = context.measureText(spec.text).width; // Measure the width of the text

@@ -56,13 +56,12 @@ MyGame.persistence = (function () {
   // Player name functions
 
   function getPlayerName() {
-    // console.log(customControls['up']);
     return playerName;
   }
 
   function changePlayerName(value) {
     playerName = value;
-    console.log(playerName);
+    (playerName);
     localStorage["MyGame.playerName"] = JSON.stringify(playerName);
 
     // location.reload();
@@ -88,7 +87,6 @@ MyGame.persistence = (function () {
 
   function changeCustomControl(key, value) {
     customControls[key] = value;
-    console.log(customControls);
     localStorage["MyGame.customControls"] = JSON.stringify(customControls);
 
     reportCustomControls();

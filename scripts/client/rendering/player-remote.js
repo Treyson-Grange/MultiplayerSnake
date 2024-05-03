@@ -27,7 +27,7 @@ MyGame.renderer.PlayerRemote = (function (graphics) {
       if (
         screenPos.y < model.state.position.y + model.size.height / 2 &&
         model.state.position.y - model.size.height / 2 <
-          screenPos.y + SCREEN_WIDTH
+        screenPos.y + SCREEN_WIDTH
       ) {
         let position = {
           x: model.state.position.x - screenPos.x,
@@ -37,7 +37,6 @@ MyGame.renderer.PlayerRemote = (function (graphics) {
           x: model.state.position.x - screenPos.x,
           y: model.state.position.y - screenPos.y - 0.05,
         };
-        // console.log(position);
         graphics.rotateCanvas(position, model.state.direction);
 
         graphics.drawImage(texture, position, model.size);

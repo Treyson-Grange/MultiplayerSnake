@@ -10,7 +10,7 @@
 // }
 //
 // --------------------------------------------------------------
-MyGame.objects.Button = function(spec) {
+MyGame.objects.Button = function (spec) {
     'use strict';
 
     let active = false;
@@ -19,7 +19,7 @@ MyGame.objects.Button = function(spec) {
     let imageReady = false;
     let image = new Image();
 
-    image.onload = function() {
+    image.onload = function () {
         imageReady = true;
     };
     image.src = spec.imageSrc;
@@ -39,10 +39,6 @@ MyGame.objects.Button = function(spec) {
         y: spec.center.y * spec.canvas.width,
     };
 
-    // console.log("BUTTON INFO:");
-    // console.log(localSize);
-    // console.log(localCenter);
-
     // // Check if click is inside the rectangle
     function isInsideRectangle(mouseX, mouseY, rectX, rectY, rectWidth, rectHeight) {
         let rectLeftSide = rectX - (rectWidth / 2);
@@ -54,7 +50,7 @@ MyGame.objects.Button = function(spec) {
     }
 
     // Handle click event
-    spec.canvas.addEventListener("click", function(event) {
+    spec.canvas.addEventListener("click", function (event) {
         var mouseX = event.clientX - spec.canvas.getBoundingClientRect().left;
         var mouseY = event.clientY - spec.canvas.getBoundingClientRect().top;
 

@@ -8,22 +8,8 @@ MyGame.systems.SoundSystem = (function (systems) {
 
   function loadSound(source) {
     let sound = new Audio();
-    // sound.addEventListener('canplay', function() {
-    //     // console.log(`${source} is ready to play`);
-    // });
-    sound.addEventListener("play", function () {});
-    // sound.addEventListener('pause', function() {
-    //     // console.log(`${source} paused`);
-    // });
-    // sound.addEventListener('canplaythrough', function() {
-    //     // console.log(`${source} can play through`);
-    // });
-    // sound.addEventListener('progress', function() {
-    //     // console.log(`${source} progress in loading`);
-    // });
-    // sound.addEventListener('timeupdate', function() {
-    //     // console.log(`${source} time update: ${this.currentTime}`);
-    // });
+
+    sound.addEventListener("play", function () { });
     sound.src = source;
     return sound;
   }

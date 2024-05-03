@@ -15,16 +15,16 @@ MyGame.components.Player = function () {
     height: 0.05,
   };
 
-//   that.getRandomAngle = function () {
-//     // Generate a random number between 0 and 3 (inclusive)
-//     let randomIndex = Math.floor(Math.random() * 4);
+  //   that.getRandomAngle = function () {
+  //     // Generate a random number between 0 and 3 (inclusive)
+  //     let randomIndex = Math.floor(Math.random() * 4);
 
-//     // Define an array with the desired angle values
-//     const angles = [0, (Math.PI / 2), -(Math.Pi / 2), Math.PI];
+  //     // Define an array with the desired angle values
+  //     const angles = [0, (Math.PI / 2), -(Math.Pi / 2), Math.PI];
 
-//     // Return the randomly selected angle
-//     return angles[randomIndex];
-//   }
+  //     // Return the randomly selected angle
+  //     return angles[randomIndex];
+  //   }
 
   let direction = 0;
   let rotateRate = Math.PI / 1000;
@@ -94,18 +94,11 @@ MyGame.components.Player = function () {
 
   // public function to find the location for a newly added segment
   that.newSegmentPosition = function (elapsedTime) {
-    console.log("segments: ", segments);
-
     let lastLocation = { x: 0, y: 0 };
 
     if (segments.length > 0) {
-      console.log(
-        "segments[segments.length - 1].model.position: ",
-        segments[segments.length - 1].model.position
-      );
       lastLocation = segments[segments.length - 1].model.position;
     }
-    console.log("lastLocation! ", lastLocation);
 
     let vectorX = Math.cos(direction);
     let vectorY = Math.sin(direction);
@@ -197,7 +190,7 @@ MyGame.components.Player = function () {
     for (let i = 0; i < segments.length; i++) {
       let segSpace = space * (i + 1);
       for (let j = turnPoints.length - 1; j >= 0; j--) {
-        // console.log(segSpace, distFrom(j, j + 1));
+
         segSpace = segSpace - distFrom(j, j + 1);
         if (segSpace <= 0) {
           segments[i].model.position = {

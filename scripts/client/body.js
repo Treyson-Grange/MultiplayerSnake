@@ -1,10 +1,4 @@
 MyGame.components.Body = function (startPosition, startDirection) {
-  // console.log(
-  //   "I am creating a snek and this is its specs: ",
-  //   startPosition,
-  //   startDirection
-  // );
-
   ("use strict");
   let that = {};
   let position = {

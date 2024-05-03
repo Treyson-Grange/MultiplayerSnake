@@ -16,63 +16,62 @@
 //------------------------------------------------------------------
 MyGame.loader = (function () {
   "use strict";
-  // console.log("MyGame: ", MyGame);
   let scriptOrder = [
-      {
-        scripts: ["queue"],
-        message: "Utilities loaded",
-        onComplete: null,
-      },
-      {
-        scripts: ["input"],
-        message: "Input loaded",
-        onComplete: null,
-      },
-      {
-        scripts: ["player", "player-remote"],
-        message: "Player models loaded",
-        onComplete: null,
-      },
-      {
-        scripts: ["food", "body"],
-        message: "Game components loaded",
-        onComplete: null,
-      },
-      {
-        scripts: ["rendering/graphics"],
-        message: "Graphics loaded",
-        onComplete: null,
-      },
-      {
-        scripts: [
-          "rendering/player",
-          "rendering/player-remote",
-          "rendering/background",
-          "rendering/walls",
-          "rendering/body",
-          "rendering/particle-system",
-          "rendering/food",
-          "rendering/text",
-          "rendering/button"
-        ],
-        message: "Renderers loaded",
-        onComplete: null,
-      },
-      {
-        scripts: ["game"],
-        message: "Gameplay model loaded",
-        onComplete: null,
-      },
-      {
-        scripts: [
-          "systems/particle-system-manager",
-          "systems/particle-system",
-          "systems/sound-system"
-        ],
-        message: "Systems loaded",
-        onComplete: null,
-      },
-    ],
+    {
+      scripts: ["queue"],
+      message: "Utilities loaded",
+      onComplete: null,
+    },
+    {
+      scripts: ["input"],
+      message: "Input loaded",
+      onComplete: null,
+    },
+    {
+      scripts: ["player", "player-remote"],
+      message: "Player models loaded",
+      onComplete: null,
+    },
+    {
+      scripts: ["food", "body"],
+      message: "Game components loaded",
+      onComplete: null,
+    },
+    {
+      scripts: ["rendering/graphics"],
+      message: "Graphics loaded",
+      onComplete: null,
+    },
+    {
+      scripts: [
+        "rendering/player",
+        "rendering/player-remote",
+        "rendering/background",
+        "rendering/walls",
+        "rendering/body",
+        "rendering/particle-system",
+        "rendering/food",
+        "rendering/text",
+        "rendering/button"
+      ],
+      message: "Renderers loaded",
+      onComplete: null,
+    },
+    {
+      scripts: ["game"],
+      message: "Gameplay model loaded",
+      onComplete: null,
+    },
+    {
+      scripts: [
+        "systems/particle-system-manager",
+        "systems/particle-system",
+        "systems/sound-system"
+      ],
+      message: "Systems loaded",
+      onComplete: null,
+    },
+  ],
     assetOrder = [
       {
         key: "player-self",

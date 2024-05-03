@@ -14,10 +14,6 @@ MyGame.screens["game-play"] = (function (
 ) {
   "use strict";
 
-  console.log(components.PlayerRemote());
-  console.log(components.Player());
-  console.log(components.Food());
-
   const WORLD_SIZE = 4; // Both x and y
   const DEBUG = false;
   let arrScores = [];
@@ -128,7 +124,6 @@ MyGame.screens["game-play"] = (function (
   });
 
   socket.on("updatePlayerNames", function (playerNames) {
-    // console.log("playerNames: ", playerNames);
     allPlayerNames = playerNames;
   });
 
@@ -160,7 +155,6 @@ MyGame.screens["game-play"] = (function (
   socket.on("remove-full-body-other", function (otherId) {
     if (playerOthers.hasOwnProperty(otherId)) {
       let model = playerOthers[otherId].model;
-    //   console.log("model is: ", model);
       model.removeAllSegments();
       model.visible = false;
     }
@@ -191,8 +185,6 @@ MyGame.screens["game-play"] = (function (
   //------------------------------------------------------------------
   socket.on("connect-other", function (data) {
     let model = components.PlayerRemote();
-    console.log("MODEL IS: ", model);
-    console.log("COMPONENTS.PLAYERREMOTE() IS: ", components.PlayerRemote());
     model.state.position.x = data.position.x;
     model.state.position.y = data.position.y;
     model.state.direction = data.direction;
@@ -402,8 +394,6 @@ MyGame.screens["game-play"] = (function (
     }
     segments = playerSelf.model.getSegments();
     for (let id in segments) {
-    //   console.log(segments[id].model);
-    //   console.log(segments[id].texture);
       renderer.Body.render(
         segments[id].model,
         segments[id].texture,
@@ -414,7 +404,7 @@ MyGame.screens["game-play"] = (function (
 
     for (let id in playerOthers) {
       let otherPlayer = playerOthers[id];
-      //console.log(id);//this is the clientID
+      //(id);//this is the clientID
       if (allPlayerNames[id] === undefined) {
         continue;
       }
@@ -637,10 +627,6 @@ MyGame.screens["game-play"] = (function (
   //
   //------------------------------------------------------------------
   function initialize() {
-    console.log("game initializing...");
-
-    //
-    // Stop the game loop by canceling the request for the next animation frame
     cancelNextRequest = true;
     //
     // Then, return to the main menu
@@ -648,7 +634,6 @@ MyGame.screens["game-play"] = (function (
   }
 
   function run() {
-    console.log("game running...");
     if (persistence.getPlayerName() == "") {
       strPlayerName = "Player";
       playerName.updateText("Player");

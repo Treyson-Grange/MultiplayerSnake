@@ -198,7 +198,7 @@ function createPlayer() {
     for (let i = 0; i < segments.length; i++) {
       let segSpace = space * (i + 1);
       for (let j = turnPoints.length - 1; j >= 0; j--) {
-        // console.log(segSpace, distFrom(j, j + 1));
+        (segSpace, distFrom(j, j + 1));
         segSpace = segSpace - distFrom(j, j + 1);
         if (segSpace <= 0) {
           segments[i].position = {
