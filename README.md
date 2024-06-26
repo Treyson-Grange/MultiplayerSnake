@@ -14,14 +14,17 @@ Welcome to our SnakeJS, developed as part of our CS5410 Game Development class. 
 
 To get started, simply clone this repository and install the dependencies using npm:
 
+```
+git clone https://github.com/Treyson-Grange/SnakeJS.git
+cd SnakeJS
+npm install
+```
 
-1. `git clone https://github.com/Treyson-Grange/SnakeJS.git`
-2. `cd SnakeJS`
-3. `npm install`
 
 ## Usage
 
-Once the installation is complete, you can start the game by running:
+Once the installation is complete, you can start the server by running: `npm start`
 
-1. `npm start`
-2. Head to [localhost:3000](localhost:3000) on multiple windows to play
+Head to [localhost:3000](localhost:3000) to play. Open multiple windows on localhost to simulate multiple players. 
+
+NOTE: It is possible to do local play here, but it differs based on many variables, so it is not documneted here. Feel free to mess around with it as need be. 
